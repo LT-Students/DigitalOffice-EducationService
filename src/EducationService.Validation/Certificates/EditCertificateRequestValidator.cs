@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 using FluentValidation.Validators;
-using LT.DigitalOffice.UserService.Data.Interfaces;
-using LT.DigitalOffice.UserService.Models.Dto.Enums;
-using LT.DigitalOffice.UserService.Models.Dto.Requests.User;
-using LT.DigitalOffice.UserService.Models.Dto.Requests.User.Certificates;
+using LT.DigitalOffice.EducationService.Data.Interfaces;
+using LT.DigitalOffice.EducationService.Models.Dto.Enums;
+using LT.DigitalOffice.EducationService.Models.Dto.Requests.User;
+using LT.DigitalOffice.EducationService.Models.Dto.Requests.Certificates;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;
 using Newtonsoft.Json;

@@ -11,8 +11,8 @@ using LT.DigitalOffice.EducationService.Business.Commands.Certificate.Interfaces
 using LT.DigitalOffice.EducationService.Data.Interfaces;
 using LT.DigitalOffice.EducationService.Mappers.Models.Interfaces;
 using LT.DigitalOffice.EducationService.Models.Db;
-using LT.DigitalOffice.EducationService.Models.Dto.Requests.User;
-using LT.DigitalOffice.EducationService.Models.Dto.Requests.User.Certificates;
+using LT.DigitalOffice.EducationService.Models.Dto.Requests.Images;
+using LT.DigitalOffice.EducationService.Models.Dto.Requests.Certificates;
 using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
