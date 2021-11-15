@@ -3,7 +3,7 @@ using System;
 
 namespace LT.DigitalOffice.EducationService.Models.Dto.Requests.Education
 {
-  public class EditEducationRequest
+  public record EditEducationRequest
   {
     public string UniversityName { get; set; }
     public string QualificationName { get; set; }

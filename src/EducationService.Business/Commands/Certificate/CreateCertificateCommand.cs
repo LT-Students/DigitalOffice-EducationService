@@ -2,7 +2,6 @@
 using LT.DigitalOffice.Kernel.Broker;
 using LT.DigitalOffice.Kernel.Constants;
 using LT.DigitalOffice.Kernel.Enums;
-using LT.DigitalOffice.Kernel.Exceptions.Models;
 using LT.DigitalOffice.Kernel.Extensions;
 using LT.DigitalOffice.Kernel.Responses;
 using LT.DigitalOffice.Models.Broker.Enums;
@@ -20,6 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Images;
+using System.Net;
+using LT.DigitalOffice.Kernel.Helpers.Interfaces;
+using LT.DigitalOffice.EducationService.Validation.Certificates.Interfaces;
+using LT.DigitalOffice.Kernel.FluentValidationExtensions;
 
 namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
 {
@@ -32,6 +35,8 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
     private readonly ICreateImageDataMapper _createImageDataMapper;
     private readonly IRequestClient<ICreateImagesRequest> _rcImage;
     private readonly ILogger<CreateCertificateCommand> _logger;
+    private readonly IResponseCreater _responseCreator;
+    private readonly ICreateCertificateRequestValidator _validator;
 
     private async Task<Guid?> GetImageIdAsync(AddImageRequest addImageRequest, List<string> errors)
     {
@@ -42,7 +47,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
         return null;
       }
 
-      const string errorMessage = "Can not add certificate image to certificate. Please try again later.";
+      string errorMessage = "Can not add certificate image to certificate. Please try again later.";
 
       try
       {
@@ -81,7 +86,9 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
       ICertificateRepository certificateRepository,
       IRequestClient<ICreateImagesRequest> rcAddIImage,
       ICreateImageDataMapper createImageDataMapper,
-      ILogger<CreateCertificateCommand> logger)
+      ILogger<CreateCertificateCommand> logger,
+      IResponseCreater responseCreator,
+      ICreateCertificateRequestValidator validator)
     {
       _accessValidator = accessValidator;
       _httpContextAccessor = httpContextAccessor;
@@ -90,6 +97,8 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
       _rcImage = rcAddIImage;
       _logger = logger;
       _createImageDataMapper = createImageDataMapper;
+      _responseCreator = responseCreator;
+      _validator = validator;
     }
 
     public async Task<OperationResultResponse<Guid>> ExecuteAsync(CreateCertificateRequest request)
@@ -97,20 +106,19 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
       if (!await _accessValidator.HasRightsAsync(Rights.AddEditRemoveUsers)
         && _httpContextAccessor.HttpContext.GetUserId() != request.UserId)
       {
-        throw new ForbiddenException("Not enough rights.");
+        return _responseCreator.CreateFailureResponse<Guid>(HttpStatusCode.Forbidden);
       }
 
-      List<string> errors = new();
+      if (!_validator.ValidateCustom(request, out List<string> errors))
+      {
+        return _responseCreator.CreateFailureResponse<Guid>(HttpStatusCode.BadRequest, errors);
+      }
 
       Guid? imageId = await GetImageIdAsync(request.Image, errors);
 
       if (!imageId.HasValue)
       {
-        return new OperationResultResponse<Guid>
-        {
-          Status = OperationResultStatusType.Failed,
-          Errors = errors
-        };
+        return _responseCreator.CreateFailureResponse<Guid>(HttpStatusCode.BadRequest, errors);
       }
 
       DbUserCertificate dbUserCertificate = _mapper.Map(request, imageId.Value);

@@ -12,14 +12,14 @@ namespace LT.DigitalOffice.EducationService.Mappers.Models
   {
     public JsonPatchDocument<DbUserCertificate> Map(JsonPatchDocument<EditCertificateRequest> request, Guid? imageId)
     {
-      if (request == null)
+      if (request is null)
       {
-        throw new ArgumentNullException(nameof(request));
+        return null;
       }
 
-      var result = new JsonPatchDocument<DbUserCertificate>();
+      JsonPatchDocument<DbUserCertificate> result = new JsonPatchDocument<DbUserCertificate>();
 
-      foreach (var item in request.Operations)
+      foreach (Operation<EditCertificateRequest> item in request.Operations)
       {
         if (item.path.EndsWith(nameof(EditCertificateRequest.EducationType), StringComparison.OrdinalIgnoreCase))
         {

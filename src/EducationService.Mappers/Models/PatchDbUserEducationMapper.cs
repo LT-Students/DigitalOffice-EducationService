@@ -12,21 +12,22 @@ namespace LT.DigitalOffice.EducationService.Mappers.Models
   {
     public JsonPatchDocument<DbUserEducation> Map(JsonPatchDocument<EditEducationRequest> request)
     {
-      if (request == null)
+      if (request is null)
       {
         return null;
       }
 
       JsonPatchDocument<DbUserEducation> dbUserEducation = new();
 
-      foreach (var item in request.Operations)
+      foreach (Operation<EditEducationRequest> item in request.Operations)
       {
         if (item.path.ToUpper().EndsWith(nameof(EditEducationRequest.FormEducation).ToUpper()))
         {
           if (Enum.TryParse(item.value.ToString(), out FormEducation education))
           {
             dbUserEducation.Operations.Add(new Operation<DbUserEducation>(
-                item.op, $"/{nameof(EditEducationRequest.FormEducation)}", item.from, (int)education));
+              item.op, $"/{nameof(EditEducationRequest.FormEducation)}", item.from, (int)education));
+
             continue;
           }
         }

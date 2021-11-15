@@ -3,6 +3,7 @@ using FluentValidation.Validators;
 using LT.DigitalOffice.EducationService.Models.Dto.Enums;
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Certificates;
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Images;
+using LT.DigitalOffice.EducationService.Validation.Certificates.Interfaces;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;
 using Newtonsoft.Json;
@@ -12,7 +13,7 @@ using System.Linq;
 
 namespace LT.DigitalOffice.UserService.Validation.Certificates
 {
-  public class EditCertificateRequestValidator : AbstractValidator<JsonPatchDocument<EditCertificateRequest>>
+  public class EditCertificateRequestValidator : AbstractValidator<JsonPatchDocument<EditCertificateRequest>>, IEditCertificateRequestValidator
   {
     private void HandleInternalPropertyValidation(Operation<EditCertificateRequest> requestedOperation, CustomContext context)
     {
@@ -126,12 +127,12 @@ namespace LT.DigitalOffice.UserService.Validation.Certificates
             {
               try
               {
-                  _ = JsonConvert.DeserializeObject<AddImageRequest>(x.value?.ToString());
-                  return true;
+                _ = JsonConvert.DeserializeObject<AddImageRequest>(x.value?.ToString());
+                return true;
               }
               catch
               {
-                  return false;
+                return false;
               }
             },
             "Incorrect Image format"

@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 
 namespace LT.DigitalOffice.EducationService.Business.Commands.Education
 {
@@ -24,43 +25,34 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
     private readonly IDbUserEducationMapper _mapper;
     private readonly IEducationRepository _educationRepository;
     private readonly ICreateEducationRequestValidator _validator;
+    private readonly IResponseCreater _responseCreator;
 
     public CreateEducationCommand(
       IAccessValidator accessValidator,
       IHttpContextAccessor httpContextAccessor,
       IDbUserEducationMapper mapper,
       IEducationRepository educationRepository,
-      ICreateEducationRequestValidator validator)
+      ICreateEducationRequestValidator validator,
+      IResponseCreater responseCreator)
     {
       _accessValidator = accessValidator;
       _httpContextAccessor = httpContextAccessor;
       _mapper = mapper;
       _educationRepository = educationRepository;
       _validator = validator;
+      _responseCreator = responseCreator;
     }
 
     public async Task<OperationResultResponse<Guid?>> ExecuteAsync(CreateEducationRequest request)
     {
       if (!await _accessValidator.HasRightsAsync(Rights.AddEditRemoveUsers))
       {
-        _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-
-        return new OperationResultResponse<Guid?>
-        {
-          Status = OperationResultStatusType.Failed,
-          Errors = new() { "Not enough rights." }
-        };
+        return _responseCreator.CreateFailureResponse<Guid?>(HttpStatusCode.Forbidden);
       }
 
       if (!_validator.ValidateCustom(request, out List<string> errors))
       {
-        _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-
-        return new OperationResultResponse<Guid?>
-        {
-          Status = OperationResultStatusType.Failed,
-          Errors = errors
-        };
+        return _responseCreator.CreateFailureResponse<Guid?>(HttpStatusCode.BadRequest, errors);
       }
 
       DbUserEducation dbEducation = _mapper.Map(request);

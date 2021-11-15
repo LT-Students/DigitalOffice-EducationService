@@ -9,7 +9,7 @@ namespace LT.DigitalOffice.EducationService.Data.Interfaces
   [AutoInject]
   public interface IEducationRepository
   {
-    Task AddAsync(DbUserEducation education);
+    Task<bool> AddAsync(DbUserEducation education);
 
     DbUserEducation Get(Guid educationId);
 

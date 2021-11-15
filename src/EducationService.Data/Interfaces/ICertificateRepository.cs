@@ -9,7 +9,7 @@ namespace LT.DigitalOffice.EducationService.Data.Interfaces
   [AutoInject]
   public interface ICertificateRepository
   {
-    Task AddAsync(DbUserCertificate certificate);
+    Task<bool> AddAsync(DbUserCertificate certificate);
 
     DbUserCertificate Get(Guid certificateId);
 

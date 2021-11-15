@@ -1,9 +1,10 @@
 ﻿using FluentValidation;
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Certificates;
+using LT.DigitalOffice.EducationService.Validation.Certificates.Interfaces;
 
 namespace LT.DigitalOffice.EducationService.Validation.Certificates
 {
-  public class CreateCertificateRequestValidator : AbstractValidator<CreateCertificateRequest>
+  public class CreateCertificateRequestValidator : AbstractValidator<CreateCertificateRequest>, ICreateCertificateRequestValidator
   {
     public CreateCertificateRequestValidator()
     {
@@ -20,9 +21,6 @@ namespace LT.DigitalOffice.EducationService.Validation.Certificates
       RuleFor(x => x.EducationType)
         .IsInEnum()
         .WithMessage("Wrong education type value.");
-
-      RuleFor(x => x.Image)
-        .NotNull();
     }
   }
 }

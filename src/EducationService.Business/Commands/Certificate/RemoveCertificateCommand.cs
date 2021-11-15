@@ -1,7 +1,6 @@
 ﻿using LT.DigitalOffice.Kernel.AccessValidatorEngine.Interfaces;
 using LT.DigitalOffice.Kernel.Constants;
 using LT.DigitalOffice.Kernel.Enums;
-using LT.DigitalOffice.Kernel.Exceptions.Models;
 using LT.DigitalOffice.Kernel.Extensions;
 using LT.DigitalOffice.Kernel.Responses;
 using LT.DigitalOffice.EducationService.Business.Commands.Certificate.Interfaces;
@@ -10,6 +9,8 @@ using LT.DigitalOffice.EducationService.Models.Db;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Threading.Tasks;
+using System.Net;
+using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 
 namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
 {
@@ -18,15 +19,18 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
     private readonly IAccessValidator _accessValidator;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ICertificateRepository _certificateRepository;
+    private readonly IResponseCreater _responseCreator;
 
     public RemoveCertificateCommand(
       IAccessValidator accessValidator,
       IHttpContextAccessor httpContextAccessor,
-      ICertificateRepository certificateRepository)
+      ICertificateRepository certificateRepository,
+      IResponseCreater responseCreator)
     {
       _accessValidator = accessValidator;
       _httpContextAccessor = httpContextAccessor;
       _certificateRepository = certificateRepository;
+      _responseCreator = responseCreator;
     }
 
     public async Task<OperationResultResponse<bool>> ExecuteAsync(Guid certificateId)
@@ -37,7 +41,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
       if (senderId != userCertificate.UserId
         && !await _accessValidator.HasRightsAsync(Rights.AddEditRemoveUsers))
       {
-        throw new ForbiddenException("Not enough rights.");
+        return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.Forbidden);
       }
 
       bool result = await _certificateRepository.RemoveAsync(userCertificate);

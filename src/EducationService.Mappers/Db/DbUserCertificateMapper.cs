@@ -20,7 +20,7 @@ namespace LT.DigitalOffice.EducationService.Mappers.Db
     {
       if (request == null)
       {
-        throw new ArgumentNullException(nameof(request));
+        return null;
       }
 
       return new DbUserCertificate

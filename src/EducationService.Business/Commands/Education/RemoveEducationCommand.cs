@@ -19,18 +19,18 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
     private readonly IAccessValidator _accessValidator;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IEducationRepository _educationRepository;
-    private readonly IResponseCreater _responseCreater;
+    private readonly IResponseCreater _responseCreator;
 
     public RemoveEducationCommand(
       IAccessValidator accessValidator,
       IHttpContextAccessor httpContextAccessor,
       IEducationRepository educationRepository,
-      IResponseCreater responseCreater)
+      IResponseCreater responseCreator)
     {
       _accessValidator = accessValidator;
       _httpContextAccessor = httpContextAccessor;
       _educationRepository = educationRepository;
-      _responseCreater = responseCreater;
+      _responseCreator = responseCreator;
     }
 
     public async Task<OperationResultResponse<bool>> ExecuteAsync(Guid educationId)
@@ -41,7 +41,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
       if (senderId != userEducation.UserId
         && !await _accessValidator.HasRightsAsync(Rights.AddEditRemoveUsers))
       {
-        _responseCreater.CreateFailureResponse<bool>(HttpStatusCode.Forbidden);
+        _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.Forbidden);
       }
 
       bool result = await _educationRepository.RemoveAsync(userEducation);

@@ -1,6 +1,5 @@
 ﻿using LT.DigitalOffice.EducationService.Data.Provider;
 using LT.DigitalOffice.EducationService.Models.Db;
-using LT.DigitalOffice.Kernel.Exceptions.Models;
 using LT.DigitalOffice.Kernel.Extensions;
 using LT.DigitalOffice.EducationService.Data.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -24,24 +23,26 @@ namespace LT.DigitalOffice.UserService.Data
       _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task AddAsync(DbUserEducation education)
+    public async Task<bool> AddAsync(DbUserEducation education)
     {
-      if (education == null)
+      if (education is null)
       {
-        throw new ArgumentNullException(nameof(education));
+        return false;
       }
 
       _provider.UserEducations.Add(education);
       await _provider.SaveAsync();
+
+      return true;
     }
 
     public DbUserEducation Get(Guid educationId)
     {
       DbUserEducation education = _provider.UserEducations.FirstOrDefault(e => e.Id == educationId);
 
-      if (education == null)
+      if (education is null)
       {
-        throw new NotFoundException($"User education with ID '{educationId}' was not found.");
+        return null;
       }
 
       return education;
@@ -49,14 +50,14 @@ namespace LT.DigitalOffice.UserService.Data
 
     public async Task<bool> EditAsync(DbUserEducation education, JsonPatchDocument<DbUserEducation> request)
     {
-      if (education == null)
+      if (education is null)
       {
-        throw new ArgumentNullException(nameof(education));
+        return false;
       }
 
-      if (request == null)
+      if (request is null)
       {
-        throw new ArgumentNullException(nameof(request));
+        return false;
       }
 
       request.ApplyTo(education);
@@ -69,9 +70,9 @@ namespace LT.DigitalOffice.UserService.Data
 
     public async Task<bool> RemoveAsync(DbUserEducation education)
     {
-      if (education == null)
+      if (education is null)
       {
-        throw new ArgumentNullException(nameof(education));
+        return false;
       }
 
       education.IsActive = false;

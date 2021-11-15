@@ -24,24 +24,26 @@ namespace LT.DigitalOffice.EducationService.Data
       _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task AddAsync(DbUserCertificate certificate)
+    public async Task<bool> AddAsync(DbUserCertificate certificate)
     {
-      if (certificate == null)
+      if (certificate is null)
       {
-        throw new ArgumentNullException(nameof(certificate));
+        return false;
       }
 
       _provider.UserCertificates.Add(certificate);
       await _provider.SaveAsync();
+
+      return true;
     }
 
     public DbUserCertificate Get(Guid certificateId)
     {
       var certificate = _provider.UserCertificates.FirstOrDefault(x => x.Id == certificateId);
 
-      if (certificate == null)
+      if (certificate is null)
       {
-        throw new NotFoundException($"User certificate with ID '{certificateId}' was not found.");
+        return null;
       }
 
       return certificate;
@@ -49,14 +51,14 @@ namespace LT.DigitalOffice.EducationService.Data
 
     public async Task<bool> EditAsync(DbUserCertificate certificate, JsonPatchDocument<DbUserCertificate> request)
     {
-      if (certificate == null)
+      if (certificate is null)
       {
-        throw new ArgumentNullException(nameof(certificate));
+        return false;
       }
 
-      if (request == null)
+      if (request is null)
       {
-        throw new ArgumentNullException(nameof(request));
+        return false;
       }
 
       request.ApplyTo(certificate);
@@ -69,9 +71,9 @@ namespace LT.DigitalOffice.EducationService.Data
 
     public async Task<bool> RemoveAsync(DbUserCertificate certificate)
     {
-      if (certificate == null)
+      if (certificate is null)
       {
-        throw new ArgumentNullException(nameof(certificate));
+        return false;
       }
 
       certificate.IsActive = false;

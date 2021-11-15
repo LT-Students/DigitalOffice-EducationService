@@ -7,7 +7,7 @@ namespace LT.DigitalOffice.EducationService.Data.Provider.MsSql.Ef.Migrations
 {
   [DbContext(typeof(EducationServiceDbContext))]
   [Migration("20211115135000_InitialTables")]
-  class InitialTables : Migration
+  public class InitialTables : Migration
   {
     protected override void Up(MigrationBuilder builder)
     {

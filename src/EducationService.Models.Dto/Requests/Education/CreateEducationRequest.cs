@@ -4,7 +4,7 @@ using System;
 
 namespace LT.DigitalOffice.EducationService.Models.Dto.Requests.Education
 {
-  public class CreateEducationRequest
+  public record CreateEducationRequest
   {
     public Guid UserId { get; set; }
     public string UniversityName { get; set; }

@@ -2,7 +2,6 @@
 using LT.DigitalOffice.Kernel.Broker;
 using LT.DigitalOffice.Kernel.Constants;
 using LT.DigitalOffice.Kernel.Enums;
-using LT.DigitalOffice.Kernel.Exceptions.Models;
 using LT.DigitalOffice.Kernel.Extensions;
 using LT.DigitalOffice.Kernel.Responses;
 using LT.DigitalOffice.Models.Broker.Enums;
@@ -23,6 +22,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LT.DigitalOffice.Kernel.Helpers.Interfaces;
+using LT.DigitalOffice.EducationService.Validation.Certificates.Interfaces;
+using System.Net;
+using LT.DigitalOffice.Kernel.FluentValidationExtensions;
 
 namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
 {
@@ -35,17 +38,19 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
     private readonly ICreateImageDataMapper _createImageDataMapper;
     private readonly IRequestClient<ICreateImagesRequest> _rcImage;
     private readonly ILogger<EditCertificateCommand> _logger;
+    private readonly IResponseCreater _responseCreator;
+    private readonly IEditCertificateRequestValidator _validator;
 
     private async Task<Guid?> GetImageIdAsync(AddImageRequest addImageRequest, List<string> errors)
     {
       Guid? imageId = null;
 
-      if (addImageRequest == null)
+      if (addImageRequest is null)
       {
         return null;
       }
 
-      const string errorMessage = "Can not add certificate image to certificate. Please try again later.";
+      string errorMessage = "Can not add certificate image to certificate. Please try again later.";
 
       try
       {
@@ -101,14 +106,18 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
       if (!await _accessValidator.HasRightsAsync(Rights.AddEditRemoveUsers)
         && _httpContextAccessor.HttpContext.GetUserId() != certificate.UserId)
       {
-        throw new ForbiddenException("Not enough rights.");
+        return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.Forbidden);
+      }
+
+      if (!_validator.ValidateCustom(request, out List<string> errors))
+      {
+        return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.BadRequest, errors);
       }
 
       Operation<EditCertificateRequest> imageOperation = request.Operations
         .FirstOrDefault(o => o.path.EndsWith(nameof(EditCertificateRequest.Image), StringComparison.OrdinalIgnoreCase));
 
       Guid? imageId = null;
-      List<string> errors = new List<string>();
 
       if (imageOperation != null)
       {

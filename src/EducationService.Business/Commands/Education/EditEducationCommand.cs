@@ -6,7 +6,6 @@ using LT.DigitalOffice.EducationService.Validation.Education.Interfaces;
 using LT.DigitalOffice.Kernel.AccessValidatorEngine.Interfaces;
 using LT.DigitalOffice.Kernel.Constants;
 using LT.DigitalOffice.Kernel.Enums;
-using LT.DigitalOffice.Kernel.Exceptions.Models;
 using LT.DigitalOffice.Kernel.Extensions;
 using LT.DigitalOffice.Kernel.FluentValidationExtensions;
 using LT.DigitalOffice.Kernel.Helpers.Interfaces;
@@ -28,7 +27,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
     private readonly IEducationRepository _educationRepository;
     private readonly IPatchDbUserEducationMapper _mapper;
     private readonly IEditEducationRequestValidator _validator;
-    private readonly IResponseCreater _responseCreater;
+    private readonly IResponseCreater _responseCreator;
 
     public EditEducationCommand(
       IAccessValidator accessValidator,
@@ -36,14 +35,14 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
       IEducationRepository educationRepository,
       IPatchDbUserEducationMapper mapper,
       IEditEducationRequestValidator validator,
-      IResponseCreater responseCreater)
+      IResponseCreater responseCreator)
     {
       _accessValidator = accessValidator;
       _httpContextAccessor = httpContextAccessor;
       _educationRepository = educationRepository;
       _mapper = mapper;
       _validator = validator;
-      _responseCreater = responseCreater;
+      _responseCreator = responseCreator;
     }
 
     public async Task<OperationResultResponse<bool>> ExecuteAsync(Guid educationId, JsonPatchDocument<EditEducationRequest> request)
@@ -54,11 +53,13 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
       if (!await _accessValidator.HasRightsAsync(Rights.AddEditRemoveUsers)
         && senderId != userEducation.UserId)
       {
-        return _responseCreater.CreateFailureResponse<bool>(HttpStatusCode.Forbidden);
+        return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.Forbidden);
       }
 
-      /// validate and custom
-      _validator.ValidateCustom(request, out List<string> errors);
+      if (!_validator.ValidateCustom(request, out List<string> errors))
+      {
+        return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.BadRequest, errors);
+      }
 
       JsonPatchDocument<DbUserEducation> dbRequest = _mapper.Map(request);
 
