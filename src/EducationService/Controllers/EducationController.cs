@@ -1,5 +1,5 @@
 ﻿using LT.DigitalOffice.EducationService.Business.Commands.Education.Interfaces;
-using LT.DigitalOffice.EducationService.Models.Dto.Requests.User.Education;
+using LT.DigitalOffice.EducationService.Models.Dto.Requests.Education;
 using LT.DigitalOffice.Kernel.Responses;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;

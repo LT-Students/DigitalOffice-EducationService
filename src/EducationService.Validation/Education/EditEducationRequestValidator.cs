@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.Validators;
 using LT.DigitalOffice.EducationService.Models.Dto.Enums;
-using LT.DigitalOffice.EducationService.Models.Dto.Requests.User.Education;
+using LT.DigitalOffice.EducationService.Models.Dto.Requests.Education;
 using LT.DigitalOffice.EducationService.Validation.Education.Interfaces;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;
@@ -61,15 +61,15 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
       #region paths
 
       AddСorrectPaths(
-          new List<string>
-          {
-                    nameof(EditEducationRequest.UniversityName),
-                    nameof(EditEducationRequest.QualificationName),
-                    nameof(EditEducationRequest.FormEducation),
-                    nameof(EditEducationRequest.AdmissionAt),
-                    nameof(EditEducationRequest.IssueAt),
-                    nameof(EditEducationRequest.IsActive),
-          });
+        new List<string>
+        {
+          nameof(EditEducationRequest.UniversityName),
+          nameof(EditEducationRequest.QualificationName),
+          nameof(EditEducationRequest.FormEducation),
+          nameof(EditEducationRequest.AdmissionAt),
+          nameof(EditEducationRequest.IssueAt),
+          nameof(EditEducationRequest.IsActive),
+        });
 
       AddСorrectOperations(nameof(EditEducationRequest.UniversityName), new List<OperationType> { OperationType.Replace });
       AddСorrectOperations(nameof(EditEducationRequest.QualificationName), new List<OperationType> { OperationType.Replace });
@@ -90,21 +90,21 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
           });
 
       AddFailureForPropertyIf(
-          nameof(EditEducationRequest.QualificationName),
-          o => o == OperationType.Replace,
-          new Dictionary<Func<Operation<EditEducationRequest>, bool>, string>
-          {
-                    { x => !string.IsNullOrEmpty(x.value?.ToString()), "QualificationName is too short."},
-                    { x => x.value.ToString().Length < 100, "QualificationName is too long."}
-          });
+        nameof(EditEducationRequest.QualificationName),
+        o => o == OperationType.Replace,
+        new Dictionary<Func<Operation<EditEducationRequest>, bool>, string>
+        {
+          { x => !string.IsNullOrEmpty(x.value?.ToString()), "QualificationName is too short."},
+          { x => x.value.ToString().Length < 100, "QualificationName is too long."}
+        });
 
       AddFailureForPropertyIf(
-          nameof(EditEducationRequest.FormEducation),
-          o => o == OperationType.Replace,
-          new Dictionary<Func<Operation<EditEducationRequest>, bool>, string>
-          {
-                    { x => Enum.TryParse(typeof(FormEducation), x.value?.ToString(), out _), "Incorrect format FormEducation"}
-          });
+        nameof(EditEducationRequest.FormEducation),
+        o => o == OperationType.Replace,
+        new Dictionary<Func<Operation<EditEducationRequest>, bool>, string>
+        {
+          { x => Enum.TryParse(typeof(FormEducation), x.value?.ToString(), out _), "Incorrect format FormEducation"}
+        });
 
       AddFailureForPropertyIf(
           nameof(EditEducationRequest.IssueAt),
@@ -123,18 +123,18 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
           });
 
       AddFailureForPropertyIf(
-          nameof(EditEducationRequest.IsActive),
-          o => o == OperationType.Replace,
-          new Dictionary<Func<Operation<EditEducationRequest>, bool>, string>
-          {
-                    { x => bool.TryParse(x.value?.ToString(), out _), "Incorrect format IsActive"}
-          });
+        nameof(EditEducationRequest.IsActive),
+        o => o == OperationType.Replace,
+        new Dictionary<Func<Operation<EditEducationRequest>, bool>, string>
+        {
+          { x => bool.TryParse(x.value?.ToString(), out _), "Incorrect format IsActive"}
+        });
     }
 
     public EditEducationRequestValidator()
     {
       RuleForEach(x => x.Operations)
-         .Custom(HandleInternalPropertyValidation);
+        .Custom(HandleInternalPropertyValidation);
     }
   }
 }

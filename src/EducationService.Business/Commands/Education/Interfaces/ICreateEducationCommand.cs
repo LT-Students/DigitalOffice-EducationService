@@ -1,4 +1,4 @@
-﻿using LT.DigitalOffice.EducationService.Models.Dto.Requests.User.Education;
+﻿using LT.DigitalOffice.EducationService.Models.Dto.Requests.Education;
 using LT.DigitalOffice.Kernel.Attributes;
 using LT.DigitalOffice.Kernel.Responses;
 using System;

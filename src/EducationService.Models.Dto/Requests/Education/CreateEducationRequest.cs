@@ -2,7 +2,7 @@
 using LT.DigitalOffice.EducationService.Models.Dto.Enums;
 using System;
 
-namespace LT.DigitalOffice.EducationService.Models.Dto.Requests.User.Education
+namespace LT.DigitalOffice.EducationService.Models.Dto.Requests.Education
 {
   public class CreateEducationRequest
   {

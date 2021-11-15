@@ -1,8 +1,6 @@
 ﻿using FluentValidation;
 using FluentValidation.Validators;
-using LT.DigitalOffice.EducationService.Data.Interfaces;
 using LT.DigitalOffice.EducationService.Models.Dto.Enums;
-using LT.DigitalOffice.EducationService.Models.Dto.Requests.User;
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Certificates;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;
@@ -10,6 +8,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LT.DigitalOffice.EducationService.Models.Dto.Requests.Images;
 
 namespace LT.DigitalOffice.UserService.Validation.Certificates
 {

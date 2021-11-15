@@ -1,6 +1,6 @@
 using LT.DigitalOffice.EducationService.Mappers.Db.Interfaces;
 using LT.DigitalOffice.EducationService.Models.Db;
-using LT.DigitalOffice.EducationService.Models.Dto.Requests.User.Education;
+using LT.DigitalOffice.EducationService.Models.Dto.Requests.Education;
 using LT.DigitalOffice.Kernel.Extensions;
 using Microsoft.AspNetCore.Http;
 using System;
