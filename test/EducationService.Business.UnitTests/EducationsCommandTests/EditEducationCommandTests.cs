@@ -4,7 +4,7 @@ using LT.DigitalOffice.EducationService.Models.Dto.Requests.Education;
 using LT.DigitalOffice.Kernel.Enums;
 using LT.DigitalOffice.Kernel.Responses;
 using LT.DigitalOffice.UnitTestKernel;
-using LT.DigitalOffice.UserService.Data.Interfaces;
+using LT.DigitalOffice.EducationService.Data.Interfaces;
 using Microsoft.AspNetCore.JsonPatch;
 using Moq;
 using Moq.AutoMock;
@@ -191,7 +191,7 @@ namespace LT.DigitalOffice.EducationService.Business.UnitTests.EducationsCommand
     //        Times.Once);
     //}
 
-    [Test]
+    /*[Test]
     public async Task ShouldEditEducationSuccesfull()
     {
       var expectedResponse = new OperationResultResponse<bool>
@@ -205,6 +205,6 @@ namespace LT.DigitalOffice.EducationService.Business.UnitTests.EducationsCommand
           Times.Once);
       _mocker.Verify<IEducationRepository, DbUserEducation>(x => x.Get(_educationId),
           Times.Once);
-    }
+    }*/
   }
 }

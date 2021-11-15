@@ -37,9 +37,9 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
       }
 
       void AddFailureForPropertyIf(
-          string propertyName,
-          Func<OperationType, bool> type,
-          Dictionary<Func<Operation<EditEducationRequest>, bool>, string> predicates)
+        string propertyName,
+        Func<OperationType, bool> type,
+        Dictionary<Func<Operation<EditEducationRequest>, bool>, string> predicates)
       {
         if (!requestedOperation.path.EndsWith(propertyName, StringComparison.OrdinalIgnoreCase)
             || !type(requestedOperation.OperationType))
@@ -81,13 +81,13 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
       #endregion
 
       AddFailureForPropertyIf(
-          nameof(EditEducationRequest.UniversityName),
-          o => o == OperationType.Replace,
-          new Dictionary<Func<Operation<EditEducationRequest>, bool>, string>
-          {
-                    { x => !string.IsNullOrEmpty(x.value?.ToString()), "UniversityName is too short."},
-                    { x => x.value.ToString().Length < 100, "UniversityName is too long."}
-          });
+        nameof(EditEducationRequest.UniversityName),
+        o => o == OperationType.Replace,
+        new Dictionary<Func<Operation<EditEducationRequest>, bool>, string>
+        {
+          { x => !string.IsNullOrEmpty(x.value?.ToString()), "UniversityName is too short."},
+          { x => x.value.ToString().Length < 100, "UniversityName is too long."}
+        });
 
       AddFailureForPropertyIf(
         nameof(EditEducationRequest.QualificationName),
@@ -107,20 +107,20 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
         });
 
       AddFailureForPropertyIf(
-          nameof(EditEducationRequest.IssueAt),
-          o => o == OperationType.Replace || o == OperationType.Add,
-          new Dictionary<Func<Operation<EditEducationRequest>, bool>, string>
-          {
-                    { x => DateTime.TryParse(x.value?.ToString(), out _), "Incorrect format IssueAt"}
-          });
+        nameof(EditEducationRequest.IssueAt),
+        o => o == OperationType.Replace || o == OperationType.Add,
+        new Dictionary<Func<Operation<EditEducationRequest>, bool>, string>
+        {
+          { x => DateTime.TryParse(x.value?.ToString(), out _), "Incorrect format IssueAt"}
+        });
 
       AddFailureForPropertyIf(
-          nameof(EditEducationRequest.AdmissionAt),
-          o => o == OperationType.Replace,
-          new Dictionary<Func<Operation<EditEducationRequest>, bool>, string>
-          {
-                    { x => DateTime.TryParse(x.value?.ToString(), out _), "Incorrect format AdmissionAt"}
-          });
+        nameof(EditEducationRequest.AdmissionAt),
+        o => o == OperationType.Replace,
+        new Dictionary<Func<Operation<EditEducationRequest>, bool>, string>
+        {
+          { x => DateTime.TryParse(x.value?.ToString(), out _), "Incorrect format AdmissionAt"}
+        });
 
       AddFailureForPropertyIf(
         nameof(EditEducationRequest.IsActive),

@@ -2,7 +2,7 @@
 using LT.DigitalOffice.EducationService.Models.Db;
 using LT.DigitalOffice.Kernel.Exceptions.Models;
 using LT.DigitalOffice.Kernel.Extensions;
-using LT.DigitalOffice.UserService.Data.Interfaces;
+using LT.DigitalOffice.EducationService.Data.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using System;

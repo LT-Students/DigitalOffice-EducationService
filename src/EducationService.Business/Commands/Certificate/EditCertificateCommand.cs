@@ -45,8 +45,6 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
         return null;
       }
 
-      Guid userId = _httpContextAccessor.HttpContext.GetUserId();
-
       const string errorMessage = "Can not add certificate image to certificate. Please try again later.";
 
       try

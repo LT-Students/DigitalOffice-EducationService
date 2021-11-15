@@ -17,8 +17,8 @@ namespace LT.DigitalOffice.EducationService.Data
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     public CertificateRepository(
-        IDataProvider provider,
-        IHttpContextAccessor httpContextAccessor)
+      IDataProvider provider,
+      IHttpContextAccessor httpContextAccessor)
     {
       _provider = provider;
       _httpContextAccessor = httpContextAccessor;

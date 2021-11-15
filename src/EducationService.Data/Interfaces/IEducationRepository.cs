@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using System;
 using System.Threading.Tasks;
 
-namespace LT.DigitalOffice.UserService.Data.Interfaces
+namespace LT.DigitalOffice.EducationService.Data.Interfaces
 {
   [AutoInject]
   public interface IEducationRepository
