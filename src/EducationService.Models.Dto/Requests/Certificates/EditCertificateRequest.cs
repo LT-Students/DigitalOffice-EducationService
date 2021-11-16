@@ -1,5 +1,4 @@
 ﻿using LT.DigitalOffice.EducationService.Models.Dto.Enums;
-using LT.DigitalOffice.EducationService.Models.Dto.Requests.Images;
 using System;
 
 namespace LT.DigitalOffice.EducationService.Models.Dto.Requests.Certificates

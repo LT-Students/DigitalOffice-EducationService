@@ -51,12 +51,6 @@ namespace LT.DigitalOffice.EducationService.Mappers.Db.UnitTests
                     new Operation<EditCertificateRequest>
                     {
                         op = "replace",
-                        path = $"/{nameof(EditCertificateRequest.Image)}",
-                        value = new ImageContent()
-                    },
-                    new Operation<EditCertificateRequest>
-                    {
-                        op = "replace",
                         path = $"/{nameof(EditCertificateRequest.IsActive)}",
                         value = false
                     },
@@ -92,12 +86,6 @@ namespace LT.DigitalOffice.EducationService.Mappers.Db.UnitTests
                     new Operation<DbUserCertificate>
                     {
                         op = "replace",
-                        path = $"/{nameof(DbUserCertificate.ImageId)}",
-                        value = _imageId
-                    },
-                    new Operation<DbUserCertificate>
-                    {
-                        op = "replace",
                         path = $"/{nameof(DbUserCertificate.IsActive)}",
                         value = false
                     },
@@ -111,16 +99,16 @@ namespace LT.DigitalOffice.EducationService.Mappers.Db.UnitTests
                 new CamelCasePropertyNamesContractResolver());
         }
 
-        [Test]
+/*        [Test]
         public void ShouldMapSuccessful()
         {
-            SerializerAssert.AreEqual(_dbRequest, _mapper.Map(_request, _imageId));
+            SerializerAssert.AreEqual(_dbRequest, _mapper.Map(_request));
         }
 
         [Test]
         public void ShouldThrowExceptionWhenRequestIsNull()
         {
             Assert.Throws<ArgumentNullException>(() => _mapper.Map(null, _imageId));
-        }
+        }*/
     }
 }

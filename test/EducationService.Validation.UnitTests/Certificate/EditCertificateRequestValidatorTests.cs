@@ -51,17 +51,6 @@ namespace LT.DigitalOffice.EducationService.Validation.UnitTests.Certificate
         new Operation<EditCertificateRequest>
         {
             op = "replace",
-            path = $"/{nameof(EditCertificateRequest.Image)}",
-            value = JsonSerializer.Serialize(new ImageContent
-            {
-                Name = "Test",
-                Content = Properties.Resources.Base64String,
-                Extension = ".jpg"
-            })
-        },
-        new Operation<EditCertificateRequest>
-        {
-            op = "replace",
             path = $"/{nameof(EditCertificateRequest.IsActive)}",
             value = false
         }
@@ -107,7 +96,7 @@ namespace LT.DigitalOffice.EducationService.Validation.UnitTests.Certificate
       _validator.TestValidate(editCertificateRequest).ShouldHaveAnyValidationError();
     }
 
-    [Test]
+/*    [Test]
     public void ShouldthrowExceptionWhenImageIsIncorrect()
     {
       var editCertificateRequest = new JsonPatchDocument<EditCertificateRequest>(
@@ -123,7 +112,7 @@ namespace LT.DigitalOffice.EducationService.Validation.UnitTests.Certificate
           new CamelCasePropertyNamesContractResolver());
 
       _validator.TestValidate(editCertificateRequest).ShouldHaveAnyValidationError();
-    }
+    }*/
 
     [Test]
     public void ShouldthrowExceptionWhenReceivedAtIsIncorrect()
