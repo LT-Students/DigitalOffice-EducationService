@@ -18,7 +18,7 @@ namespace LT.DigitalOffice.EducationService.Mappers.Models
       _httpContextAccessor = httpContextAccessor;
     }
 
-    public List<CreateImageData> Map(List<AddImageRequest> request)
+    public List<CreateImageData> Map(List<ImageContent> request)
     {
       Guid senderId = _httpContextAccessor.HttpContext.GetUserId();
 

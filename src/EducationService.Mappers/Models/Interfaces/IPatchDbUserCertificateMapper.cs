@@ -9,6 +9,6 @@ namespace LT.DigitalOffice.EducationService.Mappers.Models.Interfaces
   [AutoInject]
   public interface IPatchDbUserCertificateMapper
   {
-    JsonPatchDocument<DbUserCertificate> Map(JsonPatchDocument<EditCertificateRequest> request, Guid? imageId);
+    JsonPatchDocument<DbUserCertificate> Map(JsonPatchDocument<EditCertificateRequest> request);
   }
 }

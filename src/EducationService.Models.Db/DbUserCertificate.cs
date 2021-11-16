@@ -1,16 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using LT.DigitalOffice.Kernel.Attributes.ParseEntity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using System.Collections.Generic;
 
 namespace LT.DigitalOffice.EducationService.Models.Db
 {
+  [ParseEntity]
   public class DbUserCertificate
   {
     public const string TableName = "UserCertificates";
 
     public Guid Id { get; set; }
     public Guid UserId { get; set; }
-    public Guid ImageId { get; set; }
     public int EducationType { get; set; }
     public string Name { get; set; }
     public string SchoolName { get; set; }
@@ -20,6 +22,14 @@ namespace LT.DigitalOffice.EducationService.Models.Db
     public DateTime CreatedAtUtc { get; set; }
     public Guid? ModifiedBy { get; set; }
     public DateTime? ModifiedAtUtc { get; set; }
+
+    [IgnoreParse]
+    public ICollection<DbCertificateImage> Images { get; set; }
+
+    public DbUserCertificate()
+    {
+      Images = new HashSet<DbCertificateImage>();
+    }
   }
 
   public class DbUserCertificateConfiguration : IEntityTypeConfiguration<DbUserCertificate>
@@ -31,6 +41,10 @@ namespace LT.DigitalOffice.EducationService.Models.Db
 
       builder
         .HasKey(c => c.Id);
+
+      builder
+       .HasMany(p => p.Images)
+       .WithOne(tp => tp.Certificate);
     }
   }
 }

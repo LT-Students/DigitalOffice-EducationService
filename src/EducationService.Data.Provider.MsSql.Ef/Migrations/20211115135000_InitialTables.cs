@@ -17,7 +17,6 @@ namespace LT.DigitalOffice.EducationService.Data.Provider.MsSql.Ef.Migrations
         {
           Id = table.Column<Guid>(nullable: false),
           UserId = table.Column<Guid>(nullable: false),
-          ImageId = table.Column<Guid>(nullable: false),
           EducationType = table.Column<int>(nullable: false),
           Name = table.Column<string>(nullable: false),
           SchoolName = table.Column<string>(nullable: false),
@@ -53,6 +52,19 @@ namespace LT.DigitalOffice.EducationService.Data.Provider.MsSql.Ef.Migrations
         constraints: table =>
         {
           table.PrimaryKey("PK_UserEducations", x => x.Id);
+        });
+
+      builder.CreateTable(
+        name: DbCertificateImage.TableName,
+        columns: table => new
+        {
+          Id = table.Column<Guid>(nullable: false),
+          CertificateId = table.Column<Guid>(nullable: false),
+          ImageId = table.Column<Guid>(nullable: false)
+        },
+        constraints: table =>
+        {
+          table.PrimaryKey("PK_CertificateImages", x => x.Id);
         });
     }
   }

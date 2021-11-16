@@ -9,7 +9,7 @@ namespace LT.DigitalOffice.EducationService.Mappers.Models.Interfaces
   [AutoInject]
   public interface ICreateImageDataMapper
   {
-    List<CreateImageData> Map(List<AddImageRequest> request);
+    List<CreateImageData> Map(List<ImageContent> request);
 
     List<CreateImageData> Map(string name, string content, string extension);
   }

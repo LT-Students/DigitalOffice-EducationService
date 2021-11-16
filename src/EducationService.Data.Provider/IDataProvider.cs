@@ -11,5 +11,6 @@ namespace LT.DigitalOffice.EducationService.Data.Provider
   {
     DbSet<DbUserEducation> UserEducations { get; set; }
     DbSet<DbUserCertificate> UserCertificates { get; set; }
+    DbSet<DbCertificateImage> CertificateImages { get; set; }
   }
 }

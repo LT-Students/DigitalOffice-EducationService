@@ -1,28 +1,29 @@
-﻿using LT.DigitalOffice.Kernel.AccessValidatorEngine.Interfaces;
-using LT.DigitalOffice.Kernel.Broker;
-using LT.DigitalOffice.Kernel.Constants;
-using LT.DigitalOffice.Kernel.Enums;
-using LT.DigitalOffice.Kernel.Extensions;
-using LT.DigitalOffice.Kernel.Responses;
-using LT.DigitalOffice.Models.Broker.Enums;
-using LT.DigitalOffice.Models.Broker.Requests.Image;
-using LT.DigitalOffice.EducationService.Business.Commands.Certificate.Interfaces;
+﻿using LT.DigitalOffice.EducationService.Business.Commands.Certificate.Interfaces;
 using LT.DigitalOffice.EducationService.Data.Interfaces;
 using LT.DigitalOffice.EducationService.Mappers.Db.Interfaces;
 using LT.DigitalOffice.EducationService.Mappers.Models.Interfaces;
 using LT.DigitalOffice.EducationService.Models.Db;
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Certificates;
+using LT.DigitalOffice.EducationService.Models.Dto.Requests.Images;
+using LT.DigitalOffice.EducationService.Validation.Certificates.Interfaces;
+using LT.DigitalOffice.Kernel.AccessValidatorEngine.Interfaces;
+using LT.DigitalOffice.Kernel.Broker;
+using LT.DigitalOffice.Kernel.Constants;
+using LT.DigitalOffice.Kernel.Enums;
+using LT.DigitalOffice.Kernel.Extensions;
+using LT.DigitalOffice.Kernel.FluentValidationExtensions;
+using LT.DigitalOffice.Kernel.Helpers.Interfaces;
+using LT.DigitalOffice.Kernel.Responses;
+using LT.DigitalOffice.Models.Broker.Enums;
+using LT.DigitalOffice.Models.Broker.Requests.Image;
+using LT.DigitalOffice.Models.Broker.Responses.Image;
 using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using LT.DigitalOffice.EducationService.Models.Dto.Requests.Images;
 using System.Net;
-using LT.DigitalOffice.Kernel.Helpers.Interfaces;
-using LT.DigitalOffice.EducationService.Validation.Certificates.Interfaces;
-using LT.DigitalOffice.Kernel.FluentValidationExtensions;
+using System.Threading.Tasks;
 
 namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
 {
@@ -38,45 +39,39 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
     private readonly IResponseCreater _responseCreator;
     private readonly ICreateCertificateRequestValidator _validator;
 
-    private async Task<Guid?> GetImageIdAsync(AddImageRequest addImageRequest, List<string> errors)
+    private async Task<List<Guid>> CreateImageAsync(List<ImageContent> images, List<string> errors)
     {
-      Guid? imageId = null;
-
-      if (addImageRequest == null)
+      if (images == null)
       {
         return null;
       }
 
-      string errorMessage = "Can not add certificate image to certificate. Please try again later.";
+      string errorMessage = "Can not add certificate images to certificate. Please try again later.";
 
       try
       {
-        Response<IOperationResult<Guid>> response = await _rcImage.GetResponse<IOperationResult<Guid>>(
+        Response<IOperationResult<ICreateImagesResponse>> response = await _rcImage.GetResponse<IOperationResult<ICreateImagesResponse>>(
           ICreateImagesRequest.CreateObj(
-            _createImageDataMapper.Map(new List<AddImageRequest>() { addImageRequest }),
-            ImageSource.User));
+            _createImageDataMapper.Map(images), ImageSource.User));
 
-        if (!response.Message.IsSuccess)
+        if (response.Message.IsSuccess && response.Message.Body.ImagesIds != null)
         {
-          _logger.LogWarning(
-            errorMessage + "Reason:\n{Errors}",
-            string.Join(',', response.Message.Errors));
+          return response.Message.Body.ImagesIds;
+        }
 
-          errors.Add(errorMessage);
-        }
-        else
-        {
-          imageId = response.Message.Body;
-        }
+        _logger.LogWarning(
+          errorMessage + "Reason:\n{Errors}",
+          string.Join('\n', response.Message.Errors));
+
       }
       catch (Exception exc)
       {
         _logger.LogError(exc, errorMessage);
-
-        errors.Add(errorMessage);
       }
 
-      return imageId;
+      errors.Add(errorMessage);
+
+      return null;
     }
 
     public CreateCertificateCommand(
@@ -114,14 +109,9 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
         return _responseCreator.CreateFailureResponse<Guid>(HttpStatusCode.BadRequest, errors);
       }
 
-      Guid? imageId = await GetImageIdAsync(request.Image, errors);
+      List<Guid> imagesId = await CreateImageAsync(request?.Images, errors);
 
-      if (!imageId.HasValue)
-      {
-        return _responseCreator.CreateFailureResponse<Guid>(HttpStatusCode.BadRequest, errors);
-      }
-
-      DbUserCertificate dbUserCertificate = _mapper.Map(request, imageId.Value);
+      DbUserCertificate dbUserCertificate = _mapper.Map(request, imagesId);
 
       await _certificateRepository.AddAsync(dbUserCertificate);
 

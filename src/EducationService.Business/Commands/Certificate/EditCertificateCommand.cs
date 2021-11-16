@@ -1,23 +1,15 @@
 ﻿using LT.DigitalOffice.Kernel.AccessValidatorEngine.Interfaces;
-using LT.DigitalOffice.Kernel.Broker;
 using LT.DigitalOffice.Kernel.Constants;
 using LT.DigitalOffice.Kernel.Enums;
 using LT.DigitalOffice.Kernel.Extensions;
 using LT.DigitalOffice.Kernel.Responses;
-using LT.DigitalOffice.Models.Broker.Enums;
-using LT.DigitalOffice.Models.Broker.Requests.Image;
 using LT.DigitalOffice.EducationService.Business.Commands.Certificate.Interfaces;
 using LT.DigitalOffice.EducationService.Data.Interfaces;
 using LT.DigitalOffice.EducationService.Mappers.Models.Interfaces;
 using LT.DigitalOffice.EducationService.Models.Db;
-using LT.DigitalOffice.EducationService.Models.Dto.Requests.Images;
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Certificates;
-using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.JsonPatch.Operations;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,68 +27,23 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ICertificateRepository _certificateRepository;
     private readonly IPatchDbUserCertificateMapper _mapper;
-    private readonly ICreateImageDataMapper _createImageDataMapper;
-    private readonly IRequestClient<ICreateImagesRequest> _rcImage;
-    private readonly ILogger<EditCertificateCommand> _logger;
     private readonly IResponseCreater _responseCreator;
     private readonly IEditCertificateRequestValidator _validator;
-
-    private async Task<Guid?> GetImageIdAsync(AddImageRequest addImageRequest, List<string> errors)
-    {
-      Guid? imageId = null;
-
-      if (addImageRequest is null)
-      {
-        return null;
-      }
-
-      string errorMessage = "Can not add certificate image to certificate. Please try again later.";
-
-      try
-      {
-        Response<IOperationResult<Guid>> response = await _rcImage.GetResponse<IOperationResult<Guid>>(
-          ICreateImagesRequest.CreateObj(
-            _createImageDataMapper.Map(new List<AddImageRequest>() { addImageRequest }),
-            ImageSource.User));
-
-        if (!response.Message.IsSuccess)
-        {
-          _logger.LogWarning("Can not add certificate image to certificate. Reason: '{Errors}'",
-            string.Join(',', response.Message.Errors));
-
-          errors.Add(errorMessage);
-        }
-        else
-        {
-          imageId = response.Message.Body;
-        }
-      }
-      catch (Exception exc)
-      {
-        _logger.LogError(exc, errorMessage);
-
-        errors.Add(errorMessage);
-      }
-
-      return imageId;
-    }
 
     public EditCertificateCommand(
       IAccessValidator accessValidator,
       IHttpContextAccessor httpContextAccessor,
       ICertificateRepository certificateRepository,
       IPatchDbUserCertificateMapper mapper,
-      ICreateImageDataMapper createImageDataMapper,
-      IRequestClient<ICreateImagesRequest> rcImage,
-      ILogger<EditCertificateCommand> logger)
+      IResponseCreater responseCreator,
+      IEditCertificateRequestValidator validator)
     {
       _accessValidator = accessValidator;
       _httpContextAccessor = httpContextAccessor;
       _certificateRepository = certificateRepository;
       _mapper = mapper;
-      _createImageDataMapper = createImageDataMapper;
-      _rcImage = rcImage;
-      _logger = logger;
+      _responseCreator = responseCreator;
+      _validator = validator;
     }
 
     public async Task<OperationResultResponse<bool>> ExecuteAsync(Guid certificateId, JsonPatchDocument<EditCertificateRequest> request)
@@ -114,17 +61,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
         return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.BadRequest, errors);
       }
 
-      Operation<EditCertificateRequest> imageOperation = request.Operations
-        .FirstOrDefault(o => o.path.EndsWith(nameof(EditCertificateRequest.Image), StringComparison.OrdinalIgnoreCase));
-
-      Guid? imageId = null;
-
-      if (imageOperation != null)
-      {
-        imageId = await GetImageIdAsync(JsonConvert.DeserializeObject<AddImageRequest>(imageOperation.value?.ToString()), errors);
-      }
-
-      JsonPatchDocument<DbUserCertificate> dbRequest = _mapper.Map(request, imageId);
+      JsonPatchDocument<DbUserCertificate> dbRequest = _mapper.Map(request);
 
       bool result = await _certificateRepository.EditAsync(certificate, dbRequest);
 

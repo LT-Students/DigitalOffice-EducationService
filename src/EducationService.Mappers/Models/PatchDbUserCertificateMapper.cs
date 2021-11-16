@@ -10,7 +10,7 @@ namespace LT.DigitalOffice.EducationService.Mappers.Models
 {
   public class PatchDbUserCertificateMapper : IPatchDbUserCertificateMapper
   {
-    public JsonPatchDocument<DbUserCertificate> Map(JsonPatchDocument<EditCertificateRequest> request, Guid? imageId)
+    public JsonPatchDocument<DbUserCertificate> Map(JsonPatchDocument<EditCertificateRequest> request)
     {
       if (request is null)
       {
@@ -24,11 +24,6 @@ namespace LT.DigitalOffice.EducationService.Mappers.Models
         if (item.path.EndsWith(nameof(EditCertificateRequest.EducationType), StringComparison.OrdinalIgnoreCase))
         {
           result.Operations.Add(new Operation<DbUserCertificate>(item.op, item.path, item.from, (int)Enum.Parse(typeof(EducationType), item.value.ToString())));
-          continue;
-        }
-        if (item.path.EndsWith(nameof(EditCertificateRequest.Image), StringComparison.OrdinalIgnoreCase) && imageId.HasValue)
-        {
-          result.Operations.Add(new Operation<DbUserCertificate>(item.op, $"/{nameof(DbUserCertificate.ImageId)}", item.from, imageId.Value));
           continue;
         }
         result.Operations.Add(new Operation<DbUserCertificate>(item.op, item.path, item.from, item.value));

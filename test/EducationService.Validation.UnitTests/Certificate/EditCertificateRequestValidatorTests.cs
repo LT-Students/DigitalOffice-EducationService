@@ -52,7 +52,7 @@ namespace LT.DigitalOffice.EducationService.Validation.UnitTests.Certificate
         {
             op = "replace",
             path = $"/{nameof(EditCertificateRequest.Image)}",
-            value = JsonSerializer.Serialize(new AddImageRequest
+            value = JsonSerializer.Serialize(new ImageContent
             {
                 Name = "Test",
                 Content = Properties.Resources.Base64String,

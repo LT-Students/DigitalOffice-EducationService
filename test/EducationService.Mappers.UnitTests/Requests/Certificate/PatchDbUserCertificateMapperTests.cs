@@ -52,7 +52,7 @@ namespace LT.DigitalOffice.EducationService.Mappers.Db.UnitTests
                     {
                         op = "replace",
                         path = $"/{nameof(EditCertificateRequest.Image)}",
-                        value = new AddImageRequest()
+                        value = new ImageContent()
                     },
                     new Operation<EditCertificateRequest>
                     {

@@ -2,11 +2,9 @@
 using FluentValidation.Validators;
 using LT.DigitalOffice.EducationService.Models.Dto.Enums;
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Certificates;
-using LT.DigitalOffice.EducationService.Models.Dto.Requests.Images;
 using LT.DigitalOffice.EducationService.Validation.Certificates.Interfaces;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,7 +66,6 @@ namespace LT.DigitalOffice.UserService.Validation.Certificates
           nameof(EditCertificateRequest.Name),
           nameof(EditCertificateRequest.ReceivedAt),
           nameof(EditCertificateRequest.SchoolName),
-          nameof(EditCertificateRequest.Image),
           nameof(EditCertificateRequest.EducationType),
           nameof(EditCertificateRequest.IsActive)
         });
@@ -76,7 +73,6 @@ namespace LT.DigitalOffice.UserService.Validation.Certificates
       AddСorrectOperations(nameof(EditCertificateRequest.Name), new List<OperationType> { OperationType.Replace });
       AddСorrectOperations(nameof(EditCertificateRequest.ReceivedAt), new List<OperationType> { OperationType.Replace });
       AddСorrectOperations(nameof(EditCertificateRequest.SchoolName), new List<OperationType> { OperationType.Replace });
-      AddСorrectOperations(nameof(EditCertificateRequest.Image), new List<OperationType> { OperationType.Replace });
       AddСorrectOperations(nameof(EditCertificateRequest.EducationType), new List<OperationType> { OperationType.Replace });
       AddСorrectOperations(nameof(EditCertificateRequest.IsActive), new List<OperationType> { OperationType.Replace });
 
@@ -116,27 +112,6 @@ namespace LT.DigitalOffice.UserService.Validation.Certificates
         new Dictionary<Func<Operation<EditCertificateRequest>, bool>, string>
         {
           { x => DateTime.TryParse(x.value?.ToString(), out _), "Incorrect format ReceivedAt"}
-        });
-
-      AddFailureForPropertyIf(
-        nameof(EditCertificateRequest.Image),
-        o => o == OperationType.Replace,
-        new Dictionary<Func<Operation<EditCertificateRequest>, bool>, string>
-        {
-          { x =>
-            {
-              try
-              {
-                _ = JsonConvert.DeserializeObject<AddImageRequest>(x.value?.ToString());
-                return true;
-              }
-              catch
-              {
-                return false;
-              }
-            },
-            "Incorrect Image format"
-          }
         });
 
       AddFailureForPropertyIf(

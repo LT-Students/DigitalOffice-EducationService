@@ -19,7 +19,7 @@ namespace LT.DigitalOffice.EducationService.Business.UnitTests.CertificateComman
         private CreateCertificateRequest _request;
         private DbUserCertificate _dbCertificate;
         private Guid _imageId;
-        private AddImageRequest _image;
+        private ImageContent _image;
 
         private void RequestClientMock()
         {
