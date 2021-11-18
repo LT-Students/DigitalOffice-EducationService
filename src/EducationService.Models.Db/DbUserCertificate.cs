@@ -40,6 +40,14 @@ namespace LT.DigitalOffice.EducationService.Models.Db
         .ToTable(DbUserCertificate.TableName);
 
       builder
+        .Property(p => p.Name)
+        .IsRequired();
+
+      builder
+        .Property(p => p.SchoolName)
+        .IsRequired();
+
+      builder
         .HasKey(c => c.Id);
 
       builder
