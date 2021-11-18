@@ -35,10 +35,9 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
 
     public async Task<OperationResultResponse<bool>> ExecuteAsync(Guid educationId)
     {
-      Guid senderId = _httpContextAccessor.HttpContext.GetUserId();
       DbUserEducation userEducation = await _educationRepository.GetAsync(educationId);
 
-      if (senderId != userEducation.UserId
+      if (_httpContextAccessor.HttpContext.GetUserId() != userEducation.UserId
         && !await _accessValidator.HasRightsAsync(Rights.AddEditRemoveUsers))
       {
         return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.Forbidden);

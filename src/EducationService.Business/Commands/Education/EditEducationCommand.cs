@@ -47,11 +47,10 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
 
     public async Task<OperationResultResponse<bool>> ExecuteAsync(Guid educationId, JsonPatchDocument<EditEducationRequest> request)
     {
-      Guid senderId = _httpContextAccessor.HttpContext.GetUserId();
       DbUserEducation userEducation = await _educationRepository.GetAsync(educationId);
 
       if (!await _accessValidator.HasRightsAsync(Rights.AddEditRemoveUsers)
-        && senderId != userEducation.UserId)
+        && _httpContextAccessor.HttpContext.GetUserId() != userEducation.UserId)
       {
         return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.Forbidden);
       }

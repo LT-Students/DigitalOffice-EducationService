@@ -53,12 +53,6 @@ namespace LT.DigitalOffice.EducationService.Mappers.Db.UnitTests
                         op = "replace",
                         path = $"/{nameof(EditCertificateRequest.IsActive)}",
                         value = false
-                    },
-                    new Operation<EditCertificateRequest>
-                    {
-                        op = "replace",
-                        path = $"/{nameof(EditCertificateRequest.UserId)}",
-                        value = userId
                     }
                 },
                 new CamelCasePropertyNamesContractResolver());
