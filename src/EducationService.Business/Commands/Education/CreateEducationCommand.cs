@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using LT.DigitalOffice.Kernel.Helpers.Interfaces;
+using LT.DigitalOffice.Kernel.Extensions;
 
 namespace LT.DigitalOffice.EducationService.Business.Commands.Education
 {
@@ -25,24 +26,28 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
     private readonly IEducationRepository _educationRepository;
     private readonly ICreateEducationRequestValidator _validator;
     private readonly IResponseCreater _responseCreator;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
     public CreateEducationCommand(
       IAccessValidator accessValidator,
       IDbUserEducationMapper mapper,
       IEducationRepository educationRepository,
       ICreateEducationRequestValidator validator,
-      IResponseCreater responseCreator)
+      IResponseCreater responseCreator,
+      IHttpContextAccessor httpContextAccessor)
     {
       _accessValidator = accessValidator;
       _mapper = mapper;
       _educationRepository = educationRepository;
       _validator = validator;
       _responseCreator = responseCreator;
+      _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<OperationResultResponse<Guid?>> ExecuteAsync(CreateEducationRequest request)
     {
-      if (!await _accessValidator.HasRightsAsync(Rights.AddEditRemoveUsers))
+      if (!await _accessValidator.HasRightsAsync(Rights.AddEditRemoveUsers)
+        && _httpContextAccessor.HttpContext.GetUserId() != request.UserId)
       {
         return _responseCreator.CreateFailureResponse<Guid?>(HttpStatusCode.Forbidden);
       }

@@ -6,7 +6,7 @@ namespace LT.DigitalOffice.EducationService.Models.Db
 {
   public class DbUserEducation
   {
-    public const string TableName = "UserEducations";
+    public const string TableName = "UsersEducations";
 
     public Guid Id { get; set; }
     public Guid UserId { get; set; }

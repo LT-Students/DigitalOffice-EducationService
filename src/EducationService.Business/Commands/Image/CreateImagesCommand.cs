@@ -22,6 +22,8 @@ using System.Threading.Tasks;
 using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 using LT.DigitalOffice.EducationService.Mappers.Models.Interfaces;
 using LT.DigitalOffice.EducationService.Mappers.Db.Interfaces;
+using LT.DigitalOffice.EducationService.Validation.Image.Interfaces;
+using LT.DigitalOffice.Kernel.FluentValidationExtensions;
 
 namespace LT.DigitalOffice.UserService.Business.Commands.Image
 {
@@ -36,6 +38,7 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
     private readonly IResponseCreater _responseCreator;
     private readonly ICreateImageDataMapper _mapper;
     private readonly IDbCertificateImageMapper _imageMapper;
+    private readonly ICreateImagesRequestValidator _validator;
 
     private async Task<List<Guid>> CreateAsync(List<ImageContent> images, Guid certificateId, List<string> errors)
     {
@@ -75,7 +78,8 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
       ICertificateRepository certificateRepository,
       IResponseCreater responseCreator,
       ICreateImageDataMapper mapper,
-      IDbCertificateImageMapper imageMapper)
+      IDbCertificateImageMapper imageMapper,
+      ICreateImagesRequestValidator validator)
     {
       _repository = repository;
       _rcImages = rcImages;
@@ -86,6 +90,7 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
       _responseCreator = responseCreator;
       _mapper = mapper;
       _imageMapper = imageMapper;
+      _validator = validator;
     }
 
     public async Task<OperationResultResponse<List<Guid>>> ExecuteAsync(CreateImagesRequest request)
@@ -98,16 +103,10 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
         return _responseCreator.CreateFailureResponse<List<Guid>> (HttpStatusCode.Forbidden);
       }
 
-      /*if (!_validator.ValidateCustom(request, out List<string> errors))
+      if (!_validator.ValidateCustom(request, out List<string> errors))
       {
-        _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-
-        return new OperationResultResponse<List<Guid>>
-        {
-          Status = OperationResultStatusType.Failed,
-          Errors = errors
-        };
-      }*/
+        return _responseCreator.CreateFailureResponse<List<Guid>>(HttpStatusCode.BadRequest, errors);
+      }
 
       OperationResultResponse<List<Guid>> response = new();
 

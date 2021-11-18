@@ -3,7 +3,7 @@ using FluentValidation.Validators;
 using LT.DigitalOffice.EducationService.Models.Dto.Enums;
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Education;
 using LT.DigitalOffice.EducationService.Validation.Education.Interfaces;
-using Microsoft.AspNetCore.JsonPatch;
+using LT.DigitalOffice.Kernel.Validators;
 using Microsoft.AspNetCore.JsonPatch.Operations;
 using System;
 using System.Collections.Generic;
@@ -11,52 +11,12 @@ using System.Linq;
 
 namespace LT.DigitalOffice.EducationService.Validation.Education
 {
-  public class EditEducationRequestValidator : AbstractValidator<JsonPatchDocument<EditEducationRequest>>, IEditEducationRequestValidator
+  public class EditEducationRequestValidator : BaseEditRequestValidator<EditEducationRequest>, IEditEducationRequestValidator
   {
     private void HandleInternalPropertyValidation(Operation<EditEducationRequest> requestedOperation, CustomContext context)
     {
-      #region local functions
-
-      void AddСorrectPaths(List<string> paths)
-      {
-        if (paths.FirstOrDefault(p => p.EndsWith(requestedOperation.path[1..], StringComparison.OrdinalIgnoreCase)) == null)
-        {
-          context.AddFailure(requestedOperation.path, $"This path {requestedOperation.path} is not available");
-        }
-      }
-
-      void AddСorrectOperations(
-          string propertyName,
-          List<OperationType> types)
-      {
-        if (requestedOperation.path.EndsWith(propertyName, StringComparison.OrdinalIgnoreCase)
-            && !types.Contains(requestedOperation.OperationType))
-        {
-          context.AddFailure(propertyName, $"This operation {requestedOperation.OperationType} is prohibited for {propertyName}");
-        }
-      }
-
-      void AddFailureForPropertyIf(
-        string propertyName,
-        Func<OperationType, bool> type,
-        Dictionary<Func<Operation<EditEducationRequest>, bool>, string> predicates)
-      {
-        if (!requestedOperation.path.EndsWith(propertyName, StringComparison.OrdinalIgnoreCase)
-            || !type(requestedOperation.OperationType))
-        {
-          return;
-        }
-
-        foreach (var validateDelegate in predicates)
-        {
-          if (!validateDelegate.Key(requestedOperation))
-          {
-            context.AddFailure(propertyName, validateDelegate.Value);
-          }
-        }
-      }
-
-      #endregion
+      Context = context;
+      RequestedOperation = requestedOperation;
 
       #region paths
 
@@ -75,7 +35,7 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
       AddСorrectOperations(nameof(EditEducationRequest.QualificationName), new List<OperationType> { OperationType.Replace });
       AddСorrectOperations(nameof(EditEducationRequest.FormEducation), new List<OperationType> { OperationType.Replace });
       AddСorrectOperations(nameof(EditEducationRequest.AdmissionAt), new List<OperationType> { OperationType.Replace });
-      AddСorrectOperations(nameof(EditEducationRequest.IssueAt), new List<OperationType> { OperationType.Replace, OperationType.Add, OperationType.Remove });
+      AddСorrectOperations(nameof(EditEducationRequest.IssueAt), new List<OperationType> { OperationType.Replace });
       AddСorrectOperations(nameof(EditEducationRequest.IsActive), new List<OperationType> { OperationType.Replace });
 
       #endregion
@@ -108,7 +68,7 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
 
       AddFailureForPropertyIf(
         nameof(EditEducationRequest.IssueAt),
-        o => o == OperationType.Replace || o == OperationType.Add,
+        o => o == OperationType.Replace,
         new Dictionary<Func<Operation<EditEducationRequest>, bool>, string>
         {
           { x => DateTime.TryParse(x.value?.ToString(), out _), "Incorrect format IssueAt"}

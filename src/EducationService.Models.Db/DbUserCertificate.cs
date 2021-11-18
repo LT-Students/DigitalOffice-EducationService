@@ -9,7 +9,7 @@ namespace LT.DigitalOffice.EducationService.Models.Db
   [ParseEntity]
   public class DbUserCertificate
   {
-    public const string TableName = "UserCertificates";
+    public const string TableName = "UsersCertificates";
 
     public Guid Id { get; set; }
     public Guid UserId { get; set; }

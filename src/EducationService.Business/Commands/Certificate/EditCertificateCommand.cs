@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 using LT.DigitalOffice.EducationService.Validation.Certificates.Interfaces;
@@ -67,7 +66,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
 
       return new OperationResultResponse<bool>
       {
-        Status = errors.Any() ? OperationResultStatusType.PartialSuccess : OperationResultStatusType.FullSuccess,
+        Status = OperationResultStatusType.FullSuccess,
         Body = result,
         Errors = errors
       };

@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 
 namespace LT.DigitalOffice.EducationService.Business.Commands.Image
 {
@@ -31,6 +32,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Image
     private readonly IRemoveImagesRequestValidator _removeRequestValidator;
     private readonly IAccessValidator _accessValidator;
     private readonly ILogger<RemoveImagesCommand> _logger;
+    private readonly IResponseCreater _responseCreator;
 
     private async Task<bool> RemoveAsync(List<Guid> imagesIds, List<string> errors)
     {
@@ -67,7 +69,8 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Image
       IRequestClient<IRemoveImagesRequest> rcRemoveImages,
       IRemoveImagesRequestValidator removeRequestValidator,
       IAccessValidator accessValidator,
-      ILogger<RemoveImagesCommand> logger)
+      ILogger<RemoveImagesCommand> logger,
+      IResponseCreater responseCreator)
     {
       _imageRepository = imageRepository;
       _certificateRepository = certificateRepository;
@@ -76,6 +79,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Image
       _removeRequestValidator = removeRequestValidator;
       _accessValidator = accessValidator;
       _logger = logger;
+      _responseCreator = responseCreator;
     }
 
     public async Task<OperationResultResponse<bool>> ExecuteAsync(RemoveImagesRequest request)
@@ -87,27 +91,21 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Image
       if (!await _accessValidator.HasRightsAsync(senderId, Rights.AddEditRemoveUsers)
         && senderId != (await _certificateRepository.GetAsync(request.CerificateId)).UserId)
       {
-        _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-        response.Status = OperationResultStatusType.Failed;
-        response.Errors.Add("Not enough rights.");
-
-        return response;
+        return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.Forbidden);
       }
 
       ValidationResult validationResult = await _removeRequestValidator.ValidateAsync(request);
 
       if (!validationResult.IsValid)
       {
-        _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-        response.Status = OperationResultStatusType.Failed;
-        response.Errors.AddRange(validationResult.Errors.Select(validationFailure => validationFailure.ErrorMessage).ToList());
-
-        return response;
+        return _responseCreator.CreateFailureResponse<bool>(
+          HttpStatusCode.BadRequest,
+          validationResult.Errors.Select(validationFailure => validationFailure.ErrorMessage).ToList());
       }
 
       response.Body = await _imageRepository.RemoveAsync(request.ImagesIds);
 
-      if (response.Body)
+      if (!response.Body)
       {
         await RemoveAsync(request.ImagesIds, response.Errors);
       }

@@ -30,10 +30,10 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
 {
   public class CreateCertificateCommand : ICreateCertificateCommand
   {
-    private IAccessValidator _accessValidator;
-    private IHttpContextAccessor _httpContextAccessor;
-    private ICertificateRepository _certificateRepository;
-    private IDbUserCertificateMapper _mapper;
+    private readonly IAccessValidator _accessValidator;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly ICertificateRepository _certificateRepository;
+    private readonly IDbUserCertificateMapper _mapper;
     private readonly ICreateImageDataMapper _createImageDataMapper;
     private readonly IRequestClient<ICreateImagesRequest> _rcImage;
     private readonly ILogger<CreateCertificateCommand> _logger;
@@ -42,7 +42,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
 
     private async Task<List<Guid>> CreateImagesAsync(List<ImageContent> images, List<string> errors)
     {
-      if (images == null)
+      if (images is null)
       {
         return null;
       }

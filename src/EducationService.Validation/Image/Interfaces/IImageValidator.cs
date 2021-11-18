@@ -5,7 +5,7 @@ using LT.DigitalOffice.EducationService.Models.Dto.Requests.Images;
 namespace LT.DigitalOffice.EducationService.Validation.Image.Interfaces
 {
   [AutoInject]
-  public interface IAddImagesRequestValidator : IValidator<CreateImagesRequest>
+  public interface IImageValidator : IValidator<ImageContent>
   {
   }
 }

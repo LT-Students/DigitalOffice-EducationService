@@ -3,60 +3,19 @@ using FluentValidation.Validators;
 using LT.DigitalOffice.EducationService.Models.Dto.Enums;
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Certificates;
 using LT.DigitalOffice.EducationService.Validation.Certificates.Interfaces;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using LT.DigitalOffice.Kernel.Validators;
 
 namespace LT.DigitalOffice.UserService.Validation.Certificates
 {
-  public class EditCertificateRequestValidator : AbstractValidator<JsonPatchDocument<EditCertificateRequest>>, IEditCertificateRequestValidator
+  public class EditCertificateRequestValidator : BaseEditRequestValidator<EditCertificateRequest>, IEditCertificateRequestValidator
   {
     private void HandleInternalPropertyValidation(Operation<EditCertificateRequest> requestedOperation, CustomContext context)
     {
-      #region local functions
-
-      void AddСorrectPaths(List<string> paths)
-      {
-        if (paths.FirstOrDefault(p => p.EndsWith(requestedOperation.path[1..], StringComparison.OrdinalIgnoreCase)) == null)
-        {
-          context.AddFailure(requestedOperation.path, $"This path {requestedOperation.path} is not available");
-        }
-      }
-
-      void AddСorrectOperations(
-        string propertyName,
-        List<OperationType> types)
-      {
-        if (requestedOperation.path.EndsWith(propertyName, StringComparison.OrdinalIgnoreCase)
-            && !types.Contains(requestedOperation.OperationType))
-        {
-          context.AddFailure(propertyName, $"This operation {requestedOperation.OperationType} is prohibited for {propertyName}");
-        }
-      }
-
-      void AddFailureForPropertyIf(
-        string propertyName,
-        Func<OperationType, bool> type,
-        Dictionary<Func<Operation<EditCertificateRequest>, bool>, string> predicates)
-      {
-        if (!requestedOperation.path.EndsWith(propertyName, StringComparison.OrdinalIgnoreCase)
-            || !type(requestedOperation.OperationType))
-        {
-          return;
-        }
-
-        foreach (var validateDelegate in predicates)
-        {
-          if (!validateDelegate.Key(requestedOperation))
-          {
-            context.AddFailure(propertyName, validateDelegate.Value);
-          }
-        }
-      }
-
-      #endregion
+      Context = context;
+      RequestedOperation = requestedOperation;
 
       #region paths
 

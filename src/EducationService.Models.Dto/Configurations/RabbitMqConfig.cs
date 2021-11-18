@@ -1,5 +1,6 @@
 ﻿using LT.DigitalOffice.Kernel.Attributes;
 using LT.DigitalOffice.Kernel.Configurations;
+using LT.DigitalOffice.Models.Broker.Common;
 using LT.DigitalOffice.Models.Broker.Requests.Image;
 
 namespace LT.DigitalOffice.EducationService.Models.Dto.Configurations
@@ -16,5 +17,8 @@ namespace LT.DigitalOffice.EducationService.Models.Dto.Configurations
 
     [AutoInjectRequest(typeof(IRemoveImagesRequest))]
     public string RemoveImagesEndpoint { get; set; }
+
+    [AutoInjectRequest(typeof(ICheckUsersExistence))]
+    public string CheckUsersExistenceEndpoint { get; set; }
   }
 }
