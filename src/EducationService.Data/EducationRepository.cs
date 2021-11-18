@@ -8,7 +8,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LT.DigitalOffice.UserService.Data
+namespace LT.DigitalOffice.EducationService.Data
 {
   public class EducationRepository : IEducationRepository
   {

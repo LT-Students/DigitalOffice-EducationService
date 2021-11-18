@@ -6,8 +6,7 @@ namespace LT.DigitalOffice.EducationService.Models.Dto.Requests.Images
 {
   public record RemoveImagesRequest
   {
-    public Guid EntityId { get; set; }
-    public EntityType EntityType { get; set; }
+    public Guid CerificateId { get; set; }
     public List<Guid> ImagesIds { get; set; }
   }
 }

@@ -3,7 +3,6 @@ using LT.DigitalOffice.Models.Broker.Models;
 using LT.DigitalOffice.EducationService.Mappers.Models.Interfaces;
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Images;
 using Microsoft.AspNetCore.Http;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,14 +19,16 @@ namespace LT.DigitalOffice.EducationService.Mappers.Models
 
     public List<CreateImageData> Map(List<ImageContent> request)
     {
-      Guid senderId = _httpContextAccessor.HttpContext.GetUserId();
-
       if (request == null)
       {
         return null;
       }
 
-      return request.Select(x => new CreateImageData(x.Name, x.Content, x.Extension, senderId)).ToList();
+      return request.Select(x => new CreateImageData(
+        x.Name,
+        x.Content,
+        x.Extension,
+        _httpContextAccessor.HttpContext.GetUserId())).ToList();
     }
 
     public List<CreateImageData> Map(string name, string content, string extension)

@@ -21,7 +21,6 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
   public class CreateEducationCommand : ICreateEducationCommand
   {
     private readonly IAccessValidator _accessValidator;
-    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IDbUserEducationMapper _mapper;
     private readonly IEducationRepository _educationRepository;
     private readonly ICreateEducationRequestValidator _validator;
@@ -29,14 +28,12 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
 
     public CreateEducationCommand(
       IAccessValidator accessValidator,
-      IHttpContextAccessor httpContextAccessor,
       IDbUserEducationMapper mapper,
       IEducationRepository educationRepository,
       ICreateEducationRequestValidator validator,
       IResponseCreater responseCreator)
     {
       _accessValidator = accessValidator;
-      _httpContextAccessor = httpContextAccessor;
       _mapper = mapper;
       _educationRepository = educationRepository;
       _validator = validator;
