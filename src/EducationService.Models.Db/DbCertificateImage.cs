@@ -6,7 +6,7 @@ namespace LT.DigitalOffice.EducationService.Models.Db
 {
   public class DbCertificateImage
   {
-    public const string TableName = "CertificateImages";
+    public const string TableName = "CertificatesImages";
 
     public Guid Id { get; set; }
     public Guid CertificateId { get; set; }

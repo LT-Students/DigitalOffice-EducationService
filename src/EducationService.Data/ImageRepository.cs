@@ -25,7 +25,7 @@ namespace LT.DigitalOffice.EducationService.Data
         return null;
       }
 
-      _provider.CertificateImages.AddRange(images);
+      _provider.CertificatesImages.AddRange(images);
       await _provider.SaveAsync();
 
       return images.Select(x => x.ImageId).ToList();
@@ -38,10 +38,10 @@ namespace LT.DigitalOffice.EducationService.Data
         return false;
       }
 
-      IEnumerable<DbCertificateImage> images = _provider.CertificateImages
+      IEnumerable<DbCertificateImage> images = _provider.CertificatesImages
         .Where(x => imagesIds.Contains(x.ImageId));
 
-      _provider.CertificateImages.RemoveRange(images);
+      _provider.CertificatesImages.RemoveRange(images);
       await _provider.SaveAsync();
 
       return true;

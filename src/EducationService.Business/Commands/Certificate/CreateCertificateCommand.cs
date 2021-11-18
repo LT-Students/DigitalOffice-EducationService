@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -39,7 +40,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
     private readonly IResponseCreater _responseCreator;
     private readonly ICreateCertificateRequestValidator _validator;
 
-    private async Task<List<Guid>> CreateImageAsync(List<ImageContent> images, List<string> errors)
+    private async Task<List<Guid>> CreateImagesAsync(List<ImageContent> images, List<string> errors)
     {
       if (images == null)
       {
@@ -62,7 +63,6 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
         _logger.LogWarning(
           errorMessage + "Reason:\n{Errors}",
           string.Join('\n', response.Message.Errors));
-
       }
       catch (Exception exc)
       {
@@ -109,11 +109,16 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
         return _responseCreator.CreateFailureResponse<Guid>(HttpStatusCode.BadRequest, errors);
       }
 
-      List<Guid> imagesId = await CreateImageAsync(request?.Images, errors);
+      List<Guid> imagesId = await CreateImagesAsync(request?.Images, errors);
+
+      if (errors.Any())
+      {
+        return _responseCreator.CreateFailureResponse<Guid>(HttpStatusCode.BadRequest, errors);
+      }
 
       DbUserCertificate dbUserCertificate = _mapper.Map(request, imagesId);
 
-      await _certificateRepository.AddAsync(dbUserCertificate);
+      await _certificateRepository.CreateAsync(dbUserCertificate);
 
       return new OperationResultResponse<Guid>
       {

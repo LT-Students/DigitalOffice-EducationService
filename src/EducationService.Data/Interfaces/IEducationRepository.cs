@@ -9,9 +9,9 @@ namespace LT.DigitalOffice.EducationService.Data.Interfaces
   [AutoInject]
   public interface IEducationRepository
   {
-    Task<bool> AddAsync(DbUserEducation education);
+    Task<bool> CreateAsync(DbUserEducation education);
 
-    DbUserEducation Get(Guid educationId);
+    Task<DbUserEducation> GetAsync(Guid educationId);
 
     Task<bool> EditAsync(DbUserEducation educationId, JsonPatchDocument<DbUserEducation> request);
 

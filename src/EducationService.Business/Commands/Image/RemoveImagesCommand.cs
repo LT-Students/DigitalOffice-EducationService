@@ -32,14 +32,12 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Image
     private readonly IAccessValidator _accessValidator;
     private readonly ILogger<RemoveImagesCommand> _logger;
 
-    private async Task<bool> RemoveImages(List<Guid> imagesIds, List<string> errors)
+    private async Task<bool> RemoveAsync(List<Guid> imagesIds, List<string> errors)
     {
-      const string errorMessage = "Can't remove images. Please try again later.";
-      const string logMessage = "Errors while removing images with ids: {ImagesIds}.";
-
       try
       {
-        Response<IOperationResult<bool>> removeResponse = await _rcRemoveImages.GetResponse<IOperationResult<bool>>(
+        Response<IOperationResult<bool>> removeResponse =
+          await _rcRemoveImages.GetResponse<IOperationResult<bool>>(
             IRemoveImagesRequest.CreateObj(imagesIds, ImageSource.User));
 
         if (removeResponse.Message.IsSuccess)
@@ -48,18 +46,16 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Image
         }
 
         _logger.LogWarning(
-          logMessage + " Errors: {Errors}",
+          "Errors while removing images with ids: {ImagesIds}. Errors: {Errors}",
           string.Join(", ", imagesIds),
           string.Join('\n', removeResponse.Message.Errors));
-
-        errors.Add(errorMessage);
       }
       catch (Exception e)
       {
-        _logger.LogError(e, logMessage, string.Join(", ", imagesIds));
-
-        errors.Add(errorMessage);
+        _logger.LogError(e, "Errors while removing images with ids: {ImagesIds}.", string.Join(", ", imagesIds));
       }
+
+      errors.Add("Can't remove images. Please try again later.");
 
       return false;
     }
@@ -89,7 +85,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Image
       Guid senderId = _httpContextAccessor.HttpContext.GetUserId();
 
       if (!await _accessValidator.HasRightsAsync(senderId, Rights.AddEditRemoveUsers)
-        && senderId != _certificateRepository.Get(request.CerificateId).UserId)
+        && senderId != (await _certificateRepository.GetAsync(request.CerificateId)).UserId)
       {
         _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
         response.Status = OperationResultStatusType.Failed;
@@ -113,7 +109,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Image
 
       if (response.Body)
       {
-        await RemoveImages(request.ImagesIds, response.Errors);
+        await RemoveAsync(request.ImagesIds, response.Errors);
       }
 
       response.Status = response.Errors.Any()

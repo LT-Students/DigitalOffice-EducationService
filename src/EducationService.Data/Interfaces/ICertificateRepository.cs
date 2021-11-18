@@ -9,9 +9,9 @@ namespace LT.DigitalOffice.EducationService.Data.Interfaces
   [AutoInject]
   public interface ICertificateRepository
   {
-    Task<bool> AddAsync(DbUserCertificate certificate);
+    Task<bool> CreateAsync(DbUserCertificate certificate);
 
-    DbUserCertificate Get(Guid certificateId);
+    Task<DbUserCertificate> GetAsync(Guid certificateId);
 
     Task<bool> EditAsync(DbUserCertificate certificateId, JsonPatchDocument<DbUserCertificate> request);
 

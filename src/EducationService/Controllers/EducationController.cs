@@ -13,7 +13,7 @@ namespace LT.DigitalOffice.EducationService.Controllers
   public class EducationController : ControllerBase
   {
     [HttpPost("create")]
-    public async Task<OperationResultResponse<Guid?>> Create(
+    public async Task<OperationResultResponse<Guid?>> CreateAsync(
       [FromServices] ICreateEducationCommand command,
       [FromBody] CreateEducationRequest request)
     {
@@ -21,7 +21,7 @@ namespace LT.DigitalOffice.EducationService.Controllers
     }
 
     [HttpPatch("edit")]
-    public async Task<OperationResultResponse<bool>> Edit(
+    public async Task<OperationResultResponse<bool>> EditAsync(
       [FromServices] IEditEducationCommand command,
       [FromQuery] Guid educationId,
       [FromBody] JsonPatchDocument<EditEducationRequest> request)
@@ -30,7 +30,7 @@ namespace LT.DigitalOffice.EducationService.Controllers
     }
 
     [HttpDelete("remove")]
-    public async Task<OperationResultResponse<bool>> Remove(
+    public async Task<OperationResultResponse<bool>> RemoveAsync(
       [FromServices] IRemoveEducationCommand command,
       [FromQuery] Guid educationId)
     {

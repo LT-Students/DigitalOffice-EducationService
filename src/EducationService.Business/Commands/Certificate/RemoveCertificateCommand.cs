@@ -36,7 +36,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
     public async Task<OperationResultResponse<bool>> ExecuteAsync(Guid certificateId)
     {
       var senderId = _httpContextAccessor.HttpContext.GetUserId();
-      DbUserCertificate userCertificate = _certificateRepository.Get(certificateId);
+      DbUserCertificate userCertificate = await _certificateRepository.GetAsync(certificateId);
 
       if (senderId != userCertificate.UserId
         && !await _accessValidator.HasRightsAsync(Rights.AddEditRemoveUsers))

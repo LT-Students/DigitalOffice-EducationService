@@ -13,7 +13,7 @@ namespace LT.DigitalOffice.EducationService.Controllers
   public class CertificateController : ControllerBase
   {
     [HttpPost("create")]
-    public async Task<OperationResultResponse<Guid>> Create(
+    public async Task<OperationResultResponse<Guid>> CreateAsync(
       [FromServices] ICreateCertificateCommand command,
       [FromBody] CreateCertificateRequest request)
     {
@@ -21,7 +21,7 @@ namespace LT.DigitalOffice.EducationService.Controllers
     }
 
     [HttpPatch("edit")]
-    public async Task<OperationResultResponse<bool>> Edit(
+    public async Task<OperationResultResponse<bool>> EditAsync(
       [FromServices] IEditCertificateCommand command,
       [FromQuery] Guid certificateId,
       [FromBody] JsonPatchDocument<EditCertificateRequest> request)
@@ -30,7 +30,7 @@ namespace LT.DigitalOffice.EducationService.Controllers
     }
 
     [HttpDelete("remove")]
-    public async Task<OperationResultResponse<bool>> Remove(
+    public async Task<OperationResultResponse<bool>> RemoveAsync(
       [FromServices] IRemoveCertificateCommand command,
       [FromQuery] Guid certificateId)
     {

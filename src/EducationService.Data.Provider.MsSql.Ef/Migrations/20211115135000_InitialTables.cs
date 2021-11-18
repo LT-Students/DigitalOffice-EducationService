@@ -29,7 +29,7 @@ namespace LT.DigitalOffice.EducationService.Data.Provider.MsSql.Ef.Migrations
         },
         constraints: table =>
         {
-          table.PrimaryKey("PK_UserCertificates", x => x.Id);
+          table.PrimaryKey("PK_UsersCertificates", x => x.Id);
         });
 
       builder.CreateTable(
@@ -51,7 +51,7 @@ namespace LT.DigitalOffice.EducationService.Data.Provider.MsSql.Ef.Migrations
         },
         constraints: table =>
         {
-          table.PrimaryKey("PK_UserEducations", x => x.Id);
+          table.PrimaryKey("PK_UsersEducations", x => x.Id);
         });
 
       builder.CreateTable(
@@ -64,7 +64,7 @@ namespace LT.DigitalOffice.EducationService.Data.Provider.MsSql.Ef.Migrations
         },
         constraints: table =>
         {
-          table.PrimaryKey("PK_CertificateImages", x => x.Id);
+          table.PrimaryKey("PK_CertificatesImages", x => x.Id);
         });
     }
   }

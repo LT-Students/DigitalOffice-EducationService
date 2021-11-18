@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace LT.DigitalOffice.EducationService.Data
 {
@@ -23,39 +24,27 @@ namespace LT.DigitalOffice.EducationService.Data
       _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<bool> AddAsync(DbUserEducation education)
+    public async Task<bool> CreateAsync(DbUserEducation education)
     {
       if (education is null)
       {
         return false;
       }
 
-      _provider.UserEducations.Add(education);
+      _provider.UsersEducations.Add(education);
       await _provider.SaveAsync();
 
       return true;
     }
 
-    public DbUserEducation Get(Guid educationId)
+    public async Task<DbUserEducation> GetAsync(Guid educationId)
     {
-      DbUserEducation education = _provider.UserEducations.FirstOrDefault(e => e.Id == educationId);
-
-      if (education is null)
-      {
-        return null;
-      }
-
-      return education;
+      return await _provider.UsersEducations.FirstOrDefaultAsync(e => e.Id == educationId);
     }
 
     public async Task<bool> EditAsync(DbUserEducation education, JsonPatchDocument<DbUserEducation> request)
     {
-      if (education is null)
-      {
-        return false;
-      }
-
-      if (request is null)
+      if (request is null || education is null)
       {
         return false;
       }

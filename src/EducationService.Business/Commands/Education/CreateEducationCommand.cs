@@ -54,7 +54,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
 
       DbUserEducation dbEducation = _mapper.Map(request);
 
-      await _educationRepository.AddAsync(dbEducation);
+      await _educationRepository.CreateAsync(dbEducation);
 
       return new OperationResultResponse<Guid?>
       {

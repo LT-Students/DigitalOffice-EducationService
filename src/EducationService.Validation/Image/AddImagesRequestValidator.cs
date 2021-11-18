@@ -17,8 +17,8 @@ namespace LT.DigitalOffice.EducationService.Validation.Avatars
     {
       RuleFor(x => x)
         .MustAsync(async (x, _) =>
-          certificateRepository.Get(x.CertificateId) != null
-          || educationRepository.Get(x.CertificateId) != null)
+          await certificateRepository.GetAsync(x.CertificateId) != null
+          || await educationRepository.GetAsync(x.CertificateId) != null)
         .WithMessage("Entity doesn't exist.");
 
      /* RuleFor(x => x.Content)

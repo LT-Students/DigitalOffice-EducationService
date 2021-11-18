@@ -14,13 +14,13 @@ namespace LT.DigitalOffice.EducationService.Controllers
   {
     [HttpPost("create")]
     public async Task<OperationResultResponse<List<Guid>>> CreateAsync(
-      [FromServices] ICreateImageCommand command,
+      [FromServices] ICreateImagesCommand command,
       [FromBody] CreateImagesRequest request)
     {
       return await command.ExecuteAsync(request);
     }
 
-    [HttpPost("remove")]
+    [HttpDelete("remove")]
     public async Task<OperationResultResponse<bool>> RemoveAsync(
       [FromServices] IRemoveImagesCommand command,
       [FromBody] RemoveImagesRequest request)

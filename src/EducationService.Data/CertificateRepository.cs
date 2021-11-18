@@ -5,6 +5,7 @@ using LT.DigitalOffice.Kernel.Exceptions.Models;
 using LT.DigitalOffice.Kernel.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,39 +25,27 @@ namespace LT.DigitalOffice.EducationService.Data
       _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<bool> AddAsync(DbUserCertificate certificate)
+    public async Task<bool> CreateAsync(DbUserCertificate certificate)
     {
       if (certificate is null)
       {
         return false;
       }
 
-      _provider.UserCertificates.Add(certificate);
+      _provider.UsersCertificates.Add(certificate);
       await _provider.SaveAsync();
 
       return true;
     }
 
-    public DbUserCertificate Get(Guid certificateId)
+    public async Task<DbUserCertificate> GetAsync(Guid certificateId)
     {
-      var certificate = _provider.UserCertificates.FirstOrDefault(x => x.Id == certificateId);
-
-      if (certificate is null)
-      {
-        return null;
-      }
-
-      return certificate;
+      return await _provider.UsersCertificates.FirstOrDefaultAsync(x => x.Id == certificateId);
     }
 
     public async Task<bool> EditAsync(DbUserCertificate certificate, JsonPatchDocument<DbUserCertificate> request)
     {
-      if (certificate is null)
-      {
-        return false;
-      }
-
-      if (request is null)
+      if (request is null || certificate is null)
       {
         return false;
       }

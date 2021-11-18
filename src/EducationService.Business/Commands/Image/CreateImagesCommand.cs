@@ -25,11 +25,11 @@ using LT.DigitalOffice.EducationService.Mappers.Db.Interfaces;
 
 namespace LT.DigitalOffice.UserService.Business.Commands.Image
 {
-  public class CreateImageCommand : ICreateImageCommand
+  public class CreateImagesCommand : ICreateImagesCommand
   {
     private readonly IImageRepository _repository;
     private readonly IRequestClient<ICreateImagesRequest> _rcImages;
-    private readonly ILogger<CreateImageCommand> _logger;
+    private readonly ILogger<CreateImagesCommand> _logger;
     private readonly IAccessValidator _accessValidator;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ICertificateRepository _certificateRepository;
@@ -37,24 +37,24 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
     private readonly ICreateImageDataMapper _mapper;
     private readonly IDbCertificateImageMapper _imageMapper;
 
-    private List<Guid> CreateImagesAsync(List<ImageContent> images, Guid certificateId, List<string> errors)
+    private async Task<List<Guid>> CreateAsync(List<ImageContent> images, Guid certificateId, List<string> errors)
     {
       string logMessage = $"Errors while creating images for certificate id {certificateId}.";
 
       try
       {
-        IOperationResult<ICreateImagesResponse> response =
+        Response<IOperationResult<ICreateImagesResponse>> response = await
           _rcImages.GetResponse<IOperationResult<ICreateImagesResponse>>(
-            ICreateImagesRequest.CreateObj(_mapper.Map(images), ImageSource.User)).Result.Message;
+            ICreateImagesRequest.CreateObj(_mapper.Map(images), ImageSource.User));
 
-        if (response.IsSuccess && response.Body.ImagesIds != null)
+        if (response.Message.IsSuccess && response.Message.Body.ImagesIds != null)
         {
-          return response.Body.ImagesIds;
+          return response.Message.Body.ImagesIds;
         }
 
         _logger.LogWarning(
           logMessage + "Errors: { Errors}",
-          string.Join('\n', response.Errors));
+          string.Join('\n', response.Message.Errors));
       }
       catch (Exception exc)
       {
@@ -66,10 +66,10 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
       return null;
     }
 
-    public CreateImageCommand(
+    public CreateImagesCommand(
       IImageRepository repository,
       IRequestClient<ICreateImagesRequest> rcImages,
-      ILogger<CreateImageCommand> logger,
+      ILogger<CreateImagesCommand> logger,
       IAccessValidator accessValidator,
       IHttpContextAccessor httpContextAccessor,
       ICertificateRepository certificateRepository,
@@ -92,7 +92,7 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
     {
       Guid senderId = _httpContextAccessor.HttpContext.GetUserId();
 
-      if (senderId != _certificateRepository.Get(request.CertificateId).UserId
+      if (senderId != (await _certificateRepository.GetAsync(request.CertificateId)).UserId
         && !await _accessValidator.HasRightsAsync(senderId, Rights.AddEditRemoveUsers))
       {
         return _responseCreator.CreateFailureResponse<List<Guid>> (HttpStatusCode.Forbidden);
@@ -111,7 +111,7 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
 
       OperationResultResponse<List<Guid>> response = new();
 
-      List<Guid> imagesIds = CreateImagesAsync(
+      List<Guid> imagesIds = await CreateAsync(
         request.Images,
         request.CertificateId,
         response.Errors);

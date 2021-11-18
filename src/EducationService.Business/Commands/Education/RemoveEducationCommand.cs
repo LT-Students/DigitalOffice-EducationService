@@ -36,12 +36,12 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
     public async Task<OperationResultResponse<bool>> ExecuteAsync(Guid educationId)
     {
       Guid senderId = _httpContextAccessor.HttpContext.GetUserId();
-      DbUserEducation userEducation = _educationRepository.Get(educationId);
+      DbUserEducation userEducation = await _educationRepository.GetAsync(educationId);
 
       if (senderId != userEducation.UserId
         && !await _accessValidator.HasRightsAsync(Rights.AddEditRemoveUsers))
       {
-        _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.Forbidden);
+        return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.Forbidden);
       }
 
       bool result = await _educationRepository.RemoveAsync(userEducation);
