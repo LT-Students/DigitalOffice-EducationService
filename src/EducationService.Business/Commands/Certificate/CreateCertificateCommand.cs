@@ -6,8 +6,8 @@ using LT.DigitalOffice.EducationService.Models.Db;
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Certificates;
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Images;
 using LT.DigitalOffice.EducationService.Validation.Certificates.Interfaces;
-using LT.DigitalOffice.Kernel.AccessValidatorEngine.Interfaces;
-using LT.DigitalOffice.Kernel.Broker;
+using LT.DigitalOffice.Kernel.BrokerSupport.AccessValidatorEngine.Interfaces;
+using LT.DigitalOffice.Kernel.BrokerSupport.Broker;
 using LT.DigitalOffice.Kernel.Constants;
 using LT.DigitalOffice.Kernel.Enums;
 using LT.DigitalOffice.Kernel.Extensions;
@@ -37,17 +37,15 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
     private readonly ICreateImageDataMapper _createImageDataMapper;
     private readonly IRequestClient<ICreateImagesRequest> _rcImage;
     private readonly ILogger<CreateCertificateCommand> _logger;
-    private readonly IResponseCreater _responseCreator;
+    private readonly IResponseCreator _responseCreator;
     private readonly ICreateCertificateRequestValidator _validator;
 
     private async Task<List<Guid>> CreateImagesAsync(List<ImageContent> images, List<string> errors)
     {
-      if (images is null)
+      if (images is null || !images.Any())
       {
         return null;
       }
-
-      string errorMessage = "Can not add certificate images to certificate. Please try again later.";
 
       try
       {
@@ -61,15 +59,15 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
         }
 
         _logger.LogWarning(
-          errorMessage + "Reason:\n{Errors}",
+          "Error while adding images to certificate.\nErrors: {Errors}",
           string.Join('\n', response.Message.Errors));
       }
       catch (Exception exc)
       {
-        _logger.LogError(exc, errorMessage);
+        _logger.LogError(exc, "Cannot add images to certificate.");
       }
 
-      errors.Add(errorMessage);
+      errors.Add("Can not add images to certificate. Please try again later.");
 
       return null;
     }
@@ -82,7 +80,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
       IRequestClient<ICreateImagesRequest> rcAddIImage,
       ICreateImageDataMapper createImageDataMapper,
       ILogger<CreateCertificateCommand> logger,
-      IResponseCreater responseCreator,
+      IResponseCreator responseCreator,
       ICreateCertificateRequestValidator validator)
     {
       _accessValidator = accessValidator;
@@ -109,7 +107,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
         return _responseCreator.CreateFailureResponse<Guid>(HttpStatusCode.BadRequest, errors);
       }
 
-      List<Guid> imagesId = await CreateImagesAsync(request?.Images, errors);
+      List<Guid> imagesId = await CreateImagesAsync(request.Images, errors);
 
       if (errors.Any())
       {

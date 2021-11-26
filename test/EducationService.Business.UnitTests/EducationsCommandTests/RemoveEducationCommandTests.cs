@@ -1,18 +1,7 @@
-using LT.DigitalOffice.Kernel.AccessValidatorEngine.Interfaces;
-using LT.DigitalOffice.Kernel.Enums;
-using LT.DigitalOffice.Kernel.Responses;
-using LT.DigitalOffice.UnitTestKernel;
-using LT.DigitalOffice.EducationService.Business.Commands.Education;
 using LT.DigitalOffice.EducationService.Business.Commands.Education.Interfaces;
-using LT.DigitalOffice.EducationService.Data.Interfaces;
 using LT.DigitalOffice.EducationService.Models.Db;
-using Microsoft.AspNetCore.Http;
-using Moq;
 using Moq.AutoMock;
-using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace LT.DigitalOffice.EducationService.Business.UnitTests.EducationsCommandTests
 {

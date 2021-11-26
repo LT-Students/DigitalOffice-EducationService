@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Certificates;
 using LT.DigitalOffice.EducationService.Validation.Certificates.Interfaces;
-using LT.DigitalOffice.Kernel.Broker;
+using LT.DigitalOffice.Kernel.BrokerSupport.Broker;
 using LT.DigitalOffice.Models.Broker.Common;
 using MassTransit;
 using Microsoft.Extensions.Logging;
@@ -25,18 +25,20 @@ namespace LT.DigitalOffice.EducationService.Validation.Certificates
       _logger = logger;
 
       RuleFor(x => x.UserId)
+        .Cascade(CascadeMode.Stop)
+        .NotEmpty().WithMessage("Wrong user id value.")
         .MustAsync(async (pu, cancellation) => await CheckValidityUserId(pu))
         .WithMessage("User does not exist.");
 
       RuleFor(x => x.Name)
         .NotEmpty()
         .MaximumLength(100)
-        .WithMessage("Name of Certificate is too long");
+        .WithMessage("Name of Certificate is too long.");
 
       RuleFor(x => x.SchoolName)
         .NotEmpty()
         .MaximumLength(100)
-        .WithMessage("Name of school is too long");
+        .WithMessage("Name of school is too long.");
 
       RuleFor(x => x.EducationType)
         .IsInEnum()

@@ -1,16 +1,16 @@
 using LT.DigitalOffice.EducationService.Business.Commands.Education.Interfaces;
+using LT.DigitalOffice.EducationService.Data.Interfaces;
 using LT.DigitalOffice.EducationService.Mappers.Models.Interfaces;
 using LT.DigitalOffice.EducationService.Models.Db;
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Education;
 using LT.DigitalOffice.EducationService.Validation.Education.Interfaces;
-using LT.DigitalOffice.Kernel.AccessValidatorEngine.Interfaces;
+using LT.DigitalOffice.Kernel.BrokerSupport.AccessValidatorEngine.Interfaces;
 using LT.DigitalOffice.Kernel.Constants;
 using LT.DigitalOffice.Kernel.Enums;
 using LT.DigitalOffice.Kernel.Extensions;
 using LT.DigitalOffice.Kernel.FluentValidationExtensions;
 using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Responses;
-using LT.DigitalOffice.EducationService.Data.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using System;
@@ -27,7 +27,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
     private readonly IEducationRepository _educationRepository;
     private readonly IPatchDbUserEducationMapper _mapper;
     private readonly IEditEducationRequestValidator _validator;
-    private readonly IResponseCreater _responseCreator;
+    private readonly IResponseCreator _responseCreator;
 
     public EditEducationCommand(
       IAccessValidator accessValidator,
@@ -35,7 +35,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
       IEducationRepository educationRepository,
       IPatchDbUserEducationMapper mapper,
       IEditEducationRequestValidator validator,
-      IResponseCreater responseCreator)
+      IResponseCreator responseCreator)
     {
       _accessValidator = accessValidator;
       _httpContextAccessor = httpContextAccessor;
@@ -45,12 +45,14 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
       _responseCreator = responseCreator;
     }
 
-    public async Task<OperationResultResponse<bool>> ExecuteAsync(Guid educationId, JsonPatchDocument<EditEducationRequest> request)
+    public async Task<OperationResultResponse<bool>> ExecuteAsync(
+      Guid educationId,
+      JsonPatchDocument<EditEducationRequest> request)
     {
       DbUserEducation userEducation = await _educationRepository.GetAsync(educationId);
 
-      if (!await _accessValidator.HasRightsAsync(Rights.AddEditRemoveUsers)
-        && _httpContextAccessor.HttpContext.GetUserId() != userEducation.UserId)
+      if (_httpContextAccessor.HttpContext.GetUserId() != userEducation.UserId
+        && !await _accessValidator.HasRightsAsync(Rights.AddEditRemoveUsers))
       {
         return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.Forbidden);
       }
@@ -60,14 +62,10 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
         return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.BadRequest, errors);
       }
 
-      JsonPatchDocument<DbUserEducation> dbRequest = _mapper.Map(request);
-
-      bool result = await _educationRepository.EditAsync(userEducation, dbRequest);
-
       return new OperationResultResponse<bool>
       {
         Status = OperationResultStatusType.FullSuccess,
-        Body = result
+        Body = await _educationRepository.EditAsync(userEducation, _mapper.Map(request))
       };
     }
   }

@@ -1,16 +1,17 @@
 ﻿using FluentValidation.Results;
-using LT.DigitalOffice.Kernel.AccessValidatorEngine.Interfaces;
-using LT.DigitalOffice.Kernel.Broker;
-using LT.DigitalOffice.Kernel.Constants;
-using LT.DigitalOffice.Kernel.Enums;
-using LT.DigitalOffice.Kernel.Extensions;
-using LT.DigitalOffice.Kernel.Responses;
-using LT.DigitalOffice.Models.Broker.Enums;
-using LT.DigitalOffice.Models.Broker.Requests.Image;
 using LT.DigitalOffice.EducationService.Business.Commands.Image.Interfaces;
 using LT.DigitalOffice.EducationService.Data.Interfaces;
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Images;
 using LT.DigitalOffice.EducationService.Validation.Image.Interfaces;
+using LT.DigitalOffice.Kernel.BrokerSupport.AccessValidatorEngine.Interfaces;
+using LT.DigitalOffice.Kernel.BrokerSupport.Broker;
+using LT.DigitalOffice.Kernel.Constants;
+using LT.DigitalOffice.Kernel.Enums;
+using LT.DigitalOffice.Kernel.Extensions;
+using LT.DigitalOffice.Kernel.Helpers.Interfaces;
+using LT.DigitalOffice.Kernel.Responses;
+using LT.DigitalOffice.Models.Broker.Enums;
+using LT.DigitalOffice.Models.Broker.Requests.Image;
 using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -19,7 +20,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 
 namespace LT.DigitalOffice.EducationService.Business.Commands.Image
 {
@@ -32,32 +32,35 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Image
     private readonly IRemoveImagesRequestValidator _removeRequestValidator;
     private readonly IAccessValidator _accessValidator;
     private readonly ILogger<RemoveImagesCommand> _logger;
-    private readonly IResponseCreater _responseCreator;
+    private readonly IResponseCreator _responseCreator;
 
     private async Task<bool> RemoveAsync(List<Guid> imagesIds, List<string> errors)
     {
       try
       {
-        Response<IOperationResult<bool>> removeResponse =
+        Response<IOperationResult<bool>> response =
           await _rcRemoveImages.GetResponse<IOperationResult<bool>>(
             IRemoveImagesRequest.CreateObj(imagesIds, ImageSource.User));
 
-        if (removeResponse.Message.IsSuccess)
+        if (response.Message.IsSuccess)
         {
-          return removeResponse.Message.Body;
+          return response.Message.Body;
         }
 
         _logger.LogWarning(
-          "Errors while removing images with ids: {ImagesIds}. Errors: {Errors}",
+          "Errors while removing images with ids: {ImagesIds}.\n Errors: {Errors}",
           string.Join(", ", imagesIds),
-          string.Join('\n', removeResponse.Message.Errors));
+          string.Join('\n', response.Message.Errors));
       }
-      catch (Exception e)
+      catch (Exception ex)
       {
-        _logger.LogError(e, "Errors while removing images with ids: {ImagesIds}.", string.Join(", ", imagesIds));
+        _logger.LogError(
+          ex,
+          "Cannot remove images with ids: {ImagesIds}.",
+          string.Join(", ", imagesIds));
       }
 
-      errors.Add("Can't remove images. Please try again later.");
+      errors.Add("Cannot remove images. Please try again later.");
 
       return false;
     }
@@ -70,7 +73,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Image
       IRemoveImagesRequestValidator removeRequestValidator,
       IAccessValidator accessValidator,
       ILogger<RemoveImagesCommand> logger,
-      IResponseCreater responseCreator)
+      IResponseCreator responseCreator)
     {
       _imageRepository = imageRepository;
       _certificateRepository = certificateRepository;
@@ -88,8 +91,8 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Image
 
       Guid senderId = _httpContextAccessor.HttpContext.GetUserId();
 
-      if (!await _accessValidator.HasRightsAsync(senderId, Rights.AddEditRemoveUsers)
-        && senderId != (await _certificateRepository.GetAsync(request.CerificateId)).UserId)
+      if (senderId != (await _certificateRepository.GetAsync(request.CerificateId)).UserId
+        && !await _accessValidator.HasRightsAsync(Rights.AddEditRemoveUsers))
       {
         return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.Forbidden);
       }

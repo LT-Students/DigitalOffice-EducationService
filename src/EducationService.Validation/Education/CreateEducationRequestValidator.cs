@@ -2,7 +2,7 @@
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Education;
 using LT.DigitalOffice.EducationService.Validation.Certificates;
 using LT.DigitalOffice.EducationService.Validation.Education.Interfaces;
-using LT.DigitalOffice.Kernel.Broker;
+using LT.DigitalOffice.Kernel.BrokerSupport.Broker;
 using LT.DigitalOffice.Models.Broker.Common;
 using MassTransit;
 using Microsoft.Extensions.Logging;
@@ -26,6 +26,8 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
       _logger = logger;
 
       RuleFor(x => x.UserId)
+        .Cascade(CascadeMode.Stop)
+        .NotEmpty().WithMessage("Wrong user id value.")
         .MustAsync(async (pu, cancellation) => await CheckValidityUserId(pu))
         .WithMessage("User does not exist.");
 

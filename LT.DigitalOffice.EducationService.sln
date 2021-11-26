@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31424.327
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.31911.260
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B4F839B1-669D-4495-BFF3-EC7980B5C398}"
 EndProject
@@ -16,6 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution 
 		.gitignore = .gitignore
 		Common.Configurations.targets = Common.Configurations.targets
 		Dockerfile = Dockerfile
+		.github\workflows\main.yml = .github\workflows\main.yml
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -41,7 +42,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationService.Data.UnitT
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationService.Mappers.UnitTests", "test\EducationService.Mappers.UnitTests\EducationService.Mappers.UnitTests.csproj", "{F0A1E6F4-E29E-433A-830E-34B46A2AA7F2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationService.Validation.UnitTests", "test\EducationService.Validation.UnitTests\EducationService.Validation.UnitTests.csproj", "{08C712DD-6F67-4310-A263-F79B4F4BCFD9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationService.Validation.UnitTests", "test\EducationService.Validation.UnitTests\EducationService.Validation.UnitTests.csproj", "{08C712DD-6F67-4310-A263-F79B4F4BCFD9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

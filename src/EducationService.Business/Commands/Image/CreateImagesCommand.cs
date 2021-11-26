@@ -1,16 +1,20 @@
-﻿using FluentValidation.Results;
-using LT.DigitalOffice.Kernel.AccessValidatorEngine.Interfaces;
-using LT.DigitalOffice.Kernel.Broker;
+﻿using LT.DigitalOffice.EducationService.Business.Commands.Image.Interfaces;
+using LT.DigitalOffice.EducationService.Data.Interfaces;
+using LT.DigitalOffice.EducationService.Mappers.Db.Interfaces;
+using LT.DigitalOffice.EducationService.Mappers.Models.Interfaces;
+using LT.DigitalOffice.EducationService.Models.Dto.Requests.Images;
+using LT.DigitalOffice.EducationService.Validation.Image.Interfaces;
+using LT.DigitalOffice.Kernel.BrokerSupport.AccessValidatorEngine.Interfaces;
+using LT.DigitalOffice.Kernel.BrokerSupport.Broker;
 using LT.DigitalOffice.Kernel.Constants;
 using LT.DigitalOffice.Kernel.Enums;
 using LT.DigitalOffice.Kernel.Extensions;
+using LT.DigitalOffice.Kernel.FluentValidationExtensions;
+using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Responses;
 using LT.DigitalOffice.Models.Broker.Enums;
 using LT.DigitalOffice.Models.Broker.Requests.Image;
 using LT.DigitalOffice.Models.Broker.Responses.Image;
-using LT.DigitalOffice.EducationService.Business.Commands.Image.Interfaces;
-using LT.DigitalOffice.EducationService.Data.Interfaces;
-using LT.DigitalOffice.EducationService.Models.Dto.Requests.Images;
 using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -19,11 +23,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using LT.DigitalOffice.Kernel.Helpers.Interfaces;
-using LT.DigitalOffice.EducationService.Mappers.Models.Interfaces;
-using LT.DigitalOffice.EducationService.Mappers.Db.Interfaces;
-using LT.DigitalOffice.EducationService.Validation.Image.Interfaces;
-using LT.DigitalOffice.Kernel.FluentValidationExtensions;
 
 namespace LT.DigitalOffice.UserService.Business.Commands.Image
 {
@@ -35,14 +34,17 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
     private readonly IAccessValidator _accessValidator;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ICertificateRepository _certificateRepository;
-    private readonly IResponseCreater _responseCreator;
+    private readonly IResponseCreator _responseCreator;
     private readonly ICreateImageDataMapper _mapper;
     private readonly IDbCertificateImageMapper _imageMapper;
     private readonly ICreateImagesRequestValidator _validator;
 
     private async Task<List<Guid>> CreateAsync(List<ImageContent> images, Guid certificateId, List<string> errors)
     {
-      string logMessage = $"Errors while creating images for certificate id {certificateId}.";
+      if (images is null || !images.Any())
+      {
+        return null;
+      }
 
       try
       {
@@ -50,21 +52,25 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
           _rcImages.GetResponse<IOperationResult<ICreateImagesResponse>>(
             ICreateImagesRequest.CreateObj(_mapper.Map(images), ImageSource.User));
 
-        if (response.Message.IsSuccess && response.Message.Body.ImagesIds != null)
+        if (response.Message.IsSuccess && response.Message.Body.ImagesIds is not null)
         {
           return response.Message.Body.ImagesIds;
         }
 
         _logger.LogWarning(
-          logMessage + "Errors: { Errors}",
+          "Errors while creating images for certificate id {CertificateId}.\nErrors: {Errors}",
+          certificateId,
           string.Join('\n', response.Message.Errors));
       }
       catch (Exception exc)
       {
-        _logger.LogError(exc, logMessage);
+        _logger.LogError(
+          exc,
+          "Cannot create images for certificate id {CertificateId}.",
+          certificateId);
       }
 
-      errors.Add("Can not create images. Please try again later.");
+      errors.Add("Cannot create images. Please try again later.");
 
       return null;
     }
@@ -76,7 +82,7 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
       IAccessValidator accessValidator,
       IHttpContextAccessor httpContextAccessor,
       ICertificateRepository certificateRepository,
-      IResponseCreater responseCreator,
+      IResponseCreator responseCreator,
       ICreateImageDataMapper mapper,
       IDbCertificateImageMapper imageMapper,
       ICreateImagesRequestValidator validator)
@@ -98,9 +104,9 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
       Guid senderId = _httpContextAccessor.HttpContext.GetUserId();
 
       if (senderId != (await _certificateRepository.GetAsync(request.CertificateId)).UserId
-        && !await _accessValidator.HasRightsAsync(senderId, Rights.AddEditRemoveUsers))
+        && !await _accessValidator.HasRightsAsync(Rights.AddEditRemoveUsers))
       {
-        return _responseCreator.CreateFailureResponse<List<Guid>> (HttpStatusCode.Forbidden);
+        return _responseCreator.CreateFailureResponse<List<Guid>>(HttpStatusCode.Forbidden);
       }
 
       if (!_validator.ValidateCustom(request, out List<string> errors))
@@ -117,10 +123,9 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
 
       if (response.Errors.Any())
       {
-        response.Status = OperationResultStatusType.Failed;
-        _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-
-        return response;
+        return _responseCreator.CreateFailureResponse<List<Guid>>(
+          HttpStatusCode.BadRequest,
+          response.Errors);
       }
 
       response.Body = await _repository.CreateAsync(imagesIds.Select(imageId =>
