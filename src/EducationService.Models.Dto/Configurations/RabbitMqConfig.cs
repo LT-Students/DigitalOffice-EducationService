@@ -7,6 +7,8 @@ namespace LT.DigitalOffice.EducationService.Models.Dto.Configurations
 {
   public class RabbitMqConfig : BaseRabbitMqConfig
   {
+    public string GetUserEducationsEndpoint { get; set; }
+
     // image
 
     [AutoInjectRequest(typeof(ICreateImagesRequest))]

@@ -1,6 +1,6 @@
 ﻿using LT.DigitalOffice.EducationService.Business.Commands.Certificate.Interfaces;
 using LT.DigitalOffice.EducationService.Data.Interfaces;
-using LT.DigitalOffice.EducationService.Mappers.Models.Interfaces;
+using LT.DigitalOffice.EducationService.Mappers.Patch.Interfaces;
 using LT.DigitalOffice.EducationService.Models.Db;
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Certificates;
 using LT.DigitalOffice.EducationService.Validation.Certificates.Interfaces;
@@ -24,7 +24,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
   {
     private readonly IAccessValidator _accessValidator;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly ICertificateRepository _certificateRepository;
+    private readonly IUserCertificateRepository _certificateRepository;
     private readonly IPatchDbUserCertificateMapper _mapper;
     private readonly IResponseCreator _responseCreator;
     private readonly IEditCertificateRequestValidator _validator;
@@ -32,7 +32,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
     public EditCertificateCommand(
       IAccessValidator accessValidator,
       IHttpContextAccessor httpContextAccessor,
-      ICertificateRepository certificateRepository,
+      IUserCertificateRepository certificateRepository,
       IPatchDbUserCertificateMapper mapper,
       IResponseCreator responseCreator,
       IEditCertificateRequestValidator validator)

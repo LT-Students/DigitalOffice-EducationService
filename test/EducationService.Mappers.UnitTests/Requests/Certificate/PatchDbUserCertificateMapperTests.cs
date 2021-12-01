@@ -1,35 +1,33 @@
-﻿using LT.DigitalOffice.UnitTestKernel;
-using LT.DigitalOffice.EducationService.Mappers.Models;
-using LT.DigitalOffice.EducationService.Models.Db;
+﻿using LT.DigitalOffice.EducationService.Models.Db;
+using LT.DigitalOffice.EducationService.Models.Dto.Requests.Certificates;
+using LT.DigitalOffice.EducationService.Patch.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;
 using Newtonsoft.Json.Serialization;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using LT.DigitalOffice.EducationService.Models.Dto.Requests.Certificates;
-using LT.DigitalOffice.EducationService.Models.Dto.Requests.Images;
 
 namespace LT.DigitalOffice.EducationService.Mappers.Db.UnitTests
 {
-    public class PatchDbUserCertificateMapperTests
+  public class PatchDbUserCertificateMapperTests
+  {
+    private PatchDbUserCertificateMapper _mapper;
+
+    private Guid _imageId = Guid.NewGuid();
+    private JsonPatchDocument<EditCertificateRequest> _request;
+    private JsonPatchDocument<DbUserCertificate> _dbRequest;
+
+    [SetUp]
+    public void SetUp()
     {
-        private PatchDbUserCertificateMapper _mapper;
+      _mapper = new();
 
-        private Guid _imageId = Guid.NewGuid();
-        private JsonPatchDocument<EditCertificateRequest> _request;
-        private JsonPatchDocument<DbUserCertificate> _dbRequest;
+      var time = DateTime.UtcNow;
+      var userId = Guid.NewGuid();
 
-        [SetUp]
-        public void SetUp()
-        {
-            _mapper = new();
-
-            var time = DateTime.UtcNow;
-            var userId = Guid.NewGuid();
-
-            _request = new JsonPatchDocument<EditCertificateRequest>(
-                new List<Operation<EditCertificateRequest>> {
+      _request = new JsonPatchDocument<EditCertificateRequest>(
+          new List<Operation<EditCertificateRequest>> {
                     new Operation<EditCertificateRequest>
                     {
                         op = "replace",
@@ -54,11 +52,11 @@ namespace LT.DigitalOffice.EducationService.Mappers.Db.UnitTests
                         path = $"/{nameof(EditCertificateRequest.IsActive)}",
                         value = false
                     }
-                },
-                new CamelCasePropertyNamesContractResolver());
+          },
+          new CamelCasePropertyNamesContractResolver());
 
-            _dbRequest = new JsonPatchDocument<DbUserCertificate>(
-                new List<Operation<DbUserCertificate>> {
+      _dbRequest = new JsonPatchDocument<DbUserCertificate>(
+          new List<Operation<DbUserCertificate>> {
                     new Operation<DbUserCertificate>
                     {
                         op = "replace",
@@ -89,20 +87,20 @@ namespace LT.DigitalOffice.EducationService.Mappers.Db.UnitTests
                         path = $"/{nameof(DbUserCertificate.UserId)}",
                         value = userId
                     }
-                },
-                new CamelCasePropertyNamesContractResolver());
-        }
-
-/*        [Test]
-        public void ShouldMapSuccessful()
-        {
-            SerializerAssert.AreEqual(_dbRequest, _mapper.Map(_request));
-        }
-
-        [Test]
-        public void ShouldThrowExceptionWhenRequestIsNull()
-        {
-            Assert.Throws<ArgumentNullException>(() => _mapper.Map(null, _imageId));
-        }*/
+          },
+          new CamelCasePropertyNamesContractResolver());
     }
+
+    /*        [Test]
+            public void ShouldMapSuccessful()
+            {
+                SerializerAssert.AreEqual(_dbRequest, _mapper.Map(_request));
+            }
+
+            [Test]
+            public void ShouldThrowExceptionWhenRequestIsNull()
+            {
+                Assert.Throws<ArgumentNullException>(() => _mapper.Map(null, _imageId));
+            }*/
+  }
 }

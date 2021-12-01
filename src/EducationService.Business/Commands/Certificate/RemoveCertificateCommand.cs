@@ -18,13 +18,13 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
   {
     private readonly IAccessValidator _accessValidator;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly ICertificateRepository _certificateRepository;
+    private readonly IUserCertificateRepository _certificateRepository;
     private readonly IResponseCreator _responseCreator;
 
     public RemoveCertificateCommand(
       IAccessValidator accessValidator,
       IHttpContextAccessor httpContextAccessor,
-      ICertificateRepository certificateRepository,
+      IUserCertificateRepository certificateRepository,
       IResponseCreator responseCreator)
     {
       _accessValidator = accessValidator;

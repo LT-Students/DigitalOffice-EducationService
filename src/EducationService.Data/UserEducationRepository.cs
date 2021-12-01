@@ -1,22 +1,21 @@
-﻿using LT.DigitalOffice.EducationService.Data.Provider;
+﻿using LT.DigitalOffice.EducationService.Data.Interfaces;
+using LT.DigitalOffice.EducationService.Data.Provider;
 using LT.DigitalOffice.EducationService.Models.Db;
 using LT.DigitalOffice.Kernel.Extensions;
-using LT.DigitalOffice.EducationService.Data.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
 
 namespace LT.DigitalOffice.EducationService.Data
 {
-  public class EducationRepository : IEducationRepository
+  public class UserEducationRepository : IUserEducationRepository
   {
     private readonly IDataProvider _provider;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public EducationRepository(
+    public UserEducationRepository(
       IDataProvider provider,
       IHttpContextAccessor httpContextAccessor)
     {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace LT.DigitalOffice.EducationService.Data.Interfaces
 {
   [AutoInject]
-  public interface IEducationRepository
+  public interface IUserEducationRepository
   {
     Task<bool> CreateAsync(DbUserEducation education);
 

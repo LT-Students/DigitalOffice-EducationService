@@ -1,3 +1,4 @@
+using EducationService.Broker.Consumers;
 using HealthChecks.UI.Client;
 using LT.DigitalOffice.EducationService.Data.Provider.MsSql.Ef;
 using LT.DigitalOffice.EducationService.Models.Dto.Configurations;
@@ -10,6 +11,8 @@ using LT.DigitalOffice.Kernel.Helpers;
 using LT.DigitalOffice.Kernel.Middlewares.ApiInformation;
 using LT.DigitalOffice.Kernel.RedisSupport.Configurations;
 using MassTransit;
+using MassTransit.ExtensionsDependencyInjectionIntegration;
+using MassTransit.RabbitMqTransport;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
@@ -75,12 +78,31 @@ namespace LT.DigitalOffice.EducationService
             host.Username(username);
             host.Password(password);
           });
+
+          ConfigureEndpoints(context, cfg, _rabbitMqConfig);
         });
 
+        ConfigureConsumers(x);
         x.AddRequestClients(_rabbitMqConfig);
       });
 
       services.AddMassTransitHostedService();
+    }
+
+    private void ConfigureConsumers(IServiceCollectionBusConfigurator x)
+    {
+      x.AddConsumer<GetUserEducationsConsumer>();
+    }
+
+    private void ConfigureEndpoints(
+       IBusRegistrationContext context,
+       IRabbitMqBusFactoryConfigurator cfg,
+       RabbitMqConfig rabbitMqConfig)
+    {
+      cfg.ReceiveEndpoint(rabbitMqConfig.GetUserEducationsEndpoint, ep =>
+      {
+        ep.ConfigureConsumer<GetUserEducationsConsumer>(context);
+      });
     }
 
     private void UpdateDatabase(IApplicationBuilder app)

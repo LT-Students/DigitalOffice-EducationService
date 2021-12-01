@@ -44,6 +44,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationService.Mappers.Un
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationService.Validation.UnitTests", "test\EducationService.Validation.UnitTests\EducationService.Validation.UnitTests.csproj", "{08C712DD-6F67-4310-A263-F79B4F4BCFD9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationService.Broker", "src\EducationrService.Broker\EducationService.Broker.csproj", "{A7882373-ECA7-4DBC-8C30-88F902195907}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -102,6 +104,10 @@ Global
 		{08C712DD-6F67-4310-A263-F79B4F4BCFD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08C712DD-6F67-4310-A263-F79B4F4BCFD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08C712DD-6F67-4310-A263-F79B4F4BCFD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7882373-ECA7-4DBC-8C30-88F902195907}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7882373-ECA7-4DBC-8C30-88F902195907}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7882373-ECA7-4DBC-8C30-88F902195907}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7882373-ECA7-4DBC-8C30-88F902195907}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -120,6 +126,7 @@ Global
 		{907AC9EF-46AA-442E-A954-0C95999C18F0} = {206B7553-A120-4A54-803B-D1555D965B91}
 		{F0A1E6F4-E29E-433A-830E-34B46A2AA7F2} = {206B7553-A120-4A54-803B-D1555D965B91}
 		{08C712DD-6F67-4310-A263-F79B4F4BCFD9} = {206B7553-A120-4A54-803B-D1555D965B91}
+		{A7882373-ECA7-4DBC-8C30-88F902195907} = {B4F839B1-669D-4495-BFF3-EC7980B5C398}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C033FEB8-8440-47A5-BD46-C688CA774997}

@@ -3,6 +3,7 @@ using LT.DigitalOffice.Kernel.Attributes;
 using LT.DigitalOffice.Kernel.Database;
 using LT.DigitalOffice.Kernel.Enums;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace LT.DigitalOffice.EducationService.Data.Provider
 {

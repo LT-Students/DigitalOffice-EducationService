@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace LT.DigitalOffice.EducationService.Data.Interfaces
 {
   [AutoInject]
-  public interface ICertificateRepository
+  public interface IUserCertificateRepository
   {
     Task<bool> CreateAsync(DbUserCertificate certificate);
 
