@@ -9,6 +9,6 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate.Interf
   [AutoInject]
   public interface ICreateCertificateCommand
   {
-    Task<OperationResultResponse<Guid>> ExecuteAsync(CreateCertificateRequest request);
+    Task<OperationResultResponse<Guid?>> ExecuteAsync(CreateCertificateRequest request);
   }
 }

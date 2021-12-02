@@ -57,15 +57,13 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
         return _responseCreator.CreateFailureResponse<Guid?>(HttpStatusCode.BadRequest, errors);
       }
 
-      DbUserEducation dbEducation = _mapper.Map(request);
+      OperationResultResponse<Guid?> response = new();
 
-      await _educationRepository.CreateAsync(dbEducation);
+      response.Body = await _educationRepository.CreateAsync(_mapper.Map(request));
+      response.Status = OperationResultStatusType.FullSuccess;
+      _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Created;
 
-      return new OperationResultResponse<Guid?>
-      {
-        Status = OperationResultStatusType.FullSuccess,
-        Body = dbEducation.Id
-      };
+      return response;
     }
   }
 }

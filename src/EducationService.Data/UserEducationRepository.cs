@@ -23,17 +23,17 @@ namespace LT.DigitalOffice.EducationService.Data
       _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<bool> CreateAsync(DbUserEducation education)
+    public async Task<Guid?> CreateAsync(DbUserEducation dbEducation)
     {
-      if (education is null)
+      if (dbEducation is null)
       {
-        return false;
+        return null;
       }
 
-      _provider.UsersEducations.Add(education);
+      _provider.UsersEducations.Add(dbEducation);
       await _provider.SaveAsync();
 
-      return true;
+      return dbEducation.Id;
     }
 
     public async Task<DbUserEducation> GetAsync(Guid educationId)
@@ -56,16 +56,16 @@ namespace LT.DigitalOffice.EducationService.Data
       return true;
     }
 
-    public async Task<bool> RemoveAsync(DbUserEducation education)
+    public async Task<bool> RemoveAsync(DbUserEducation dbEducation)
     {
-      if (education is null)
+      if (dbEducation is null)
       {
         return false;
       }
 
-      education.IsActive = false;
-      education.ModifiedBy = _httpContextAccessor.HttpContext.GetUserId();
-      education.ModifiedAtUtc = DateTime.UtcNow;
+      dbEducation.IsActive = false;
+      dbEducation.ModifiedBy = _httpContextAccessor.HttpContext.GetUserId();
+      dbEducation.ModifiedAtUtc = DateTime.UtcNow;
       await _provider.SaveAsync();
 
       return true;

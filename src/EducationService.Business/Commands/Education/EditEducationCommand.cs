@@ -51,6 +51,11 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
     {
       DbUserEducation userEducation = await _educationRepository.GetAsync(educationId);
 
+      if (userEducation is null)
+      {
+        return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.NotFound);
+      }
+
       if (_httpContextAccessor.HttpContext.GetUserId() != userEducation.UserId
         && !await _accessValidator.HasRightsAsync(Rights.AddEditRemoveUsers))
       {

@@ -23,17 +23,17 @@ namespace LT.DigitalOffice.EducationService.Data
       _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<bool> CreateAsync(DbUserCertificate certificate)
+    public async Task<Guid?> CreateAsync(DbUserCertificate dbCertificate)
     {
-      if (certificate is null)
+      if (dbCertificate is null)
       {
-        return false;
+        return null;
       }
 
-      _provider.UsersCertificates.Add(certificate);
+      _provider.UsersCertificates.Add(dbCertificate);
       await _provider.SaveAsync();
 
-      return true;
+      return dbCertificate.Id;
     }
 
     public async Task<DbUserCertificate> GetAsync(Guid certificateId)
@@ -56,16 +56,16 @@ namespace LT.DigitalOffice.EducationService.Data
       return true;
     }
 
-    public async Task<bool> RemoveAsync(DbUserCertificate certificate)
+    public async Task<bool> RemoveAsync(DbUserCertificate dbCertificate)
     {
-      if (certificate is null)
+      if (dbCertificate is null)
       {
         return false;
       }
 
-      certificate.IsActive = false;
-      certificate.ModifiedBy = _httpContextAccessor.HttpContext.GetUserId();
-      certificate.ModifiedAtUtc = DateTime.UtcNow;
+      dbCertificate.IsActive = false;
+      dbCertificate.ModifiedBy = _httpContextAccessor.HttpContext.GetUserId();
+      dbCertificate.ModifiedAtUtc = DateTime.UtcNow;
       await _provider.SaveAsync();
 
       return true;

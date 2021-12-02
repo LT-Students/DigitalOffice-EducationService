@@ -9,12 +9,12 @@ namespace LT.DigitalOffice.EducationService.Data.Interfaces
   [AutoInject]
   public interface IUserCertificateRepository
   {
-    Task<bool> CreateAsync(DbUserCertificate certificate);
+    Task<Guid?> CreateAsync(DbUserCertificate dbCertificate);
 
     Task<DbUserCertificate> GetAsync(Guid certificateId);
 
     Task<bool> EditAsync(DbUserCertificate certificateId, JsonPatchDocument<DbUserCertificate> request);
 
-    Task<bool> RemoveAsync(DbUserCertificate certificate);
+    Task<bool> RemoveAsync(DbUserCertificate dbCertificate);
   }
 }

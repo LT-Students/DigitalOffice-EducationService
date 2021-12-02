@@ -49,9 +49,14 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
       Guid certificateId,
       JsonPatchDocument<EditCertificateRequest> request)
     {
-      DbUserCertificate certificate = await _certificateRepository.GetAsync(certificateId);
+      DbUserCertificate dbCertificate = await _certificateRepository.GetAsync(certificateId);
 
-      if (_httpContextAccessor.HttpContext.GetUserId() != certificate.UserId
+      if (dbCertificate is null)
+      {
+        return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.NotFound);
+      }
+
+      if (_httpContextAccessor.HttpContext.GetUserId() != dbCertificate.UserId
         && !await _accessValidator.HasRightsAsync(Rights.AddEditRemoveUsers))
       {
         return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.Forbidden);
@@ -65,7 +70,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
       return new OperationResultResponse<bool>
       {
         Status = OperationResultStatusType.FullSuccess,
-        Body = await _certificateRepository.EditAsync(certificate, _mapper.Map(request))
+        Body = await _certificateRepository.EditAsync(dbCertificate, _mapper.Map(request))
       };
     }
   }

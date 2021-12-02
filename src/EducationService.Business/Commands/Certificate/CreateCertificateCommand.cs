@@ -94,35 +94,33 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
       _validator = validator;
     }
 
-    public async Task<OperationResultResponse<Guid>> ExecuteAsync(CreateCertificateRequest request)
+    public async Task<OperationResultResponse<Guid?>> ExecuteAsync(CreateCertificateRequest request)
     {
       if (!await _accessValidator.HasRightsAsync(Rights.AddEditRemoveUsers)
         && _httpContextAccessor.HttpContext.GetUserId() != request.UserId)
       {
-        return _responseCreator.CreateFailureResponse<Guid>(HttpStatusCode.Forbidden);
+        return _responseCreator.CreateFailureResponse<Guid?>(HttpStatusCode.Forbidden);
       }
 
       if (!_validator.ValidateCustom(request, out List<string> errors))
       {
-        return _responseCreator.CreateFailureResponse<Guid>(HttpStatusCode.BadRequest, errors);
+        return _responseCreator.CreateFailureResponse<Guid?>(HttpStatusCode.BadRequest, errors);
       }
 
       List<Guid> imagesId = await CreateImagesAsync(request.Images, errors);
 
       if (errors.Any())
       {
-        return _responseCreator.CreateFailureResponse<Guid>(HttpStatusCode.BadRequest, errors);
+        return _responseCreator.CreateFailureResponse<Guid?>(HttpStatusCode.BadRequest, errors);
       }
 
-      DbUserCertificate dbUserCertificate = _mapper.Map(request, imagesId);
+      OperationResultResponse<Guid?> response = new();
 
-      await _certificateRepository.CreateAsync(dbUserCertificate);
+      response.Body = await _certificateRepository.CreateAsync(_mapper.Map(request, imagesId));
+      response.Status = OperationResultStatusType.FullSuccess;
+      _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Created;
 
-      return new OperationResultResponse<Guid>
-      {
-        Status = OperationResultStatusType.FullSuccess,
-        Body = dbUserCertificate.Id
-      };
+      return response;
     }
   }
 }
