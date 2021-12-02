@@ -13,7 +13,7 @@ namespace LT.DigitalOffice.EducationService.Controllers
   public class CertificateController : ControllerBase
   {
     [HttpPost("create")]
-    public async Task<OperationResultResponse<Guid>> CreateAsync(
+    public async Task<OperationResultResponse<Guid?>> CreateAsync(
       [FromServices] ICreateCertificateCommand command,
       [FromBody] CreateCertificateRequest request)
     {
