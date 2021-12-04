@@ -1,12 +1,12 @@
+using LT.DigitalOffice.EducationService.Mappers.Patch.Interfaces;
 using LT.DigitalOffice.EducationService.Models.Db;
+using LT.DigitalOffice.EducationService.Models.Dto.Enums;
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Education;
-using LT.DigitalOffice.EducationService.Mappers.Models.Interfaces;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;
 using System;
-using LT.DigitalOffice.EducationService.Models.Dto.Enums;
 
-namespace LT.DigitalOffice.EducationService.Mappers.Models
+namespace LT.DigitalOffice.EducationService.Patch.Models
 {
   public class PatchDbUserEducationMapper : IPatchDbUserEducationMapper
   {

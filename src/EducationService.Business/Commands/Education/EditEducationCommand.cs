@@ -1,6 +1,6 @@
 using LT.DigitalOffice.EducationService.Business.Commands.Education.Interfaces;
 using LT.DigitalOffice.EducationService.Data.Interfaces;
-using LT.DigitalOffice.EducationService.Mappers.Models.Interfaces;
+using LT.DigitalOffice.EducationService.Mappers.Patch.Interfaces;
 using LT.DigitalOffice.EducationService.Models.Db;
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Education;
 using LT.DigitalOffice.EducationService.Validation.Education.Interfaces;
@@ -24,7 +24,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
   {
     private readonly IAccessValidator _accessValidator;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IEducationRepository _educationRepository;
+    private readonly IUserEducationRepository _educationRepository;
     private readonly IPatchDbUserEducationMapper _mapper;
     private readonly IEditEducationRequestValidator _validator;
     private readonly IResponseCreator _responseCreator;
@@ -32,7 +32,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
     public EditEducationCommand(
       IAccessValidator accessValidator,
       IHttpContextAccessor httpContextAccessor,
-      IEducationRepository educationRepository,
+      IUserEducationRepository educationRepository,
       IPatchDbUserEducationMapper mapper,
       IEditEducationRequestValidator validator,
       IResponseCreator responseCreator)
@@ -50,6 +50,11 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
       JsonPatchDocument<EditEducationRequest> request)
     {
       DbUserEducation userEducation = await _educationRepository.GetAsync(educationId);
+
+      if (userEducation is null)
+      {
+        return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.NotFound);
+      }
 
       if (_httpContextAccessor.HttpContext.GetUserId() != userEducation.UserId
         && !await _accessValidator.HasRightsAsync(Rights.AddEditRemoveUsers))

@@ -23,7 +23,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
   {
     private readonly IAccessValidator _accessValidator;
     private readonly IDbUserEducationMapper _mapper;
-    private readonly IEducationRepository _educationRepository;
+    private readonly IUserEducationRepository _educationRepository;
     private readonly ICreateEducationRequestValidator _validator;
     private readonly IResponseCreator _responseCreator;
     private readonly IHttpContextAccessor _httpContextAccessor;
@@ -31,7 +31,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
     public CreateEducationCommand(
       IAccessValidator accessValidator,
       IDbUserEducationMapper mapper,
-      IEducationRepository educationRepository,
+      IUserEducationRepository educationRepository,
       ICreateEducationRequestValidator validator,
       IResponseCreator responseCreator,
       IHttpContextAccessor httpContextAccessor)
@@ -57,15 +57,13 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
         return _responseCreator.CreateFailureResponse<Guid?>(HttpStatusCode.BadRequest, errors);
       }
 
-      DbUserEducation dbEducation = _mapper.Map(request);
+      OperationResultResponse<Guid?> response = new();
 
-      await _educationRepository.CreateAsync(dbEducation);
+      response.Body = await _educationRepository.CreateAsync(_mapper.Map(request));
+      response.Status = OperationResultStatusType.FullSuccess;
+      _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Created;
 
-      return new OperationResultResponse<Guid?>
-      {
-        Status = OperationResultStatusType.FullSuccess,
-        Body = dbEducation.Id
-      };
+      return response;
     }
   }
 }

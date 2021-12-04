@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 namespace LT.DigitalOffice.EducationService.Data.Interfaces
 {
   [AutoInject]
-  public interface IEducationRepository
+  public interface IUserEducationRepository
   {
-    Task<bool> CreateAsync(DbUserEducation education);
+    Task<Guid?> CreateAsync(DbUserEducation dbEducation);
 
     Task<DbUserEducation> GetAsync(Guid educationId);
 
     Task<bool> EditAsync(DbUserEducation educationId, JsonPatchDocument<DbUserEducation> request);
 
-    Task<bool> RemoveAsync(DbUserEducation education);
+    Task<bool> RemoveAsync(DbUserEducation dbEducation);
   }
 }

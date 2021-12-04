@@ -1,23 +1,21 @@
 ﻿using LT.DigitalOffice.EducationService.Data.Interfaces;
 using LT.DigitalOffice.EducationService.Data.Provider;
 using LT.DigitalOffice.EducationService.Models.Db;
-using LT.DigitalOffice.Kernel.Exceptions.Models;
 using LT.DigitalOffice.Kernel.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace LT.DigitalOffice.EducationService.Data
 {
-  public class CertificateRepository : ICertificateRepository
+  public class UserCertificateRepository : IUserCertificateRepository
   {
     private readonly IDataProvider _provider;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public CertificateRepository(
+    public UserCertificateRepository(
       IDataProvider provider,
       IHttpContextAccessor httpContextAccessor)
     {
@@ -25,17 +23,17 @@ namespace LT.DigitalOffice.EducationService.Data
       _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<bool> CreateAsync(DbUserCertificate certificate)
+    public async Task<Guid?> CreateAsync(DbUserCertificate dbCertificate)
     {
-      if (certificate is null)
+      if (dbCertificate is null)
       {
-        return false;
+        return null;
       }
 
-      _provider.UsersCertificates.Add(certificate);
+      _provider.UsersCertificates.Add(dbCertificate);
       await _provider.SaveAsync();
 
-      return true;
+      return dbCertificate.Id;
     }
 
     public async Task<DbUserCertificate> GetAsync(Guid certificateId)
@@ -58,16 +56,16 @@ namespace LT.DigitalOffice.EducationService.Data
       return true;
     }
 
-    public async Task<bool> RemoveAsync(DbUserCertificate certificate)
+    public async Task<bool> RemoveAsync(DbUserCertificate dbCertificate)
     {
-      if (certificate is null)
+      if (dbCertificate is null)
       {
         return false;
       }
 
-      certificate.IsActive = false;
-      certificate.ModifiedBy = _httpContextAccessor.HttpContext.GetUserId();
-      certificate.ModifiedAtUtc = DateTime.UtcNow;
+      dbCertificate.IsActive = false;
+      dbCertificate.ModifiedBy = _httpContextAccessor.HttpContext.GetUserId();
+      dbCertificate.ModifiedAtUtc = DateTime.UtcNow;
       await _provider.SaveAsync();
 
       return true;

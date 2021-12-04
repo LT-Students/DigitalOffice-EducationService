@@ -1,22 +1,21 @@
-﻿using LT.DigitalOffice.EducationService.Data.Provider;
+﻿using LT.DigitalOffice.EducationService.Data.Interfaces;
+using LT.DigitalOffice.EducationService.Data.Provider;
 using LT.DigitalOffice.EducationService.Models.Db;
 using LT.DigitalOffice.Kernel.Extensions;
-using LT.DigitalOffice.EducationService.Data.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
 
 namespace LT.DigitalOffice.EducationService.Data
 {
-  public class EducationRepository : IEducationRepository
+  public class UserEducationRepository : IUserEducationRepository
   {
     private readonly IDataProvider _provider;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public EducationRepository(
+    public UserEducationRepository(
       IDataProvider provider,
       IHttpContextAccessor httpContextAccessor)
     {
@@ -24,17 +23,17 @@ namespace LT.DigitalOffice.EducationService.Data
       _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<bool> CreateAsync(DbUserEducation education)
+    public async Task<Guid?> CreateAsync(DbUserEducation dbEducation)
     {
-      if (education is null)
+      if (dbEducation is null)
       {
-        return false;
+        return null;
       }
 
-      _provider.UsersEducations.Add(education);
+      _provider.UsersEducations.Add(dbEducation);
       await _provider.SaveAsync();
 
-      return true;
+      return dbEducation.Id;
     }
 
     public async Task<DbUserEducation> GetAsync(Guid educationId)
@@ -57,16 +56,16 @@ namespace LT.DigitalOffice.EducationService.Data
       return true;
     }
 
-    public async Task<bool> RemoveAsync(DbUserEducation education)
+    public async Task<bool> RemoveAsync(DbUserEducation dbEducation)
     {
-      if (education is null)
+      if (dbEducation is null)
       {
         return false;
       }
 
-      education.IsActive = false;
-      education.ModifiedBy = _httpContextAccessor.HttpContext.GetUserId();
-      education.ModifiedAtUtc = DateTime.UtcNow;
+      dbEducation.IsActive = false;
+      dbEducation.ModifiedBy = _httpContextAccessor.HttpContext.GetUserId();
+      dbEducation.ModifiedAtUtc = DateTime.UtcNow;
       await _provider.SaveAsync();
 
       return true;

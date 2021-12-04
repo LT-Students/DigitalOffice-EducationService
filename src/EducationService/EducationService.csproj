@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EducationrService.Broker\EducationService.Broker.csproj" />
     <ProjectReference Include="..\EducationService.Business\EducationService.Business.csproj" />
     <ProjectReference Include="..\EducationService.Data.Provider.MsSql.Ef\EducationService.Data.Provider.MsSql.Ef.csproj" />
     <ProjectReference Include="..\EducationService.Models.Dto\EducationService.Models.Dto.csproj" />

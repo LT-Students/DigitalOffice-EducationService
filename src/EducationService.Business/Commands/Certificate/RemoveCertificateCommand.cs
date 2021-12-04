@@ -18,13 +18,13 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
   {
     private readonly IAccessValidator _accessValidator;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly ICertificateRepository _certificateRepository;
+    private readonly IUserCertificateRepository _certificateRepository;
     private readonly IResponseCreator _responseCreator;
 
     public RemoveCertificateCommand(
       IAccessValidator accessValidator,
       IHttpContextAccessor httpContextAccessor,
-      ICertificateRepository certificateRepository,
+      IUserCertificateRepository certificateRepository,
       IResponseCreator responseCreator)
     {
       _accessValidator = accessValidator;
@@ -35,9 +35,14 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
 
     public async Task<OperationResultResponse<bool>> ExecuteAsync(Guid certificateId)
     {
-      DbUserCertificate userCertificate = await _certificateRepository.GetAsync(certificateId);
+      DbUserCertificate dbCertificate = await _certificateRepository.GetAsync(certificateId);
 
-      if (_httpContextAccessor.HttpContext.GetUserId() != userCertificate.UserId
+      if (dbCertificate is null)
+      {
+        return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.NotFound);
+      }
+
+      if (_httpContextAccessor.HttpContext.GetUserId() != dbCertificate.UserId
         && !await _accessValidator.HasRightsAsync(Rights.AddEditRemoveUsers))
       {
         return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.Forbidden);
@@ -46,7 +51,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Certificate
       return new OperationResultResponse<bool>
       {
         Status = OperationResultStatusType.FullSuccess,
-        Body = await _certificateRepository.RemoveAsync(userCertificate)
+        Body = await _certificateRepository.RemoveAsync(dbCertificate)
       };
     }
   }

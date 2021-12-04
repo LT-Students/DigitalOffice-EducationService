@@ -1,6 +1,7 @@
 using LT.DigitalOffice.EducationService.Mappers.Models;
 using LT.DigitalOffice.EducationService.Models.Db;
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Education;
+using LT.DigitalOffice.EducationService.Patch.Models;
 using LT.DigitalOffice.UnitTestKernel;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;

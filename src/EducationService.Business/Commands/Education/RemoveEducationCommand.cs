@@ -18,13 +18,13 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
   {
     private readonly IAccessValidator _accessValidator;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IEducationRepository _educationRepository;
+    private readonly IUserEducationRepository _educationRepository;
     private readonly IResponseCreator _responseCreator;
 
     public RemoveEducationCommand(
       IAccessValidator accessValidator,
       IHttpContextAccessor httpContextAccessor,
-      IEducationRepository educationRepository,
+      IUserEducationRepository educationRepository,
       IResponseCreator responseCreator)
     {
       _accessValidator = accessValidator;
@@ -37,16 +37,21 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
     {
       DbUserEducation userEducation = await _educationRepository.GetAsync(educationId);
 
+      if (userEducation is null)
+      {
+        return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.NotFound);
+      }
+
       if (_httpContextAccessor.HttpContext.GetUserId() != userEducation.UserId
         && !await _accessValidator.HasRightsAsync(Rights.AddEditRemoveUsers))
       {
         return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.Forbidden);
       }
 
-      return new OperationResultResponse<bool>
+      return new()
       {
-        Status = OperationResultStatusType.FullSuccess,
-        Body = await _educationRepository.RemoveAsync(userEducation)
+        Body = await _educationRepository.RemoveAsync(userEducation),
+        Status = OperationResultStatusType.FullSuccess
       };
     }
   }
