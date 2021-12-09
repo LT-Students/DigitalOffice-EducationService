@@ -3,7 +3,6 @@ using LT.DigitalOffice.Kernel.Attributes;
 using LT.DigitalOffice.Kernel.Database;
 using LT.DigitalOffice.Kernel.Enums;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 
 namespace LT.DigitalOffice.EducationService.Data.Provider
 {
@@ -13,5 +12,7 @@ namespace LT.DigitalOffice.EducationService.Data.Provider
     DbSet<DbUserEducation> UsersEducations { get; set; }
     DbSet<DbUserCertificate> UsersCertificates { get; set; }
     DbSet<DbCertificateImage> CertificatesImages { get; set; }
+    DbSet<DbUserSkill> UsersSkills { get; set; }
+    DbSet<DbSkill> Skills { get; set; }
   }
 }
