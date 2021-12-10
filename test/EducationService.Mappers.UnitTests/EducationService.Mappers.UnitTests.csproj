@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="$(ProjectDir)..\..\Common.Configurations.targets" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\EducationService.Business\EducationService.Business.csproj" />
+    <ProjectReference Include="..\..\src\EducationService.Mappers\EducationService.Mappers.csproj" />
+  </ItemGroup>
+
+</Project>
