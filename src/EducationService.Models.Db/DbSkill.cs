@@ -16,11 +16,11 @@ namespace LT.DigitalOffice.EducationService.Models.Db
     public DateTime CreatedAtUtc { get; set; }
     public Guid? ModifiedBy { get; set; }
     public DateTime? ModifiedAtUtc { get; set; }
-    public ICollection<DbUserSkill> UserSkills { get; set; }
+    public ICollection<DbUserSkill> UsersSkill { get; set; }
 
     public DbSkill()
     {
-      UserSkills = new HashSet<DbUserSkill>();
+      UsersSkill = new HashSet<DbUserSkill>();
     }
   }
 
@@ -39,7 +39,7 @@ namespace LT.DigitalOffice.EducationService.Models.Db
         .IsRequired();
 
       builder
-        .HasMany(s => s.UserSkills)
+        .HasMany(s => s.UsersSkill)
         .WithOne(us => us.Skill);
     }
   }

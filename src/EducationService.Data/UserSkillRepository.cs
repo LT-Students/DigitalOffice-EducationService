@@ -24,7 +24,7 @@ namespace LT.DigitalOffice.EducationService.Data
       return (
         await _provider.UsersSkills
         .Include(us => us.Skill)
-        .Where(us => us.UserId == userId)
+        .Where(us => us.UserId == userId && us.IsActive)
         .ToListAsync());
     }
   }

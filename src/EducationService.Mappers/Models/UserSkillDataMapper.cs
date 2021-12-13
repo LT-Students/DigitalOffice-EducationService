@@ -15,8 +15,7 @@ namespace LT.DigitalOffice.EducationService.Mappers.Models
 
       return new UserSkillData(
         id: dbUserSkill.Id,
-        name: dbUserSkill.Skill.Name
-        );
+        name: dbUserSkill.Skill.Name);
     }
   }
 }

@@ -48,6 +48,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Skill
       {
         return _responseCreator.CreateFailureResponse<Guid?>(HttpStatusCode.Forbidden);
       }
+
       ValidationResult validationResult = await _validator.ValidateAsync(request);
 
       if (!validationResult.IsValid)
@@ -59,14 +60,12 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Skill
       OperationResultResponse<Guid?> response = new();
 
       response.Body = await _repository.CreateAsync(_mapper.Map(request));
-      response.Status = OperationResultStatusType.FullSuccess;
 
       _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Created;
 
       if (response.Body is null)
       {
         response = _responseCreator.CreateFailureResponse<Guid?>(HttpStatusCode.BadRequest);
-        response.Status = OperationResultStatusType.Failed;
       }
 
       return response;

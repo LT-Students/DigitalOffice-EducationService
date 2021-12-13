@@ -40,7 +40,7 @@ namespace LT.DigitalOffice.EducationService.Models.Db
 
       builder
         .HasOne(us => us.Skill)
-        .WithMany(s => s.UserSkills);
+        .WithMany(s => s.UsersSkill);
     }
   }
 }
