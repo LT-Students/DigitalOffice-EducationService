@@ -9,7 +9,6 @@ namespace LT.DigitalOffice.EducationService.Validation.Skill
   {
     public CreateSkillRequestValidator(ISkillRepository skillRepository)
     {
-
       RuleFor(s => s.Name)
         .Cascade(CascadeMode.Stop)
         .Must(s => string.IsNullOrWhiteSpace(s)).WithMessage("Name of Skill must not be empty.")
