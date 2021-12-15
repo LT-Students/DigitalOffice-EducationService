@@ -31,7 +31,7 @@ namespace LT.DigitalOffice.EducationService.Data
 
     public async Task<bool> DoesSkillAlreadyExistAsync(string skillName)
     {
-      return await _provider.Skills.AnyAsync(s => s.Name == skillName);
+      return await _provider.Skills.AnyAsync(s => s.Name.ToLower() == skillName.ToLower());
     }
   }
 }
