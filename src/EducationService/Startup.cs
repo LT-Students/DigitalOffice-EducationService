@@ -137,7 +137,7 @@ namespace LT.DigitalOffice.EducationService
         .GetSection(BaseServiceInfoConfig.SectionName)
         .Get<BaseServiceInfoConfig>();
 
-      Version = "1.0.0.0";
+      Version = "1.0.1.0";
       Description = "EducationService is an API that intended to work with education.";
       StartTime = DateTime.UtcNow;
       ApiName = $"LT Digital Office - {_serviceInfoConfig.Name}";
