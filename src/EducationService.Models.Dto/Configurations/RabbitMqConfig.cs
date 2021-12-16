@@ -8,6 +8,7 @@ namespace LT.DigitalOffice.EducationService.Models.Dto.Configurations
   public class RabbitMqConfig : BaseRabbitMqConfig
   {
     public string GetUserEducationsEndpoint { get; set; }
+    public string GetUserSkillsEndpoint { get; set; }
 
     // image
 

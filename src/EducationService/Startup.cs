@@ -1,5 +1,6 @@
 using EducationService.Broker.Consumers;
 using HealthChecks.UI.Client;
+using LT.DigitalOffice.EducationService.Broker.Consumers;
 using LT.DigitalOffice.EducationService.Data.Provider.MsSql.Ef;
 using LT.DigitalOffice.EducationService.Models.Dto.Configurations;
 using LT.DigitalOffice.Kernel.BrokerSupport.Configurations;
@@ -92,6 +93,7 @@ namespace LT.DigitalOffice.EducationService
     private void ConfigureConsumers(IServiceCollectionBusConfigurator x)
     {
       x.AddConsumer<GetUserEducationsConsumer>();
+      x.AddConsumer<GetUserSkillsConsumer>();
     }
 
     private void ConfigureEndpoints(
@@ -102,6 +104,11 @@ namespace LT.DigitalOffice.EducationService
       cfg.ReceiveEndpoint(rabbitMqConfig.GetUserEducationsEndpoint, ep =>
       {
         ep.ConfigureConsumer<GetUserEducationsConsumer>(context);
+      });
+
+      cfg.ReceiveEndpoint(rabbitMqConfig.GetUserSkillsEndpoint, ep =>
+      {
+        ep.ConfigureConsumer<GetUserSkillsConsumer>(context);
       });
     }
 
@@ -130,7 +137,7 @@ namespace LT.DigitalOffice.EducationService
         .GetSection(BaseServiceInfoConfig.SectionName)
         .Get<BaseServiceInfoConfig>();
 
-      Version = "1.0.0.0";
+      Version = "1.0.1.0";
       Description = "EducationService is an API that intended to work with education.";
       StartTime = DateTime.UtcNow;
       ApiName = $"LT Digital Office - {_serviceInfoConfig.Name}";
