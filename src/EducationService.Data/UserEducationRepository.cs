@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LT.DigitalOffice.EducationService.Data
@@ -34,6 +36,23 @@ namespace LT.DigitalOffice.EducationService.Data
       await _provider.SaveAsync();
 
       return dbEducation.Id;
+    }
+
+    public async Task<bool> DisactivateEducation(Guid userId, Guid modifiedBy)
+    {
+      List<DbUserEducation> dbUserEducations = await _provider.UsersEducations
+        .Where(e => e.UserId == userId && e.IsActive)
+        .ToListAsync();
+      
+      foreach (DbUserEducation dbUserEducation in dbUserEducations)
+      {
+        dbUserEducation.IsActive = false;
+        dbUserEducation.ModifiedBy = modifiedBy;
+        dbUserEducation.ModifiedAtUtc = DateTime.UtcNow;
+      }
+      await _provider.SaveAsync();
+
+      return true;
     }
 
     public async Task<DbUserEducation> GetAsync(Guid educationId)
