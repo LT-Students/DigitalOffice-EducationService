@@ -34,13 +34,13 @@ namespace LT.DigitalOffice.EducationService.Data
 
     public async Task<bool> DisactivateCertificateAndEducations(Guid userId, Guid modifiedBy)
     {
-      List<DbUserEducation> dbUserEducations = await _provider.UsersEducations
+      IQueryable<DbUserEducation> dbUserEducations = _provider.UsersEducations
         .Where(e => e.UserId == userId && e.IsActive)
-        .ToListAsync();
+        .AsQueryable();
 
-      List<DbUserCertificate> dbUserCertificates = await _provider.UsersCertificates
+      IQueryable<DbUserCertificate> dbUserCertificates = _provider.UsersCertificates
         .Where(e => e.UserId == userId && e.IsActive)
-        .ToListAsync();
+        .AsQueryable();
 
       foreach (DbUserEducation dbUserEducation in dbUserEducations)
       {
