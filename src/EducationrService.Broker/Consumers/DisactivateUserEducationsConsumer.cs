@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace LT.DigitalOffice.EducationService.Broker.Consumers
 {
-  public class DisactivateUserEducationConsumer : IConsumer<IDisactivateUserRequest>
+  public class DisactivateUserEducationsConsumer : IConsumer<IDisactivateUserRequest>
   {
     private readonly IUserRepository _repository;
 
-    public DisactivateUserEducationConsumer(
+    public DisactivateUserEducationsConsumer(
       IUserRepository repository)
     {
       _repository = repository;

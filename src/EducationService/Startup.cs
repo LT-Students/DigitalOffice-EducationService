@@ -94,7 +94,7 @@ namespace LT.DigitalOffice.EducationService
     {
       x.AddConsumer<GetUserEducationsConsumer>();
       x.AddConsumer<GetUserSkillsConsumer>();
-      x.AddConsumer<DisactivateUserEducationConsumer>();
+      x.AddConsumer<DisactivateUserEducationsConsumer>();
     }
 
     private void ConfigureEndpoints(
@@ -112,9 +112,9 @@ namespace LT.DigitalOffice.EducationService
         ep.ConfigureConsumer<GetUserSkillsConsumer>(context);
       });
 
-      cfg.ReceiveEndpoint(rabbitMqConfig.DisactivateUserEducationEndpoint, ep =>
+      cfg.ReceiveEndpoint(rabbitMqConfig.DisactivateUserEducationsEndpoint, ep =>
       {
-        ep.ConfigureConsumer<DisactivateUserEducationConsumer>(context);
+        ep.ConfigureConsumer<DisactivateUserEducationsConsumer>(context);
       });
     }
 
