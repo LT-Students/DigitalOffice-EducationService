@@ -11,8 +11,6 @@ namespace LT.DigitalOffice.EducationService.Data.Interfaces
   {
     Task<Guid?> CreateAsync(DbUserEducation dbEducation);
 
-    Task<bool> DisactivateEducation(Guid userId, Guid modifiedBy);
-
     Task<DbUserEducation> GetAsync(Guid educationId);
 
     Task<bool> EditAsync(DbUserEducation educationId, JsonPatchDocument<DbUserEducation> request);

@@ -31,5 +31,34 @@ namespace LT.DigitalOffice.EducationService.Data
           .Where(uc => uc.UserId == userId)
           .ToListAsync());
     }
+
+    public async Task<bool> DisactivateCertificateAndEducations(Guid userId, Guid modifiedBy)
+    {
+      List<DbUserEducation> dbUserEducations = await _provider.UsersEducations
+        .Where(e => e.UserId == userId && e.IsActive)
+        .ToListAsync();
+
+      List<DbUserCertificate> dbUserCertificates = await _provider.UsersCertificates
+        .Where(e => e.UserId == userId && e.IsActive)
+        .ToListAsync();
+
+      foreach (DbUserEducation dbUserEducation in dbUserEducations)
+      {
+        dbUserEducation.IsActive = false;
+        dbUserEducation.ModifiedBy = modifiedBy;
+        dbUserEducation.ModifiedAtUtc = DateTime.UtcNow;
+      }
+
+      foreach (DbUserCertificate dbUserCertificate in dbUserCertificates)
+      {
+        dbUserCertificate.IsActive = false;
+        dbUserCertificate.ModifiedBy = modifiedBy;
+        dbUserCertificate.ModifiedAtUtc = DateTime.UtcNow;
+      }
+
+      await _provider.SaveAsync();
+
+      return true;
+    }
   }
 }

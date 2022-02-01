@@ -38,23 +38,6 @@ namespace LT.DigitalOffice.EducationService.Data
       return dbEducation.Id;
     }
 
-    public async Task<bool> DisactivateEducation(Guid userId, Guid modifiedBy)
-    {
-      List<DbUserEducation> dbUserEducations = await _provider.UsersEducations
-        .Where(e => e.UserId == userId && e.IsActive)
-        .ToListAsync();
-      
-      foreach (DbUserEducation dbUserEducation in dbUserEducations)
-      {
-        dbUserEducation.IsActive = false;
-        dbUserEducation.ModifiedBy = modifiedBy;
-        dbUserEducation.ModifiedAtUtc = DateTime.UtcNow;
-      }
-      await _provider.SaveAsync();
-
-      return true;
-    }
-
     public async Task<DbUserEducation> GetAsync(Guid educationId)
     {
       return await _provider.UsersEducations.FirstOrDefaultAsync(e => e.Id == educationId);
