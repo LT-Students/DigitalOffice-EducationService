@@ -32,7 +32,7 @@ namespace LT.DigitalOffice.EducationService.Data
           .ToListAsync());
     }
 
-    public async Task DisactivateCertificateAndEducations(Guid userId, Guid modifiedBy)
+    public async Task DisactivateCertificateAndEducationsAsync(Guid userId, Guid modifiedBy)
     {
       IQueryable<DbUserEducation> dbUserEducations = _provider.UsersEducations
         .Where(e => e.UserId == userId && e.IsActive)

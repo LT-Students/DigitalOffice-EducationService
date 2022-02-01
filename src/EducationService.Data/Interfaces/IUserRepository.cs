@@ -12,6 +12,6 @@ namespace LT.DigitalOffice.EducationService.Data.Interfaces
     Task<(List<DbUserCertificate> userCertificates, List<DbUserEducation> userEducations)>
       GetAsync(Guid userId);
 
-    Task DisactivateCertificateAndEducations(Guid userId, Guid modifiedBy);
+    Task DisactivateCertificateAndEducationsAsync(Guid userId, Guid modifiedBy);
   }
 }
