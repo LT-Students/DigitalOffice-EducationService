@@ -17,7 +17,7 @@ namespace LT.DigitalOffice.EducationService.Broker.Consumers
 
     public async Task Consume(ConsumeContext<IDisactivateUserRequest> context)
     {
-      await _repository.DisactivateCertificateAndEducations(context.Message.UserId, context.Message.ModifiedBy);
+      await _repository.DisactivateCertificateAndEducationsAsync(context.Message.UserId, context.Message.ModifiedBy);
     }
   }
 }
