@@ -55,7 +55,6 @@ namespace LT.DigitalOffice.EducationService.Data
         dbUserCertificate.ModifiedBy = modifiedBy;
         dbUserCertificate.ModifiedAtUtc = DateTime.UtcNow;
       }
-
       await _provider.SaveAsync();
 
       return true;
