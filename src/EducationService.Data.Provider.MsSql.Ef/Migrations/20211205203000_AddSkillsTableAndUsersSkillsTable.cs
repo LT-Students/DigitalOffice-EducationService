@@ -1,5 +1,4 @@
-﻿using LT.DigitalOffice.EducationService.Models.Db;
-using Microsoft.EntityFrameworkCore.Infrastructure;
+﻿using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
@@ -12,7 +11,7 @@ namespace LT.DigitalOffice.EducationService.Data.Provider.MsSql.Ef.Migrations
     private void CreateUsersSkillsTable(MigrationBuilder builder)
     {
       builder.CreateTable(
-        name: DbUserSkill.TableName,
+        name: "UsersSkills",
         columns: table => new
         {
           Id = table.Column<Guid>(nullable: false),
@@ -33,7 +32,7 @@ namespace LT.DigitalOffice.EducationService.Data.Provider.MsSql.Ef.Migrations
     private void CreateSkillsTable(MigrationBuilder builder)
     {
       builder.CreateTable(
-        name: DbSkill.TableName,
+        name: "Skills",
         columns: table => new
         {
           Id = table.Column<Guid>(nullable: false),
@@ -58,9 +57,9 @@ namespace LT.DigitalOffice.EducationService.Data.Provider.MsSql.Ef.Migrations
     protected override void Down(MigrationBuilder builder)
     {
       builder.DropTable(
-        name: DbUserSkill.TableName);
+        name: "UsersSkills");
       builder.DropTable(
-        name: DbSkill.TableName);
+        name: "Skills");
     }
   }
 }
