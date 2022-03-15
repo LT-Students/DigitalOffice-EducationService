@@ -31,7 +31,7 @@ namespace LT.DigitalOffice.EducationService.Mappers.Db
         QualificationName = request.QualificationName,
         AdmissionAt = request.AdmissionAt,
         IssueAt = request.IssueAt,
-        FormEducation = (int)request.FormEducation,
+ 
         IsActive = true,
         CreatedBy = _httpContextAccessor.HttpContext.GetUserId(),
         CreatedAtUtc = DateTime.UtcNow,

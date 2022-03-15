@@ -25,7 +25,7 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
         {
           nameof(EditEducationRequest.UniversityName),
           nameof(EditEducationRequest.QualificationName),
-          nameof(EditEducationRequest.FormEducation),
+        //  nameof(EditEducationRequest.FormEducation),
           nameof(EditEducationRequest.AdmissionAt),
           nameof(EditEducationRequest.IssueAt),
           nameof(EditEducationRequest.IsActive),
@@ -33,7 +33,7 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
 
       AddСorrectOperations(nameof(EditEducationRequest.UniversityName), new List<OperationType> { OperationType.Replace });
       AddСorrectOperations(nameof(EditEducationRequest.QualificationName), new List<OperationType> { OperationType.Replace });
-      AddСorrectOperations(nameof(EditEducationRequest.FormEducation), new List<OperationType> { OperationType.Replace });
+    //  AddСorrectOperations(nameof(EditEducationRequest.FormEducation), new List<OperationType> { OperationType.Replace });
       AddСorrectOperations(nameof(EditEducationRequest.AdmissionAt), new List<OperationType> { OperationType.Replace });
       AddСorrectOperations(nameof(EditEducationRequest.IssueAt), new List<OperationType> { OperationType.Replace });
       AddСorrectOperations(nameof(EditEducationRequest.IsActive), new List<OperationType> { OperationType.Replace });
@@ -58,13 +58,13 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
           { x => x.value.ToString().Length < 100, "QualificationName is too long."}
         });
 
-      AddFailureForPropertyIf(
-        nameof(EditEducationRequest.FormEducation),
-        o => o == OperationType.Replace,
-        new Dictionary<Func<Operation<EditEducationRequest>, bool>, string>
-        {
-          { x => Enum.TryParse(typeof(FormEducation), x.value?.ToString(), out _), "Incorrect format FormEducation"}
-        });
+      //AddFailureForPropertyIf(
+      //  nameof(EditEducationRequest.FormEducation),
+      //  o => o == OperationType.Replace,
+      //  new Dictionary<Func<Operation<EditEducationRequest>, bool>, string>
+      //  {
+      //    { x => Enum.TryParse(typeof(FormEducation), x.value?.ToString(), out _), "Incorrect format FormEducation"}
+      //  });
 
       AddFailureForPropertyIf(
         nameof(EditEducationRequest.IssueAt),

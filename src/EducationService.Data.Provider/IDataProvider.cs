@@ -10,7 +10,7 @@ namespace LT.DigitalOffice.EducationService.Data.Provider
   public interface IDataProvider : IBaseDataProvider
   {
     DbSet<DbUserEducation> UsersEducations { get; set; }
-    DbSet<DbUserCertificate> UsersCertificates { get; set; }
-    DbSet<DbCertificateImage> CertificatesImages { get; set; }
+    DbSet<DbEducationType> EducationTypes { get; set; }
+    DbSet<DbEducationForm> EducationForms { get; set; }
   }
 }

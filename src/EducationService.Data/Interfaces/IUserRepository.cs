@@ -9,8 +9,7 @@ namespace LT.DigitalOffice.EducationService.Data.Interfaces
   [AutoInject]
   public interface IUserRepository
   {
-    Task<(List<DbUserCertificate> userCertificates, List<DbUserEducation> userEducations)>
-      GetAsync(Guid userId);
+    Task<List<DbUserEducation>> GetAsync(Guid userId);
 
     Task DisactivateCertificateAndEducationsAsync(Guid userId, Guid modifiedBy);
   }

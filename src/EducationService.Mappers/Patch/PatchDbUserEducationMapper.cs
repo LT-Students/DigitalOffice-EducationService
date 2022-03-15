@@ -12,30 +12,31 @@ namespace LT.DigitalOffice.EducationService.Patch.Models
   {
     public JsonPatchDocument<DbUserEducation> Map(JsonPatchDocument<EditEducationRequest> request)
     {
-      if (request is null)
-      {
-        return null;
-      }
+      return null;
+    //  if (request is null)
+    //  {
+    //    return null;
+    //  }
 
-      JsonPatchDocument<DbUserEducation> dbUserEducation = new();
+    //  JsonPatchDocument<DbUserEducation> dbUserEducation = new();
 
-      foreach (Operation<EditEducationRequest> item in request.Operations)
-      {
-        if (item.path.ToUpper().EndsWith(nameof(EditEducationRequest.FormEducation).ToUpper()))
-        {
-          if (Enum.TryParse(item.value.ToString(), out FormEducation education))
-          {
-            dbUserEducation.Operations.Add(new Operation<DbUserEducation>(
-              item.op, $"/{nameof(EditEducationRequest.FormEducation)}", item.from, (int)education));
+    //  foreach (Operation<EditEducationRequest> item in request.Operations)
+    //  {
+    //    if (item.path.ToUpper().EndsWith(nameof(EditEducationRequest.FormEducation).ToUpper()))
+    //    {
+    //      if (Enum.TryParse(item.value.ToString(), out FormEducation education))
+    //      {
+    //        dbUserEducation.Operations.Add(new Operation<DbUserEducation>(
+    //          item.op, $"/{nameof(EditEducationRequest.FormEducation)}", item.from, (int)education));
 
-            continue;
-          }
-        }
+    //        continue;
+    //      }
+    //    }
 
-        dbUserEducation.Operations.Add(new Operation<DbUserEducation>(item.op, item.path, item.from, item.value));
-      }
+    //    dbUserEducation.Operations.Add(new Operation<DbUserEducation>(item.op, item.path, item.from, item.value));
+    //  }
 
-      return dbUserEducation;
+    //  return dbUserEducation;
     }
   }
 }

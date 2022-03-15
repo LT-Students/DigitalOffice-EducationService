@@ -9,8 +9,8 @@ namespace LT.DigitalOffice.EducationService.Data.Provider.MsSql.Ef
   public class EducationServiceDbContext : DbContext, IDataProvider
   {
     public DbSet<DbUserEducation> UsersEducations { get; set; }
-    public DbSet<DbUserCertificate> UsersCertificates { get; set; }
-    public DbSet<DbCertificateImage> CertificatesImages { get; set; }
+    public DbSet<DbEducationForm> EducationForms { get; set; }
+    public DbSet<DbEducationType> EducationTypes { get; set; }
 
     public EducationServiceDbContext(DbContextOptions<EducationServiceDbContext> options)
       : base(options)

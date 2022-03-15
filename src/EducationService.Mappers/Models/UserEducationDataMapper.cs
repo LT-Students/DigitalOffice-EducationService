@@ -14,14 +14,15 @@ namespace LT.DigitalOffice.EducationService.Mappers.Models
         return null;
       }
 
-      return new EducationData(
-        id: dbUserEducation.Id,
-        universityName: dbUserEducation.UniversityName,
-        qualificationName: dbUserEducation.QualificationName,
-        formEducation: ((FormEducation)dbUserEducation.FormEducation).ToString(),
-        admissionAt: dbUserEducation.AdmissionAt,
-        issueAt: dbUserEducation.IssueAt,
-        imageId: null);
+      //   return new EducationData(
+      //     id: dbUserEducation.Id,
+      //     universityName: dbUserEducation.UniversityName,
+      //     qualificationName: dbUserEducation.QualificationName,
+      //     formEducation: ((FormEducation)dbUserEducation.FormEducation).ToString(),
+      //     admissionAt: dbUserEducation.AdmissionAt,
+      //     issueAt: dbUserEducation.IssueAt,
+      //     imageId: null);
+      return null;
     }
   }
 }
