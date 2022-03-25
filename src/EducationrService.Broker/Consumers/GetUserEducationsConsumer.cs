@@ -15,18 +15,15 @@ namespace EducationService.Broker.Consumers
   {
     private readonly IUserRepository _repository;
     private readonly IUserEducationDataMapper _educationMapper;
-    //private readonly IUserCertificateDataMapper _certificateMapper;
 
     private async Task<object> GetUserEducationsAsync(IGetUserEducationsRequest request)
     {
-      //List < DbUserEducation > userEducations =
-      //   await _repository.GetAsync(request.UserId);
+      List < DbUserEducation > userEducations =
+         await _repository.GetAsync(request.UserId);
 
-      //return IGetUserEducationsResponse
-      //  .CreateObj(
-      //    userEducations?.Select(_educationMapper.Map).ToList()); // поправить это в моделсах
-
-      return null;
+      return IGetUserEducationsResponse
+        .CreateObj(
+          userEducations?.Select(_educationMapper.Map).ToList());
     }
 
     public GetUserEducationsConsumer(

@@ -7,7 +7,6 @@ using LT.DigitalOffice.Kernel.Validators;
 using Microsoft.AspNetCore.JsonPatch.Operations;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace LT.DigitalOffice.EducationService.Validation.Education
 {
@@ -25,7 +24,9 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
         {
           nameof(EditEducationRequest.UniversityName),
           nameof(EditEducationRequest.QualificationName),
-        //  nameof(EditEducationRequest.FormEducation),
+          nameof(EditEducationRequest.EducationFormId),
+          nameof(EditEducationRequest.EducationTypeId),
+          nameof(EditEducationRequest.Сompleteness),
           nameof(EditEducationRequest.AdmissionAt),
           nameof(EditEducationRequest.IssueAt),
           nameof(EditEducationRequest.IsActive),
@@ -33,7 +34,9 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
 
       AddСorrectOperations(nameof(EditEducationRequest.UniversityName), new List<OperationType> { OperationType.Replace });
       AddСorrectOperations(nameof(EditEducationRequest.QualificationName), new List<OperationType> { OperationType.Replace });
-    //  AddСorrectOperations(nameof(EditEducationRequest.FormEducation), new List<OperationType> { OperationType.Replace });
+      AddСorrectOperations(nameof(EditEducationRequest.EducationFormId), new List<OperationType> { OperationType.Replace });
+      AddСorrectOperations(nameof(EditEducationRequest.EducationTypeId), new List<OperationType> { OperationType.Replace });
+      AddСorrectOperations(nameof(EditEducationRequest.Сompleteness), new List<OperationType> { OperationType.Replace });
       AddСorrectOperations(nameof(EditEducationRequest.AdmissionAt), new List<OperationType> { OperationType.Replace });
       AddСorrectOperations(nameof(EditEducationRequest.IssueAt), new List<OperationType> { OperationType.Replace });
       AddСorrectOperations(nameof(EditEducationRequest.IsActive), new List<OperationType> { OperationType.Replace });
@@ -58,13 +61,33 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
           { x => x.value.ToString().Length < 100, "QualificationName is too long."}
         });
 
-      //AddFailureForPropertyIf(
-      //  nameof(EditEducationRequest.FormEducation),
-      //  o => o == OperationType.Replace,
-      //  new Dictionary<Func<Operation<EditEducationRequest>, bool>, string>
-      //  {
-      //    { x => Enum.TryParse(typeof(FormEducation), x.value?.ToString(), out _), "Incorrect format FormEducation"}
-      //  });
+      AddFailureForPropertyIf(
+        nameof(EditEducationRequest.EducationTypeId),
+        x => x == OperationType.Replace,
+        new Dictionary<Func<Operation<EditEducationRequest>, bool>, string>
+        {
+          { x => string.IsNullOrEmpty(x.value?.ToString())? true :
+            Guid.TryParse(x.value.ToString(), out Guid result),
+            "Incorrect format of EducationTypeId." },
+        });
+
+      AddFailureForPropertyIf(
+        nameof(EditEducationRequest.EducationFormId),
+        x => x == OperationType.Replace,
+        new Dictionary<Func<Operation<EditEducationRequest>, bool>, string>
+        {
+          { x => string.IsNullOrEmpty(x.value?.ToString())? true :
+            Guid.TryParse(x.value.ToString(), out Guid result),
+            "Incorrect format of FormEducationId." },
+        });
+
+      AddFailureForPropertyIf(
+       nameof(EditEducationRequest.Сompleteness),
+       o => o == OperationType.Replace,
+       new Dictionary<Func<Operation<EditEducationRequest>, bool>, string>
+       {
+          { x => Enum.TryParse(typeof(EducationCompleteness), x.value?.ToString(), out _), "Incorrect format EducationCompleteness"}
+       });
 
       AddFailureForPropertyIf(
         nameof(EditEducationRequest.IssueAt),

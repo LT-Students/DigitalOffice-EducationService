@@ -47,12 +47,7 @@ namespace LT.DigitalOffice.EducationService.Mappers.Db.UnitTests
                             "replace",
                             $"/{nameof(EditEducationRequest.IssueAt)}",
                             "",
-                            time),
-                        new Operation<EditEducationRequest>(
-                            "replace",
-                            $"/{nameof(EditEducationRequest.FormEducation)}",
-                            "",
-                            0)
+                            time)
               }, new CamelCasePropertyNamesContractResolver()
           );
 
@@ -81,7 +76,7 @@ namespace LT.DigitalOffice.EducationService.Mappers.Db.UnitTests
                             time),
                         new Operation<DbUserEducation>(
                             "replace",
-                            $"/{nameof(DbUserEducation.FormEducation)}",
+                            $"/{nameof(DbUserEducation.EducationForm)}",
                             "",
                             0)
               }, new CamelCasePropertyNamesContractResolver());

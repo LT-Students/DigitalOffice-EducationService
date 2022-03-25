@@ -19,28 +19,19 @@ namespace LT.DigitalOffice.EducationService.Data
       _provider = provider;
     }
 
-    public async Task</*(List<DbUserCertificate> userCertificates, */List<DbUserEducation> /*userEducations)*/>
-      GetAsync(Guid userId)
+    public async Task<List<DbUserEducation>> GetAsync(Guid userId)
     {
       return (
-        //await _provider.UsersCertificates
-        //  .Include(uc => uc.Images)
-        //  .Where(uc => uc.UserId == userId)
-        //  .ToListAsync(),
         await _provider.UsersEducations
           .Where(uc => uc.UserId == userId)
           .ToListAsync());
     }
 
-    public async Task DisactivateCertificateAndEducationsAsync(Guid userId, Guid modifiedBy)
+    public async Task DisactivateEducationsAsync(Guid userId, Guid modifiedBy)
     {
       IQueryable<DbUserEducation> dbUserEducations = _provider.UsersEducations
         .Where(e => e.UserId == userId && e.IsActive)
         .AsQueryable();
-
-      //IQueryable<DbUserCertificate> dbUserCertificates = _provider.UsersCertificates
-      //  .Where(e => e.UserId == userId && e.IsActive)
-      //  .AsQueryable();
 
       foreach (DbUserEducation dbUserEducation in dbUserEducations)
       {
@@ -49,15 +40,7 @@ namespace LT.DigitalOffice.EducationService.Data
         dbUserEducation.ModifiedAtUtc = DateTime.UtcNow;
       }
 
-      //foreach (DbUserCertificate dbUserCertificate in dbUserCertificates)
-      //{
-      //  dbUserCertificate.IsActive = false;
-      //  dbUserCertificate.ModifiedBy = modifiedBy;
-      //  dbUserCertificate.ModifiedAtUtc = DateTime.UtcNow;
-      //}
-
       await _provider.SaveAsync();
-
     }
   }
 }

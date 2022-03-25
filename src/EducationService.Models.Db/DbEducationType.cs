@@ -32,8 +32,12 @@ namespace LT.DigitalOffice.EducationService.Models.Db
       builder.HasKey(x => x.Id);
 
       builder
+        .Property(p => p.Name)
+        .IsRequired();
+
+      builder
         .HasMany(u => u.UsersEducation)
-        .WithMany(fe => fe.EducationType);
+        .WithOne(fe => fe.EducationType);
     }
   }
 }

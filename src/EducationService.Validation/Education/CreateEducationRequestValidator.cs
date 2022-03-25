@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Education;
-//using LT.DigitalOffice.EducationService.Validation.Certificates;
 using LT.DigitalOffice.EducationService.Validation.Education.Interfaces;
 using LT.DigitalOffice.Kernel.BrokerSupport.Broker;
 using LT.DigitalOffice.Models.Broker.Common;
@@ -16,14 +15,14 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
   public class CreateEducationRequestValidator : AbstractValidator<CreateEducationRequest>, ICreateEducationRequestValidator
   {
     private readonly IRequestClient<ICheckUsersExistence> _rcCheckUsersExistence;
- //   private readonly ILogger<CreateCertificateRequestValidator> _logger;
+    private readonly ILogger<CreateEducationRequestValidator> _logger;
 
     public CreateEducationRequestValidator(
-      IRequestClient<ICheckUsersExistence> rcCheckUsersExistence
-     /* ILogger<CreateCertificateRequestValidator> logger*/)
+      IRequestClient<ICheckUsersExistence> rcCheckUsersExistence,
+      ILogger<CreateEducationRequestValidator> logger)
     {
       _rcCheckUsersExistence = rcCheckUsersExistence;
-    //  _logger = logger;
+      _logger = logger;
 
       RuleFor(x => x.UserId)
         .Cascade(CascadeMode.Stop)
@@ -39,8 +38,8 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
         .NotEmpty().WithMessage("Qualification name must not be empty.")
         .MaximumLength(100).WithMessage("Qualification name is too long");
 
-      //RuleFor(education => education.FormEducation)
-      //  .IsInEnum().WithMessage("Wrong form education.");
+      RuleFor(education => education.Сompleteness)
+        .IsInEnum().WithMessage("Wrong form completeness of education.");
     }
 
     private async Task<bool> CheckValidityUserId(Guid userId)
@@ -58,11 +57,11 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
           return response.Message.Body.UserIds.Any();
         }
 
-      //  _logger.LogWarning($"Can not find with this Id: {userId}: {Environment.NewLine}{string.Join('\n', response.Message.Errors)}");
+        _logger.LogWarning($"Can not find with this Id: {userId}: {Environment.NewLine}{string.Join('\n', response.Message.Errors)}");
       }
       catch (Exception exc)
       {
-       // _logger.LogError(exc, logMessage);
+        _logger.LogError(exc, logMessage);
       }
 
       return false;
