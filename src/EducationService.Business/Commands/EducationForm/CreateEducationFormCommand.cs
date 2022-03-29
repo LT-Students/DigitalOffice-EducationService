@@ -5,7 +5,6 @@ using LT.DigitalOffice.EducationService.Models.Dto.Requests.Education;
 using LT.DigitalOffice.EducationService.Validation.Education.Interfaces;
 using LT.DigitalOffice.Kernel.BrokerSupport.AccessValidatorEngine.Interfaces;
 using LT.DigitalOffice.Kernel.Constants;
-using LT.DigitalOffice.Kernel.Enums;
 using LT.DigitalOffice.Kernel.FluentValidationExtensions;
 using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Responses;
@@ -25,7 +24,6 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.EducationForm
     private readonly ICreateEducationFormRequestValidator _validator;
     private readonly IAccessValidator _accessValidator;
     private readonly IResponseCreator _responseCreator;
-
 
     public CreateEducationFormCommand(
       IHttpContextAccessor httpContextAccessor,
@@ -58,7 +56,6 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.EducationForm
       OperationResultResponse<Guid?> response = new();
 
       response.Body = await _educationFormRepository.CreateAsync(_mapper.Map(request));
-      response.Status = OperationResultStatusType.FullSuccess;
 
       _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Created;
 

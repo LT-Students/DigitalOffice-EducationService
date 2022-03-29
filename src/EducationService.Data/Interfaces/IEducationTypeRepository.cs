@@ -10,6 +10,6 @@ namespace LT.DigitalOffice.EducationService.Data.Interfaces
   {
     Task<Guid> CreateAsync(DbEducationType type);
 
-    Task<bool> DoesEducationTypeAlreadyExistAsync(string typeName);
+    Task<bool> DoesEducationTypeAlreadyExistAsync(string name);
   }
 }

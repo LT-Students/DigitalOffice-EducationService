@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
-
 namespace LT.DigitalOffice.EducationService.Data.Provider.MsSql.Ef.Migrations
 {
   [DbContext(typeof(EducationServiceDbContext))]
@@ -33,7 +32,7 @@ namespace LT.DigitalOffice.EducationService.Data.Provider.MsSql.Ef.Migrations
         },
         constraints: table =>
         {
-          table.PrimaryKey("PR_UsersEditions", x => x.Id);
+          table.PrimaryKey("PR_UsersEducations", x => x.Id);
         });
     }
 
@@ -53,8 +52,8 @@ namespace LT.DigitalOffice.EducationService.Data.Provider.MsSql.Ef.Migrations
         },
         constraints: table =>
         {
-          table.PrimaryKey("PR_EducationTypes", x => x.Id);
-          table.UniqueConstraint("UC_EducationType_Name_Unique", x => x.Name);
+          table.PrimaryKey("PR_EducationsTypes", x => x.Id);
+          table.UniqueConstraint("UC_DbEducationType.TableName_Name_Unique", x => x.Name);
         });
 
       builder.CreateTable(
@@ -70,8 +69,8 @@ namespace LT.DigitalOffice.EducationService.Data.Provider.MsSql.Ef.Migrations
         },
         constraints: table =>
         {
-          table.PrimaryKey("PR_EducationForms", x => x.Id);
-          table.UniqueConstraint("UC_EducationForm_Name_Unique", x => x.Name);
+          table.PrimaryKey("PR_EducationsForms", x => x.Id);
+          table.UniqueConstraint("UC_DbEducationForm.TableName_Name_Unique", x => x.Name);
         });
     }
 

@@ -18,15 +18,15 @@ namespace LT.DigitalOffice.EducationService.Data
 
     public async Task<Guid> CreateAsync(DbEducationForm form)
     {
-      _provider.EducationForms.Add(form);
+      _provider.EducationsForms.Add(form);
       await _provider.SaveAsync();
 
       return form.Id;
     }
 
-    public async Task<bool> DoesEducationFormAlreadyExistAsync(string formName)
+    public async Task<bool> DoesEducationFormAlreadyExistAsync(string name)
     {
-      return await _provider.EducationForms.AnyAsync(s => s.Name.ToLower() == formName.ToLower());
+      return await _provider.EducationsForms.AnyAsync(f => f.Name.Equals(name));
     }
   }
 }
