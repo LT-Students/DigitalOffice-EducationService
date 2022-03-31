@@ -1,5 +1,7 @@
 ﻿using LT.DigitalOffice.EducationService.Models.Dto.Enums;
+using LT.DigitalOffice.EducationService.Models.Dto.Requests.Images;
 using System;
+using System.Collections.Generic;
 
 namespace LT.DigitalOffice.EducationService.Models.Dto.Requests.Education
 {
@@ -13,5 +15,6 @@ namespace LT.DigitalOffice.EducationService.Models.Dto.Requests.Education
     public EducationCompleteness Сompleteness { get; set; }   
     public DateTime AdmissionAt { get; set; }
     public DateTime? IssueAt { get; set; }
+    public List<ImageContent> Images { get; set; }
   }
 }

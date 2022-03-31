@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using LT.DigitalOffice.Kernel.BrokerSupport.Attributes.ParseEntity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -25,6 +26,14 @@ namespace LT.DigitalOffice.EducationService.Models.Db
     public DateTime? ModifiedAtUtc { get; set; }
     public DbEducationForm EducationForm { get; set; }
     public DbEducationType EducationType { get; set; }
+
+    [IgnoreParse]
+    public ICollection<DbEducationImage> Images { get; set; }
+
+    public DbUserEducation()
+    {
+      Images = new HashSet<DbEducationImage>();
+    }
   }
 
   public class DbUserEducationConfiguration : IEntityTypeConfiguration<DbUserEducation>
@@ -54,6 +63,10 @@ namespace LT.DigitalOffice.EducationService.Models.Db
       builder
         .HasOne(te => te.EducationType)
         .WithMany(u => u.UsersEducation);
+
+      builder
+       .HasMany(p => p.Images)
+       .WithOne(tp => tp.Education);
     }
   }
 }

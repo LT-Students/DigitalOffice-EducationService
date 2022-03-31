@@ -9,6 +9,22 @@ namespace LT.DigitalOffice.EducationService.Data.Provider.MsSql.Ef.Migrations
   [Migration("202203141430_InitialTables")]
   public class InitialTables : Migration
   {
+    public void CreateEducationImageTable(MigrationBuilder builder)
+    {
+      builder.CreateTable(
+        name: DbEducationImage.TableName,
+        columns: table => new
+        {
+          Id = table.Column<Guid>(nullable: false),
+          EducationId = table.Column<Guid>(nullable: false),
+          ImageId = table.Column<Guid>(nullable: false)
+        },
+        constraints: table =>
+        {
+          table.PrimaryKey("PK_EducationsImages", x => x.Id);
+        });
+    }
+
     public void CreateUserEducationTable(MigrationBuilder builder)
     {
       builder.CreateTable(
@@ -117,6 +133,7 @@ namespace LT.DigitalOffice.EducationService.Data.Provider.MsSql.Ef.Migrations
     {
       CreateUserEducationTable(migrationBuilder);
       CreateEducationTypesandEducationFormsTable(migrationBuilder);
+      CreateEducationImageTable(migrationBuilder);
       InsertData(migrationBuilder);
     }
 
@@ -129,7 +146,10 @@ namespace LT.DigitalOffice.EducationService.Data.Provider.MsSql.Ef.Migrations
        name: DbEducationForm.TableName);
 
       migrationBuilder.DropTable(
-       name: DbEducationType.TableName);
+       name: DbEducationForm.TableName);
+
+      migrationBuilder.DropTable(
+       name: DbEducationImage.TableName);
     }
   }
 }

@@ -12,5 +12,6 @@ namespace LT.DigitalOffice.EducationService.Data.Provider
     DbSet<DbUserEducation> UsersEducations { get; set; }
     DbSet<DbEducationType> EducationsTypes { get; set; }
     DbSet<DbEducationForm> EducationsForms { get; set; }
+    DbSet<DbEducationImage> EducationsImages { get; set; }
   }
 }

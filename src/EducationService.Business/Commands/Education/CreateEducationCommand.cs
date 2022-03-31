@@ -1,17 +1,26 @@
 ﻿using LT.DigitalOffice.EducationService.Business.Commands.Education.Interfaces;
 using LT.DigitalOffice.EducationService.Data.Interfaces;
 using LT.DigitalOffice.EducationService.Mappers.Db.Interfaces;
+using LT.DigitalOffice.EducationService.Mappers.Models.Interfaces;
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Education;
+using LT.DigitalOffice.EducationService.Models.Dto.Requests.Images;
 using LT.DigitalOffice.EducationService.Validation.Education.Interfaces;
 using LT.DigitalOffice.Kernel.BrokerSupport.AccessValidatorEngine.Interfaces;
+using LT.DigitalOffice.Kernel.BrokerSupport.Broker;
 using LT.DigitalOffice.Kernel.Constants;
 using LT.DigitalOffice.Kernel.Extensions;
 using LT.DigitalOffice.Kernel.FluentValidationExtensions;
 using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Responses;
+using LT.DigitalOffice.Models.Broker.Enums;
+using LT.DigitalOffice.Models.Broker.Requests.Image;
+using LT.DigitalOffice.Models.Broker.Responses.Image;
+using MassTransit;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -24,7 +33,42 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
     private readonly IUserEducationRepository _educationRepository;
     private readonly ICreateEducationRequestValidator _validator;
     private readonly IResponseCreator _responseCreator;
+    private readonly ICreateImageDataMapper _createImageDataMapper;
+    private readonly IRequestClient<ICreateImagesRequest> _rcImage;
+    private readonly ILogger<CreateEducationCommand> _logger;
     private readonly IHttpContextAccessor _httpContextAccessor;
+
+    private async Task<List<Guid>> CreateImagesAsync(List<ImageContent> images, List<string> errors)
+    {
+      if (images is null || !images.Any())
+      {
+        return null;
+      }
+
+      try
+      {
+        Response<IOperationResult<ICreateImagesResponse>> response = await _rcImage.GetResponse<IOperationResult<ICreateImagesResponse>>(
+          ICreateImagesRequest.CreateObj(
+            _createImageDataMapper.Map(images), ImageSource.User));
+
+        if (response.Message.IsSuccess && response.Message.Body.ImagesIds is not null)
+        {
+          return response.Message.Body.ImagesIds;
+        }
+
+        _logger.LogWarning(
+          "Error while adding images to education.\nErrors: {Errors}",
+          string.Join('\n', response.Message.Errors));
+      }
+      catch (Exception exc)
+      {
+        _logger.LogError(exc, "Cannot add images to education.");
+      }
+
+      errors.Add("Can not add images to education. Please try again later.");
+
+      return null;
+    }
 
     public CreateEducationCommand(
       IAccessValidator accessValidator,
@@ -55,9 +99,16 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
         return _responseCreator.CreateFailureResponse<Guid?>(HttpStatusCode.BadRequest, errors);
       }
 
+      List<Guid> imagesIds = await CreateImagesAsync(request.Images, errors);
+
+      if (errors.Any())
+      {
+        return _responseCreator.CreateFailureResponse<Guid?>(HttpStatusCode.BadRequest, errors);
+      }
+
       OperationResultResponse<Guid?> response = new();
 
-      response.Body = await _educationRepository.CreateAsync(_mapper.Map(request));
+      response.Body = await _educationRepository.CreateAsync(_mapper.Map(request, imagesIds));
 
       _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Created;
 

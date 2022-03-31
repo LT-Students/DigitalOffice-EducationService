@@ -43,8 +43,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.EducationType
 
     public async Task<OperationResultResponse<Guid?>> ExecuteAsync(CreateEducationTypeRequest request)
     {
-      OperationResultResponse<Guid?> response = new();
-
+      
       if (!await _accessValidator.HasRightsAsync(Rights.AddEditRemoveUsers))
       {
         return _responseCreator.CreateFailureResponse<Guid?>(HttpStatusCode.Forbidden);
@@ -55,6 +54,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.EducationType
         return _responseCreator.CreateFailureResponse<Guid?>(HttpStatusCode.BadRequest, errors);
       }
 
+      OperationResultResponse<Guid?> response = new();
       response.Body = await _educationTypeRepository.CreateAsync(_mapper.Map(request));
 
       _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Created;
