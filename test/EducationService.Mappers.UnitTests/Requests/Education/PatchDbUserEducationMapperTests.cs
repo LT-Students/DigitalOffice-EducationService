@@ -14,7 +14,7 @@ namespace LT.DigitalOffice.EducationService.Mappers.Db.UnitTests
 {
   class PatchDbUserEducationMapperTests
   {
-    private PatchDbUserEducationMapper _mapper;
+    /*private PatchDbUserEducationMapper _mapper;
 
     private JsonPatchDocument<EditEducationRequest> _request;
     private JsonPatchDocument<DbUserEducation> _dbRequest;
