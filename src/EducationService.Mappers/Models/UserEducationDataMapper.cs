@@ -32,7 +32,7 @@ namespace LT.DigitalOffice.EducationService.Mappers.Models
         id: dbUserEducation.Id,
         universityName: dbUserEducation.UniversityName,
         qualificationName: dbUserEducation.QualificationName,
-        completeness: ((EducationCompleteness)dbUserEducation.Сompleteness).ToString(),
+        completeness: ((EducationCompleteness)dbUserEducation.Completeness).ToString(),
         educationForm: formData,
         educationType: typeData,
         admissionAt: dbUserEducation.AdmissionAt,

@@ -22,12 +22,12 @@ namespace LT.DigitalOffice.EducationService.Patch.Models
 
       foreach (Operation<EditEducationRequest> item in request.Operations)
       {
-        if (item.path.ToUpper().EndsWith(nameof(EditEducationRequest.Ñompleteness).ToUpper()))
+        if (item.path.ToUpper().EndsWith(nameof(EditEducationRequest.Completeness).ToUpper()))
         {
           if (Enum.TryParse(item.value.ToString(), out EducationCompleteness completeness))
           {
             dbUserEducation.Operations.Add(new Operation<DbUserEducation>(
-               item.op, $"/{nameof(EditEducationRequest.Ñompleteness)}", item.from, (int)completeness));
+               item.op, $"/{nameof(EditEducationRequest.Completeness)}", item.from, (int)completeness));
 
             continue;
           }
