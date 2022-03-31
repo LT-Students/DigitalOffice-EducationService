@@ -16,7 +16,7 @@ namespace LT.DigitalOffice.EducationService.Models.Db
     public string QualificationName { get; set; }
     public Guid EducationFormId { get; set; }
     public Guid EducationTypeId { get; set; }
-    public int Сompleteness { get; set; }
+    public int Completeness { get; set; }
     public DateTime AdmissionAt { get; set; }
     public DateTime? IssueAt { get; set; }
     public bool IsActive { get; set; }
