@@ -39,7 +39,7 @@ namespace LT.DigitalOffice.EducationService.Mappers.Db
         QualificationName = request.QualificationName,
         EducationFormId = request.EducationFormId,
         EducationTypeId = request.EducationTypeId,
-        Completeness = (int)request.Ñompleteness,
+        Completeness = (int)request.Completeness,
         AdmissionAt = request.AdmissionAt,
         IssueAt = request.IssueAt,
         IsActive = true,
