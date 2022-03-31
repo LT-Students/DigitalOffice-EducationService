@@ -38,7 +38,7 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
         .NotEmpty().WithMessage("Qualification name must not be empty.")
         .MaximumLength(100).WithMessage("Qualification name is too long");
 
-      RuleFor(education => education.Сompleteness)
+      RuleFor(education => education.Completeness)
         .IsInEnum().WithMessage("Wrong form completeness of education.");
     }
 

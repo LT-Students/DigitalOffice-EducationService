@@ -26,7 +26,7 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
           nameof(EditEducationRequest.QualificationName),
           nameof(EditEducationRequest.EducationFormId),
           nameof(EditEducationRequest.EducationTypeId),
-          nameof(EditEducationRequest.Сompleteness),
+          nameof(EditEducationRequest.Completeness),
           nameof(EditEducationRequest.AdmissionAt),
           nameof(EditEducationRequest.IssueAt),
           nameof(EditEducationRequest.IsActive),
@@ -36,7 +36,7 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
       AddСorrectOperations(nameof(EditEducationRequest.QualificationName), new List<OperationType> { OperationType.Replace });
       AddСorrectOperations(nameof(EditEducationRequest.EducationFormId), new List<OperationType> { OperationType.Replace });
       AddСorrectOperations(nameof(EditEducationRequest.EducationTypeId), new List<OperationType> { OperationType.Replace });
-      AddСorrectOperations(nameof(EditEducationRequest.Сompleteness), new List<OperationType> { OperationType.Replace });
+      AddСorrectOperations(nameof(EditEducationRequest.Completeness), new List<OperationType> { OperationType.Replace });
       AddСorrectOperations(nameof(EditEducationRequest.AdmissionAt), new List<OperationType> { OperationType.Replace });
       AddСorrectOperations(nameof(EditEducationRequest.IssueAt), new List<OperationType> { OperationType.Replace });
       AddСorrectOperations(nameof(EditEducationRequest.IsActive), new List<OperationType> { OperationType.Replace });
@@ -82,7 +82,7 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
         });
 
       AddFailureForPropertyIf(
-       nameof(EditEducationRequest.Сompleteness),
+       nameof(EditEducationRequest.Completeness),
        o => o == OperationType.Replace,
        new Dictionary<Func<Operation<EditEducationRequest>, bool>, string>
        {
