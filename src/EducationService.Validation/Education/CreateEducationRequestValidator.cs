@@ -1,14 +1,12 @@
 ﻿using FluentValidation;
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Education;
 using LT.DigitalOffice.EducationService.Validation.Education.Interfaces;
-using LT.DigitalOffice.Kernel.BrokerSupport.Broker;
 using LT.DigitalOffice.Kernel.BrokerSupport.Helpers;
 using LT.DigitalOffice.Models.Broker.Common;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace LT.DigitalOffice.EducationService.Validation.Education

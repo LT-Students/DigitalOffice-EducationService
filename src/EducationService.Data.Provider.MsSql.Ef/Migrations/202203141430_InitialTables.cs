@@ -21,7 +21,7 @@ namespace LT.DigitalOffice.EducationService.Data.Provider.MsSql.Ef.Migrations
         },
         constraints: table =>
         {
-          table.PrimaryKey("PK_EducationsImages", x => x.Id);
+          table.PrimaryKey($"PK_{DbEducationImage.TableName}", x => x.Id);
         });
     }
 
@@ -48,7 +48,7 @@ namespace LT.DigitalOffice.EducationService.Data.Provider.MsSql.Ef.Migrations
         },
         constraints: table =>
         {
-          table.PrimaryKey("PR_UsersEducations", x => x.Id);
+          table.PrimaryKey($"PR_{DbUserEducation.TableName}", x => x.Id);
         });
     }
 
@@ -68,8 +68,8 @@ namespace LT.DigitalOffice.EducationService.Data.Provider.MsSql.Ef.Migrations
         },
         constraints: table =>
         {
-          table.PrimaryKey("PR_EducationsTypes", x => x.Id);
-          table.UniqueConstraint("UC_DbEducationType.TableName_Name_Unique", x => x.Name);
+          table.PrimaryKey($"PR_{DbEducationType.TableName}", x => x.Id);
+          table.UniqueConstraint($"UC_{DbEducationType.TableName}_Name_Unique", x => x.Name);
         });
 
       builder.CreateTable(
@@ -85,8 +85,8 @@ namespace LT.DigitalOffice.EducationService.Data.Provider.MsSql.Ef.Migrations
         },
         constraints: table =>
         {
-          table.PrimaryKey("PR_EducationsForms", x => x.Id);
-          table.UniqueConstraint("UC_DbEducationForm.TableName_Name_Unique", x => x.Name);
+          table.PrimaryKey($"PR_{DbEducationForm.TableName}", x => x.Id);
+          table.UniqueConstraint($"UC_{DbEducationForm.TableName}_Name_Unique", x => x.Name);
         });
     }
 
