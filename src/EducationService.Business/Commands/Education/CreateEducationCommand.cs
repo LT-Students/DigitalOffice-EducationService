@@ -7,12 +7,14 @@ using LT.DigitalOffice.EducationService.Models.Dto.Requests.Images;
 using LT.DigitalOffice.EducationService.Validation.Education.Interfaces;
 using LT.DigitalOffice.Kernel.BrokerSupport.AccessValidatorEngine.Interfaces;
 using LT.DigitalOffice.Kernel.BrokerSupport.Broker;
+using LT.DigitalOffice.Kernel.BrokerSupport.Helpers;
 using LT.DigitalOffice.Kernel.Constants;
 using LT.DigitalOffice.Kernel.Extensions;
 using LT.DigitalOffice.Kernel.FluentValidationExtensions;
 using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Responses;
 using LT.DigitalOffice.Models.Broker.Enums;
+using LT.DigitalOffice.Models.Broker.Models;
 using LT.DigitalOffice.Models.Broker.Requests.Image;
 using LT.DigitalOffice.Models.Broker.Responses.Image;
 using MassTransit;
@@ -45,29 +47,12 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
         return null;
       }
 
-      try
-      {
-        Response<IOperationResult<ICreateImagesResponse>> response = await _rcImage.GetResponse<IOperationResult<ICreateImagesResponse>>(
-          ICreateImagesRequest.CreateObj(
-            _createImageDataMapper.Map(images), ImageSource.User));
-
-        if (response.Message.IsSuccess && response.Message.Body.ImagesIds is not null)
-        {
-          return response.Message.Body.ImagesIds;
-        }
-
-        _logger.LogWarning(
-          "Error while adding images to education.\nErrors: {Errors}",
-          string.Join('\n', response.Message.Errors));
-      }
-      catch (Exception exc)
-      {
-        _logger.LogError(exc, "Cannot add images to education.");
-      }
-
-      errors.Add("Can not add images to education. Please try again later.");
-
-      return null;
+      return (await RequestHandler.ProcessRequest<ICreateImagesRequest, ICreateImagesResponse>(
+          _rcImage,
+          ICreateImagesRequest.CreateObj(_createImageDataMapper.Map(images), ImageSource.User),
+          errors,
+          _logger))
+        .ImagesIds;
     }
 
     public CreateEducationCommand(
@@ -90,7 +75,6 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
       _rcImage = rcImage; //
       _createImageDataMapper = createImageDataMapper; //
       _logger = logger; //
-
     }
 
     public async Task<OperationResultResponse<Guid?>> ExecuteAsync(CreateEducationRequest request)

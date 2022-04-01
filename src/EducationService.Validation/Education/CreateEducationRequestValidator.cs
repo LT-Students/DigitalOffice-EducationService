@@ -2,6 +2,7 @@
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Education;
 using LT.DigitalOffice.EducationService.Validation.Education.Interfaces;
 using LT.DigitalOffice.Kernel.BrokerSupport.Broker;
+using LT.DigitalOffice.Kernel.BrokerSupport.Helpers;
 using LT.DigitalOffice.Models.Broker.Common;
 using MassTransit;
 using Microsoft.Extensions.Logging;
@@ -27,44 +28,26 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
       RuleFor(x => x.UserId)
         .Cascade(CascadeMode.Stop)
         .NotEmpty().WithMessage("Wrong user id value.")
-        .MustAsync(async (pu, cancellation) => await CheckValidityUserId(pu))
+        .MustAsync(async (pu, cancellation) => await CheckValidityUserId(pu, new List<string>()))
         .WithMessage("User does not exist.");
 
       RuleFor(education => education.UniversityName)
-        .NotEmpty().WithMessage("University name must not be empty.")
-        .MaximumLength(100).WithMessage("University name is too long");
+        .NotEmpty().WithMessage("University name must not be empty.");
 
       RuleFor(education => education.QualificationName)
-        .NotEmpty().WithMessage("Qualification name must not be empty.")
-        .MaximumLength(100).WithMessage("Qualification name is too long");
+        .NotEmpty().WithMessage("Qualification name must not be empty.");
 
       RuleFor(education => education.Completeness)
         .IsInEnum().WithMessage("Wrong form completeness of education.");
     }
 
-    private async Task<bool> CheckValidityUserId(Guid userId)
+    private async Task<bool> CheckValidityUserId(Guid userId, List<string> errors)
     {
-      string logMessage = "Cannot check existing user with this id {userId}";
-
-      try
-      {
-        Response<IOperationResult<ICheckUsersExistence>> response =
-          await _rcCheckUsersExistence.GetResponse<IOperationResult<ICheckUsersExistence>>(
-            ICheckUsersExistence.CreateObj(new List<Guid> { userId }));
-
-        if (response.Message.IsSuccess)
-        {
-          return response.Message.Body.UserIds.Any();
-        }
-
-        _logger.LogWarning($"Can not find with this Id: {userId}: {Environment.NewLine}{string.Join('\n', response.Message.Errors)}");
-      }
-      catch (Exception exc)
-      {
-        _logger.LogError(exc, logMessage);
-      }
-
-      return false;
+      return await RequestHandler.ProcessRequest<ICheckUsersExistence, bool>(
+          _rcCheckUsersExistence,
+          ICheckUsersExistence.CreateObj(new List<Guid> { userId }),
+          errors,
+          _logger);
     }
   }
 }
