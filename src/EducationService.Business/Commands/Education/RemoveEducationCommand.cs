@@ -18,13 +18,13 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
   {
     private readonly IAccessValidator _accessValidator;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IUserEducationRepository _educationRepository;
+    private readonly IEducationRepository _educationRepository;
     private readonly IResponseCreator _responseCreator;
 
     public RemoveEducationCommand(
       IAccessValidator accessValidator,
       IHttpContextAccessor httpContextAccessor,
-      IUserEducationRepository educationRepository,
+      IEducationRepository educationRepository,
       IResponseCreator responseCreator)
     {
       _accessValidator = accessValidator;

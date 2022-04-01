@@ -25,16 +25,13 @@ namespace LT.DigitalOffice.EducationService.Mappers.Models
         return null;
       }
 
-      EducationFormData formData = _educationFormDataMapper.Map(dbUserEducation.EducationForm);
-      EducationTypeData typeData = _educationTypeDataMapper.Map(dbUserEducation.EducationType);
-
       return new EducationData(
         id: dbUserEducation.Id,
         universityName: dbUserEducation.UniversityName,
         qualificationName: dbUserEducation.QualificationName,
         completeness: ((EducationCompleteness)dbUserEducation.Completeness).ToString(),
-        educationForm: formData,
-        educationType: typeData,
+        educationForm: _educationFormDataMapper.Map(dbUserEducation.EducationForm),
+        educationType: _educationTypeDataMapper.Map(dbUserEducation.EducationType),
         admissionAt: dbUserEducation.AdmissionAt,
         issueAt: dbUserEducation.IssueAt);
     }

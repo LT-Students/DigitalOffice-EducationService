@@ -66,8 +66,7 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
         x => x == OperationType.Replace,
         new Dictionary<Func<Operation<EditEducationRequest>, bool>, string>
         {
-          { x => string.IsNullOrEmpty(x.value?.ToString())? true :
-            Guid.TryParse(x.value.ToString(), out Guid result),
+          { x => Guid.TryParse(x.value.ToString(), out Guid result),
             "Incorrect format of EducationTypeId." },
         });
 
@@ -76,8 +75,7 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
         x => x == OperationType.Replace,
         new Dictionary<Func<Operation<EditEducationRequest>, bool>, string>
         {
-          { x => string.IsNullOrEmpty(x.value?.ToString())? true :
-            Guid.TryParse(x.value.ToString(), out Guid result),
+          { x => Guid.TryParse(x.value.ToString(), out Guid result),
             "Incorrect format of FormEducationId." },
         });
 

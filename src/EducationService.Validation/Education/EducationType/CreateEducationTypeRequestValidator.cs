@@ -12,7 +12,7 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
       RuleFor(educationType => educationType.Name)
         .Cascade(CascadeMode.Stop)
         .NotEmpty().WithMessage("Education type must not be empty.")
-        .MustAsync(async (type, _) => !await educationTypeRepository.DoesEducationTypeAlreadyExistAsync(type))
+        .MustAsync(async (type, _) => !await educationTypeRepository.DoesNameExistAsync(type))
         .WithMessage("Education type with this name already exists.");
     }
   }

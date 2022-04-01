@@ -1,11 +1,10 @@
 ﻿using LT.DigitalOffice.EducationService.Data.Interfaces;
 using LT.DigitalOffice.EducationService.Data.Provider;
 using LT.DigitalOffice.EducationService.Models.Db;
-using LT.DigitalOffice.Kernel.Extensions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LT.DigitalOffice.EducationService.Data
@@ -13,62 +12,35 @@ namespace LT.DigitalOffice.EducationService.Data
   public class UserEducationRepository : IUserEducationRepository
   {
     private readonly IDataProvider _provider;
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
     public UserEducationRepository(
-      IDataProvider provider,
-      IHttpContextAccessor httpContextAccessor)
+      IDataProvider provider)
     {
       _provider = provider;
-      _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<Guid?> CreateAsync(DbUserEducation dbEducation)
+    public async Task<List<DbUserEducation>> GetAsync(Guid userId)
     {
-      if (dbEducation is null)
+      return (
+        await _provider.UsersEducations
+          .Where(uc => uc.UserId == userId)
+          .ToListAsync());
+    }
+
+    public async Task DisactivateEducationsAsync(Guid userId, Guid modifiedBy)
+    {
+      IQueryable<DbUserEducation> dbUserEducations = _provider.UsersEducations
+        .Where(e => e.UserId == userId && e.IsActive)
+        .AsQueryable();
+
+      foreach (DbUserEducation dbUserEducation in dbUserEducations)
       {
-        return null;
+        dbUserEducation.IsActive = false;
+        dbUserEducation.ModifiedBy = modifiedBy;
+        dbUserEducation.ModifiedAtUtc = DateTime.UtcNow;
       }
 
-      _provider.UsersEducations.Add(dbEducation);
       await _provider.SaveAsync();
-
-      return dbEducation.Id;
-    }
-
-    public async Task<DbUserEducation> GetAsync(Guid educationId)
-    {
-      return await _provider.UsersEducations.FirstOrDefaultAsync(e => e.Id == educationId);
-    }
-
-    public async Task<bool> EditAsync(DbUserEducation education, JsonPatchDocument<DbUserEducation> request)
-    {
-      if (request is null || education is null)
-      {
-        return false;
-      }
-
-      request.ApplyTo(education);
-      education.ModifiedBy = _httpContextAccessor.HttpContext.GetUserId();
-      education.ModifiedAtUtc = DateTime.UtcNow;
-      await _provider.SaveAsync();
-
-      return true;
-    }
-
-    public async Task<bool> RemoveAsync(DbUserEducation dbEducation)
-    {
-      if (dbEducation is null)
-      {
-        return false;
-      }
-
-      dbEducation.IsActive = false;
-      dbEducation.ModifiedBy = _httpContextAccessor.HttpContext.GetUserId();
-      dbEducation.ModifiedAtUtc = DateTime.UtcNow;
-      await _provider.SaveAsync();
-
-      return true;
     }
   }
 }

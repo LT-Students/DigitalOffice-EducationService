@@ -38,7 +38,7 @@ namespace LT.DigitalOffice.EducationService.Data
         return false;
       }
 
-      IEnumerable<DbEducationImage> images = _provider.EducationsImages
+      IEnumerable<DbEducationImage> images = _provider.EducationsImages?
         .Where(x => imagesIds.Contains(x.ImageId));
 
       _provider.EducationsImages.RemoveRange(images);

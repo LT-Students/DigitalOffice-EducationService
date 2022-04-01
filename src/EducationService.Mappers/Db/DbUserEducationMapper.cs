@@ -45,8 +45,6 @@ namespace LT.DigitalOffice.EducationService.Mappers.Db
         IsActive = true,
         CreatedBy = _httpContextAccessor.HttpContext.GetUserId(),
         CreatedAtUtc = DateTime.UtcNow,
-        ModifiedBy = _httpContextAccessor.HttpContext.GetUserId(),
-        ModifiedAtUtc = DateTime.UtcNow,
         Images = filesIds?
           .Select(fileId => _dbEducationImageMapper.Map(fileId, educationId))
           .ToList(),

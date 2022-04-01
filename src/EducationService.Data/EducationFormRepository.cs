@@ -24,9 +24,9 @@ namespace LT.DigitalOffice.EducationService.Data
       return form.Id;
     }
 
-    public async Task<bool> DoesEducationFormAlreadyExistAsync(string name)
+    public async Task<bool> DoesNameExistAsync(string name)// проверить
     {
-      return await _provider.EducationsForms.AnyAsync(f => f.Name.Equals(name));
+      return await _provider.EducationsForms.AnyAsync(f => String.Equals(f.Name, name, StringComparison.OrdinalIgnoreCase) == true);
     }
   }
 }

@@ -24,9 +24,9 @@ namespace LT.DigitalOffice.EducationService.Data
       return type.Id;
     }
 
-    public async Task<bool> DoesEducationTypeAlreadyExistAsync(string name)
+    public async Task<bool> DoesNameExistAsync(string name)
     {
-      return await _provider.EducationsTypes.AnyAsync(t => t.Name.Equals(name));
+      return await _provider.EducationsTypes.AnyAsync(t => String.Equals(t.Name, name, StringComparison.OrdinalIgnoreCase) == true);
     }
   }
 }

@@ -26,7 +26,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Image
   public class RemoveImagesCommand : IRemoveImagesCommand
   {
     private readonly IImageRepository _imageRepository;
-    private readonly IUserEducationRepository _educationRepository;
+    private readonly IEducationRepository _educationRepository;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IRequestClient<IRemoveImagesRequest> _rcRemoveImages;
     private readonly IRemoveImagesRequestValidator _removeRequestValidator;
@@ -67,7 +67,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Image
 
     public RemoveImagesCommand(
       IImageRepository imageRepository,
-      IUserEducationRepository educationRepository,
+      IEducationRepository educationRepository,
       IHttpContextAccessor httpContextAccessor,
       IRequestClient<IRemoveImagesRequest> rcRemoveImages,
       IRemoveImagesRequestValidator removeRequestValidator,

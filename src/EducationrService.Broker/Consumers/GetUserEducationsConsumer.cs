@@ -13,13 +13,12 @@ namespace EducationService.Broker.Consumers
 {
   public class GetUserEducationsConsumer : IConsumer<IGetUserEducationsRequest>
   {
-    private readonly IUserRepository _repository;
+    private readonly IUserEducationRepository _repository;
     private readonly IUserEducationDataMapper _educationMapper;
 
     private async Task<object> GetUserEducationsAsync(IGetUserEducationsRequest request)
     {
-      List < DbUserEducation > userEducations =
-         await _repository.GetAsync(request.UserId);
+      List < DbUserEducation > userEducations = await _repository.GetAsync(request.UserId);
 
       return IGetUserEducationsResponse
         .CreateObj(
@@ -27,7 +26,7 @@ namespace EducationService.Broker.Consumers
     }
 
     public GetUserEducationsConsumer(
-      IUserRepository repository,
+      IUserEducationRepository repository,
       IUserEducationDataMapper educationMapper)
     {
       _repository = repository;

@@ -48,21 +48,19 @@ namespace LT.DigitalOffice.EducationService.Models.Db
 
       builder
         .Property(e => e.UniversityName)
-        .IsRequired()
-        .HasMaxLength(100);
+        .IsRequired();
 
       builder
         .Property(e => e.QualificationName)
-        .IsRequired()
-        .HasMaxLength(100);
+        .IsRequired();
 
       builder
         .HasOne(fe => fe.EducationForm)
-        .WithMany(u => u.UsersEducation);
+        .WithMany(u => u.UsersEducations);
 
       builder
         .HasOne(te => te.EducationType)
-        .WithMany(u => u.UsersEducation);
+        .WithMany(u => u.UsersEducations);
 
       builder
        .HasMany(p => p.Images)

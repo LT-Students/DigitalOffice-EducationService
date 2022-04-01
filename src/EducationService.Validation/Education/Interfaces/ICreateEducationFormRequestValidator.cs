@@ -7,6 +7,5 @@ namespace LT.DigitalOffice.EducationService.Validation.Education.Interfaces
   [AutoInject]
   public interface ICreateEducationFormRequestValidator : IValidator<CreateEducationFormRequest>
   {
-
   }
 }

@@ -7,10 +7,10 @@ namespace LT.DigitalOffice.EducationService.Broker.Consumers
 {
   public class DisactivateUserEducationsConsumer : IConsumer<IDisactivateUserRequest>
   {
-    private readonly IUserRepository _repository;
+    private readonly IUserEducationRepository _repository;
 
     public DisactivateUserEducationsConsumer(
-      IUserRepository repository)
+      IUserEducationRepository repository)
     {
       _repository = repository;
     }

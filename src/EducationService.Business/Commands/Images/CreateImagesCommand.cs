@@ -33,7 +33,7 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
     private readonly ILogger<CreateImagesCommand> _logger;
     private readonly IAccessValidator _accessValidator;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IUserEducationRepository _educationRepository;
+    private readonly IEducationRepository _educationRepository;
     private readonly IResponseCreator _responseCreator;
     private readonly ICreateImageDataMapper _mapper;
     private readonly IDbEducationImageMapper _imageMapper;
@@ -81,7 +81,7 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
       ILogger<CreateImagesCommand> logger,
       IAccessValidator accessValidator,
       IHttpContextAccessor httpContextAccessor,
-      IUserEducationRepository educationRepository,
+      IEducationRepository educationRepository,
       IResponseCreator responseCreator,
       ICreateImageDataMapper mapper,
       IDbEducationImageMapper imageMapper,

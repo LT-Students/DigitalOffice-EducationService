@@ -15,11 +15,11 @@ namespace LT.DigitalOffice.EducationService.Models.Db
     public DateTime CreatedAtUtc { get; set; }
     public Guid? ModifiedBy { get; set; }
     public DateTime? ModifiedAtUtc { get; set; }
-    public ICollection<DbUserEducation> UsersEducation { get; set; }
+    public ICollection<DbUserEducation> UsersEducations { get; set; }
 
     public DbEducationForm()
     {
-      UsersEducation = new HashSet<DbUserEducation>();
+      UsersEducations = new HashSet<DbUserEducation>();
     }
   }
 
@@ -36,7 +36,7 @@ namespace LT.DigitalOffice.EducationService.Models.Db
         .IsRequired();
 
       builder
-        .HasMany(u => u.UsersEducation)
+        .HasMany(u => u.UsersEducations)
         .WithOne(fe => fe.EducationForm);
     }
   }

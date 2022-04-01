@@ -30,7 +30,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
   {
     private readonly IAccessValidator _accessValidator;
     private readonly IDbUserEducationMapper _mapper;
-    private readonly IUserEducationRepository _educationRepository;
+    private readonly IEducationRepository _educationRepository;
     private readonly ICreateEducationRequestValidator _validator;
     private readonly IResponseCreator _responseCreator;
     private readonly ICreateImageDataMapper _createImageDataMapper;
@@ -73,10 +73,13 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
     public CreateEducationCommand(
       IAccessValidator accessValidator,
       IDbUserEducationMapper mapper,
-      IUserEducationRepository educationRepository,
+      IEducationRepository educationRepository,
       ICreateEducationRequestValidator validator,
       IResponseCreator responseCreator,
-      IHttpContextAccessor httpContextAccessor)
+      IHttpContextAccessor httpContextAccessor,
+      IRequestClient<ICreateImagesRequest> rcImage,
+      ICreateImageDataMapper createImageDataMapper,
+      ILogger<CreateEducationCommand> logger)
     {
       _accessValidator = accessValidator;
       _mapper = mapper;
@@ -84,6 +87,10 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
       _validator = validator;
       _responseCreator = responseCreator;
       _httpContextAccessor = httpContextAccessor;
+      _rcImage = rcImage; //
+      _createImageDataMapper = createImageDataMapper; //
+      _logger = logger; //
+
     }
 
     public async Task<OperationResultResponse<Guid?>> ExecuteAsync(CreateEducationRequest request)

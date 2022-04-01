@@ -28,9 +28,7 @@ namespace LT.DigitalOffice.EducationService.Mappers.Db
         Id = Guid.NewGuid(),
         Name = request.Name,
         CreatedBy = _httpContextAccessor.HttpContext.GetUserId(),
-        CreatedAtUtc = DateTime.UtcNow,
-        ModifiedBy = _httpContextAccessor.HttpContext.GetUserId(),
-        ModifiedAtUtc = DateTime.UtcNow,
+        CreatedAtUtc = DateTime.UtcNow
       };
     }
   }

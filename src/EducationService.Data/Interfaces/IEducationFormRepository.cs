@@ -10,6 +10,6 @@ namespace LT.DigitalOffice.EducationService.Data.Interfaces
   {
     Task<Guid> CreateAsync(DbEducationForm form);
 
-    Task<bool> DoesEducationFormAlreadyExistAsync(string name);
+    Task<bool> DoesNameExistAsync(string name);
   }
 }
