@@ -6,7 +6,6 @@ using LT.DigitalOffice.EducationService.Models.Dto.Requests.Education;
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Images;
 using LT.DigitalOffice.EducationService.Validation.Education.Interfaces;
 using LT.DigitalOffice.Kernel.BrokerSupport.AccessValidatorEngine.Interfaces;
-using LT.DigitalOffice.Kernel.BrokerSupport.Broker;
 using LT.DigitalOffice.Kernel.BrokerSupport.Helpers;
 using LT.DigitalOffice.Kernel.Constants;
 using LT.DigitalOffice.Kernel.Extensions;
@@ -14,7 +13,6 @@ using LT.DigitalOffice.Kernel.FluentValidationExtensions;
 using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Responses;
 using LT.DigitalOffice.Models.Broker.Enums;
-using LT.DigitalOffice.Models.Broker.Models;
 using LT.DigitalOffice.Models.Broker.Requests.Image;
 using LT.DigitalOffice.Models.Broker.Responses.Image;
 using MassTransit;
@@ -51,7 +49,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
           _rcImage,
           ICreateImagesRequest.CreateObj(_createImageDataMapper.Map(images), ImageSource.User),
           errors,
-          _logger))
+          _logger))?
         .ImagesIds;
     }
 

@@ -7,6 +7,7 @@ using MassTransit;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LT.DigitalOffice.EducationService.Validation.Education
@@ -41,11 +42,18 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
 
     private async Task<bool> CheckValidityUserId(Guid userId, List<string> errors)
     {
-      return await RequestHandler.ProcessRequest<ICheckUsersExistence, bool>(
+      ICheckUsersExistence check = await RequestHandler.ProcessRequest<ICheckUsersExistence, ICheckUsersExistence>(
           _rcCheckUsersExistence,
           ICheckUsersExistence.CreateObj(new List<Guid> { userId }),
           errors,
           _logger);
+
+      if(check != null)
+      {
+        return check.UserIds.Any();
+      }
+
+      return false;
     }
   }
 }

@@ -5,9 +5,8 @@ using LT.DigitalOffice.EducationService.Mappers.Models.Interfaces;
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Images;
 using LT.DigitalOffice.EducationService.Validation.Image.Interfaces;
 using LT.DigitalOffice.Kernel.BrokerSupport.AccessValidatorEngine.Interfaces;
-using LT.DigitalOffice.Kernel.BrokerSupport.Broker;
+using LT.DigitalOffice.Kernel.BrokerSupport.Helpers;
 using LT.DigitalOffice.Kernel.Constants;
-using LT.DigitalOffice.Kernel.Enums;
 using LT.DigitalOffice.Kernel.Extensions;
 using LT.DigitalOffice.Kernel.FluentValidationExtensions;
 using LT.DigitalOffice.Kernel.Helpers.Interfaces;
@@ -29,7 +28,7 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
   public class CreateImagesCommand : ICreateImagesCommand
   {
     private readonly IImageRepository _repository;
-    private readonly IRequestClient<ICreateImagesRequest> _rcImages;
+    private readonly IRequestClient<ICreateImagesRequest> _rcImage;
     private readonly ILogger<CreateImagesCommand> _logger;
     private readonly IAccessValidator _accessValidator;
     private readonly IHttpContextAccessor _httpContextAccessor;
@@ -39,45 +38,24 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
     private readonly IDbEducationImageMapper _imageMapper;
     private readonly ICreateImagesRequestValidator _validator;
 
-    private async Task<List<Guid>> CreateAsync(List<ImageContent> images, Guid certificateId, List<string> errors)
+    private async Task<List<Guid>> CreateAsync(List<ImageContent> images, List<string> errors)
     {
       if (images is null || !images.Any())
       {
         return null;
       }
 
-      try
-      {
-        Response<IOperationResult<ICreateImagesResponse>> response = await
-          _rcImages.GetResponse<IOperationResult<ICreateImagesResponse>>(
-            ICreateImagesRequest.CreateObj(_mapper.Map(images), ImageSource.User));
-
-        if (response.Message.IsSuccess && response.Message.Body.ImagesIds is not null)
-        {
-          return response.Message.Body.ImagesIds;
-        }
-
-        _logger.LogWarning(
-          "Errors while creating images for education id {EducationId}.\nErrors: {Errors}",
-          certificateId,
-          string.Join('\n', response.Message.Errors));
-      }
-      catch (Exception exc)
-      {
-        _logger.LogError(
-          exc,
-          "Cannot create images for education id {EducationId}.",
-          certificateId);
-      }
-
-      errors.Add("Cannot create images. Please try again later.");
-
-      return null;
+      return (await RequestHandler.ProcessRequest<ICreateImagesRequest, ICreateImagesResponse>(
+         _rcImage,
+         ICreateImagesRequest.CreateObj(_mapper.Map(images), ImageSource.User),
+         errors,
+         _logger))
+       .ImagesIds;
     }
 
     public CreateImagesCommand(
       IImageRepository repository,
-      IRequestClient<ICreateImagesRequest> rcImages,
+      IRequestClient<ICreateImagesRequest> rcImage,
       ILogger<CreateImagesCommand> logger,
       IAccessValidator accessValidator,
       IHttpContextAccessor httpContextAccessor,
@@ -88,7 +66,7 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
       ICreateImagesRequestValidator validator)
     {
       _repository = repository;
-      _rcImages = rcImages;
+      _rcImage = rcImage;
       _logger = logger;
       _accessValidator = accessValidator;
       _httpContextAccessor = httpContextAccessor;
@@ -118,7 +96,6 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
 
       List<Guid> imagesIds = await CreateAsync(
         request.Images,
-        request.EducationId,
         response.Errors);
 
       if (response.Errors.Any())
@@ -132,7 +109,6 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
         _imageMapper.Map(imageId, request.EducationId))
         .ToList());
 
-      response.Status = OperationResultStatusType.FullSuccess;
       _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Created;
 
       return response;
