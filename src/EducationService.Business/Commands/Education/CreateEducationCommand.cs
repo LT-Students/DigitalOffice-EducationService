@@ -83,7 +83,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
         return _responseCreator.CreateFailureResponse<Guid?>(HttpStatusCode.Forbidden);
       }
 
-      if (!_validator.ValidateCustom(request, out List<string> errors))
+      if (!await _validator.ValidateCustom(request, out List<string> errors))
       {
         return _responseCreator.CreateFailureResponse<Guid?>(HttpStatusCode.BadRequest, errors);
       }
@@ -99,7 +99,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
 
       response.Body = await _educationRepository.CreateAsync(_mapper.Map(request, imagesIds));
 
-      _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Created;
+      _httpContextAccessor.HttpContext.Response.StatusCode = HttpStatusCode.Created;
 
       return response;
     }
