@@ -26,7 +26,7 @@ namespace LT.DigitalOffice.EducationService.Data
 
     public async Task<bool> DoesNameExistAsync(string name)
     {
-      return await _provider.EducationsForms.AnyAsync(f => f.Name.Equals(name));
+      return await _provider.EducationsForms.AnyAsync(f => f.Name.ToLower() == name.ToLower());
     }
   }
 }
