@@ -37,7 +37,7 @@ namespace LT.DigitalOffice.EducationService.Data.Provider.MsSql.Ef.Migrations
           QualificationName = table.Column<string>(nullable: false),
           EducationFormId = table.Column<Guid>(nullable: false),
           EducationTypeId = table.Column<Guid>(nullable: false),
-          Сompleteness = table.Column<int>(nullable: false),
+          Completeness = table.Column<int>(nullable: false),
           AdmissionAt = table.Column<DateTime>(nullable: false),
           IssueAt = table.Column<DateTime>(nullable: true),
           IsActive = table.Column<bool>(nullable: false),

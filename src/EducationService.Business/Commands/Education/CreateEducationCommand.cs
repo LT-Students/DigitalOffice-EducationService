@@ -70,9 +70,9 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
       _validator = validator;
       _responseCreator = responseCreator;
       _httpContextAccessor = httpContextAccessor;
-      _rcImage = rcImage; //
-      _createImageDataMapper = createImageDataMapper; //
-      _logger = logger; //
+      _rcImage = rcImage;
+      _createImageDataMapper = createImageDataMapper;
+      _logger = logger;
     }
 
     public async Task<OperationResultResponse<Guid?>> ExecuteAsync(CreateEducationRequest request)

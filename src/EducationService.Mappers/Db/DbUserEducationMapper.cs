@@ -22,7 +22,7 @@ namespace LT.DigitalOffice.EducationService.Mappers.Db
       _dbEducationImageMapper = dbEducationImageMapper;
     }
 
-    public DbUserEducation Map(CreateEducationRequest request, List<Guid> filesIds)
+    public DbUserEducation Map(CreateEducationRequest request, List<Guid> imagesIds)
     {
       if (request is null)
       {
@@ -45,8 +45,8 @@ namespace LT.DigitalOffice.EducationService.Mappers.Db
         IsActive = true,
         CreatedBy = _httpContextAccessor.HttpContext.GetUserId(),
         CreatedAtUtc = DateTime.UtcNow,
-        Images = filesIds?
-          .Select(fileId => _dbEducationImageMapper.Map(fileId, educationId))
+        Images = imagesIds?
+          .Select(imageId => _dbEducationImageMapper.Map(imageId, educationId))
           .ToList(),
       };
     }

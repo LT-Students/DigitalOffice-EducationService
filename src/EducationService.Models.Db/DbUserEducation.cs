@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LT.DigitalOffice.EducationService.Models.Db
 {
+  [ParseEntity]
   public class DbUserEducation
   {
     public const string TableName = "UsersEducations";
@@ -24,7 +25,10 @@ namespace LT.DigitalOffice.EducationService.Models.Db
     public DateTime CreatedAtUtc { get; set; }
     public Guid? ModifiedBy { get; set; }
     public DateTime? ModifiedAtUtc { get; set; }
+
+    [IgnoreParse]
     public DbEducationForm EducationForm { get; set; }
+    [IgnoreParse]
     public DbEducationType EducationType { get; set; }
 
     [IgnoreParse]
