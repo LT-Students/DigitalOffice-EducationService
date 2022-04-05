@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace LT.DigitalOffice.EducationService.Business.Commands.EducationType
 {
