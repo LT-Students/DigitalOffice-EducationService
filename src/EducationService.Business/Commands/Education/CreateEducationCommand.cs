@@ -9,7 +9,6 @@ using LT.DigitalOffice.Kernel.BrokerSupport.AccessValidatorEngine.Interfaces;
 using LT.DigitalOffice.Kernel.BrokerSupport.Helpers;
 using LT.DigitalOffice.Kernel.Constants;
 using LT.DigitalOffice.Kernel.Extensions;
-using LT.DigitalOffice.Kernel.FluentValidationExtensions;
 using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Responses;
 using LT.DigitalOffice.Models.Broker.Enums;
@@ -23,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using FluentValidation.Results;
 
 namespace LT.DigitalOffice.EducationService.Business.Commands.Education
 {
@@ -83,11 +83,17 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
         return _responseCreator.CreateFailureResponse<Guid?>(HttpStatusCode.Forbidden);
       }
 
-      if (!await _validator.ValidateCustom(request, out List<string> errors))
+      
+
+      ValidationResult validationResult = await _validator.ValidateAsync(request);
+
+      if (!validationResult.IsValid)
       {
-        return _responseCreator.CreateFailureResponse<Guid?>(HttpStatusCode.BadRequest, errors);
+        return _responseCreator.CreateFailureResponse<Guid?>(HttpStatusCode.BadRequest,
+          validationResult.Errors.Select(validationFailure => validationFailure.ErrorMessage).ToList());
       }
 
+      List<string> errors = new List<string>();
       List<Guid> imagesIds = await CreateImagesAsync(request.Images, errors);
 
       if (errors.Any())
@@ -99,7 +105,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
 
       response.Body = await _educationRepository.CreateAsync(_mapper.Map(request, imagesIds));
 
-      _httpContextAccessor.HttpContext.Response.StatusCode = HttpStatusCode.Created;
+      _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Created;
 
       return response;
     }

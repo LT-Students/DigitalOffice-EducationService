@@ -5,7 +5,7 @@ using LT.DigitalOffice.EducationService.Models.Dto.Requests.Education;
 using LT.DigitalOffice.EducationService.Validation.Education.Interfaces;
 using LT.DigitalOffice.Kernel.BrokerSupport.AccessValidatorEngine.Interfaces;
 using LT.DigitalOffice.Kernel.Constants;
-using LT.DigitalOffice.Kernel.FluentValidationExtensions;
+using FluentValidation.Results;
 using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Responses;
 using Microsoft.AspNetCore.Http;
@@ -49,9 +49,12 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.EducationType
         return _responseCreator.CreateFailureResponse<Guid?>(HttpStatusCode.Forbidden);
       }
 
-      if (!_validator.ValidateCustom(request, out List<string> errors))
+      ValidationResult validationResult = await _validator.ValidateAsync(request);
+
+      if (!validationResult.IsValid)
       {
-        return _responseCreator.CreateFailureResponse<Guid?>(HttpStatusCode.BadRequest, errors);
+        return _responseCreator.CreateFailureResponse<Guid?>(HttpStatusCode.BadRequest,
+          validationResult.Errors.Select(validationFailure => validationFailure.ErrorMessage).ToList());
       }
 
       OperationResultResponse<Guid?> response = new();
