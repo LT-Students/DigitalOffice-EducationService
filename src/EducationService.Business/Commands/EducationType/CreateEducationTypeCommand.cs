@@ -43,8 +43,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.EducationType
     }
 
     public async Task<OperationResultResponse<Guid?>> ExecuteAsync(CreateEducationTypeRequest request)
-    {
-      
+    {    
       if (!await _accessValidator.HasRightsAsync(Rights.AddEditRemoveUsers))
       {
         return _responseCreator.CreateFailureResponse<Guid?>(HttpStatusCode.Forbidden);

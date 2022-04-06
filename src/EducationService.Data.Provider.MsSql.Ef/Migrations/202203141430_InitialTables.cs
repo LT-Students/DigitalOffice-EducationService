@@ -52,7 +52,7 @@ namespace LT.DigitalOffice.EducationService.Data.Provider.MsSql.Ef.Migrations
         });
     }
 
-    public void CreateEducationTypesandEducationFormsTable(MigrationBuilder builder)
+    public void CreateEducationTypesAndEducationFormsTable(MigrationBuilder builder)
     {
 
       builder.CreateTable(
@@ -132,7 +132,7 @@ namespace LT.DigitalOffice.EducationService.Data.Provider.MsSql.Ef.Migrations
     protected override void Up(MigrationBuilder migrationBuilder)
     {
       CreateUserEducationTable(migrationBuilder);
-      CreateEducationTypesandEducationFormsTable(migrationBuilder);
+      CreateEducationTypesAndEducationFormsTable(migrationBuilder);
       CreateEducationImageTable(migrationBuilder);
       InsertData(migrationBuilder);
     }
