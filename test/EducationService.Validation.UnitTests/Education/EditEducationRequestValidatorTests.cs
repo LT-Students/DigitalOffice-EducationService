@@ -12,7 +12,7 @@ namespace LT.DigitalOffice.EducationService.Validation.UnitTests.Education
 {
     class EditEducationRequestValidatorTests
     {
-        private EditEducationRequestValidator _validator;
+       /* private EditEducationRequestValidator _validator;
         private JsonPatchDocument<EditEducationRequest> _request;
 
         [OneTimeSetUp]
@@ -46,12 +46,7 @@ namespace LT.DigitalOffice.EducationService.Validation.UnitTests.Education
                             "replace",
                             $"/{nameof(EditEducationRequest.IssueAt)}",
                             "",
-                            DateTime.UtcNow),
-                        new Operation<EditEducationRequest>(
-                            "replace",
-                            $"/{nameof(EditEducationRequest.FormEducation)}",
-                            "",
-                            0)
+                            DateTime.UtcNow)
                 }, new CamelCasePropertyNamesContractResolver());
 
             _validator.TestValidate(_request).ShouldNotHaveAnyValidationErrors();
@@ -151,6 +146,6 @@ namespace LT.DigitalOffice.EducationService.Validation.UnitTests.Education
                 }, new CamelCasePropertyNamesContractResolver());
 
             _validator.TestValidate(_request).ShouldHaveAnyValidationError();
-        }
+        }*/
     }
 }

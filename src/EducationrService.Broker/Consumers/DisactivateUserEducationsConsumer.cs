@@ -7,17 +7,17 @@ namespace LT.DigitalOffice.EducationService.Broker.Consumers
 {
   public class DisactivateUserEducationsConsumer : IConsumer<IDisactivateUserRequest>
   {
-    private readonly IUserRepository _repository;
+    private readonly IUserEducationRepository _repository;
 
     public DisactivateUserEducationsConsumer(
-      IUserRepository repository)
+      IUserEducationRepository repository)
     {
       _repository = repository;
     }
 
     public async Task Consume(ConsumeContext<IDisactivateUserRequest> context)
     {
-      await _repository.DisactivateCertificateAndEducationsAsync(context.Message.UserId, context.Message.ModifiedBy);
+      await _repository.DisactivateEducationsAsync(context.Message.UserId, context.Message.ModifiedBy);
     }
   }
 }

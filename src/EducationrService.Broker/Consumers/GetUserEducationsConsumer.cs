@@ -13,29 +13,24 @@ namespace EducationService.Broker.Consumers
 {
   public class GetUserEducationsConsumer : IConsumer<IGetUserEducationsRequest>
   {
-    private readonly IUserRepository _repository;
+    private readonly IUserEducationRepository _repository;
     private readonly IUserEducationDataMapper _educationMapper;
-    private readonly IUserCertificateDataMapper _certificateMapper;
 
     private async Task<object> GetUserEducationsAsync(IGetUserEducationsRequest request)
     {
-      (List<DbUserCertificate> userCertificates, List<DbUserEducation> userEducations) =
-        await _repository.GetAsync(request.UserId);
+      List < DbUserEducation > userEducations = await _repository.GetAsync(request.UserId);
 
       return IGetUserEducationsResponse
         .CreateObj(
-          userEducations?.Select(_educationMapper.Map).ToList(),
-          userCertificates?.Select(_certificateMapper.Map).ToList());
+          userEducations?.Select(_educationMapper.Map).ToList());
     }
 
     public GetUserEducationsConsumer(
-      IUserRepository repository,
-      IUserEducationDataMapper educationMapper,
-      IUserCertificateDataMapper certificateMapper)
+      IUserEducationRepository repository,
+      IUserEducationDataMapper educationMapper)
     {
       _repository = repository;
       _educationMapper = educationMapper;
-      _certificateMapper = certificateMapper;
     }
 
     public async Task Consume(ConsumeContext<IGetUserEducationsRequest> context)

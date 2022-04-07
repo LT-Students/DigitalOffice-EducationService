@@ -9,7 +9,7 @@ namespace LT.DigitalOffice.EducationService.Data.Interfaces
   [AutoInject]
   public interface IImageRepository
   {
-    Task<List<Guid>> CreateAsync(List<DbCertificateImage> images);
+    Task<List<Guid>> CreateAsync(List<DbEducationImage> images);
 
     Task<bool> RemoveAsync(List<Guid> imagesIds);
   }

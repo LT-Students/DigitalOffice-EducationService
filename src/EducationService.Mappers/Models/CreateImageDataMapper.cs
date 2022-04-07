@@ -19,7 +19,7 @@ namespace LT.DigitalOffice.EducationService.Mappers.Models
 
     public List<CreateImageData> Map(List<ImageContent> request)
     {
-      if (request == null)
+      if (request is null)
       {
         return null;
       }

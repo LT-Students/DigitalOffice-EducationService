@@ -7,6 +7,17 @@ namespace LT.DigitalOffice.EducationService.Mappers.Models
 {
   public class UserEducationDataMapper : IUserEducationDataMapper
   {
+    private readonly IEducationFormDataMapper _educationFormDataMapper;
+    private readonly IEducationTypeDataMapper _educationTypeDataMapper;
+
+    public UserEducationDataMapper(
+      IEducationFormDataMapper educationFormDataMapper,
+      IEducationTypeDataMapper educationTypeDataMapper)
+    {
+      _educationFormDataMapper = educationFormDataMapper;
+      _educationTypeDataMapper = educationTypeDataMapper;
+    }
+
     public EducationData Map(DbUserEducation dbUserEducation)
     {
       if (dbUserEducation is null)
@@ -18,10 +29,11 @@ namespace LT.DigitalOffice.EducationService.Mappers.Models
         id: dbUserEducation.Id,
         universityName: dbUserEducation.UniversityName,
         qualificationName: dbUserEducation.QualificationName,
-        formEducation: ((FormEducation)dbUserEducation.FormEducation).ToString(),
+        completeness: ((EducationCompleteness)dbUserEducation.Completeness).ToString(),
+        educationForm: _educationFormDataMapper.Map(dbUserEducation.EducationForm),
+        educationType: _educationTypeDataMapper.Map(dbUserEducation.EducationType),
         admissionAt: dbUserEducation.AdmissionAt,
-        issueAt: dbUserEducation.IssueAt,
-        imageId: null);
+        issueAt: dbUserEducation.IssueAt);
     }
   }
 }

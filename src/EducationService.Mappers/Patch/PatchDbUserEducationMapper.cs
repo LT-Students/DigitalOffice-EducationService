@@ -12,6 +12,7 @@ namespace LT.DigitalOffice.EducationService.Patch.Models
   {
     public JsonPatchDocument<DbUserEducation> Map(JsonPatchDocument<EditEducationRequest> request)
     {
+
       if (request is null)
       {
         return null;
@@ -21,21 +22,16 @@ namespace LT.DigitalOffice.EducationService.Patch.Models
 
       foreach (Operation<EditEducationRequest> item in request.Operations)
       {
-        if (item.path.ToUpper().EndsWith(nameof(EditEducationRequest.FormEducation).ToUpper()))
+        if (item.path.EndsWith(nameof(EditEducationRequest.Completeness), StringComparison.OrdinalIgnoreCase))
         {
-          if (Enum.TryParse(item.value.ToString(), out FormEducation education))
-          {
-            dbUserEducation.Operations.Add(new Operation<DbUserEducation>(
-              item.op, $"/{nameof(EditEducationRequest.FormEducation)}", item.from, (int)education));
+          dbUserEducation.Operations.Add(new Operation<DbUserEducation>(
+            item.op, item.path, item.from, (int)Enum.Parse(typeof(EducationCompleteness), item.value.ToString())));
 
             continue;
-          }
         }
-
         dbUserEducation.Operations.Add(new Operation<DbUserEducation>(item.op, item.path, item.from, item.value));
       }
-
-      return dbUserEducation;
+      return dbUserEducation;          
     }
   }
 }

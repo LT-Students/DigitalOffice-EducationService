@@ -18,14 +18,14 @@ namespace LT.DigitalOffice.EducationService.Data
       _provider = provider;
     }
 
-    public async Task<List<Guid>> CreateAsync(List<DbCertificateImage> images)
+    public async Task<List<Guid>> CreateAsync(List<DbEducationImage> images)
     {
-      if (images == null)
+      if (images is null)
       {
         return null;
       }
 
-      _provider.CertificatesImages.AddRange(images);
+      _provider.EducationsImages.AddRange(images);
       await _provider.SaveAsync();
 
       return images.Select(x => x.ImageId).ToList();
@@ -33,15 +33,15 @@ namespace LT.DigitalOffice.EducationService.Data
 
     public async Task<bool> RemoveAsync(List<Guid> imagesIds)
     {
-      if (imagesIds == null)
+      if (imagesIds is null)
       {
         return false;
       }
 
-      IEnumerable<DbCertificateImage> images = _provider.CertificatesImages
+      IEnumerable<DbEducationImage> images = _provider.EducationsImages?
         .Where(x => imagesIds.Contains(x.ImageId));
 
-      _provider.CertificatesImages.RemoveRange(images);
+      _provider.EducationsImages.RemoveRange(images);
       await _provider.SaveAsync();
 
       return true;
