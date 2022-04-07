@@ -9,8 +9,11 @@ namespace LT.DigitalOffice.EducationService.Models.Dto.Configurations
   {
     public string GetUserEducationsEndpoint { get; set; }
     public string DisactivateUserEducationsEndpoint { get; set; }
+        
+    [AutoInjectRequest(typeof(ICheckUsersExistence))]
+    public string CheckUsersExistenceEndpoint { get; set; }
 
-
+    // image
     [AutoInjectRequest(typeof(ICreateImagesRequest))]
     public string CreateImagesEndpoint { get; set; }
 
@@ -18,9 +21,6 @@ namespace LT.DigitalOffice.EducationService.Models.Dto.Configurations
     public string GetImagesEndpoint { get; set; }
 
     [AutoInjectRequest(typeof(IRemoveImagesRequest))]
-    public string RemoveImagesEndpoint { get; set; }
-
-    [AutoInjectRequest(typeof(ICheckUsersExistence))]
-    public string CheckUsersExistenceEndpoint { get; set; }
+    public string RemoveImagesEndpoint { get; set; }  
   }
 }
