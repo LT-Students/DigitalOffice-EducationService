@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LT.DigitalOffice.EducationService.Data
@@ -38,7 +39,14 @@ namespace LT.DigitalOffice.EducationService.Data
 
     public async Task<DbUserEducation> GetAsync(Guid educationId)
     {
-      return await _provider.UsersEducations.FirstOrDefaultAsync(e => e.Id == educationId);
+      IQueryable<DbUserEducation> dbEducation = _provider.UsersEducations.AsQueryable();
+
+      dbEducation = dbEducation.Where(dbEducation => dbEducation.Id == educationId);
+
+      return await dbEducation?
+        .Include(dbEducation => dbEducation.EducationForm)
+        .Include(dbEducation => dbEducation.EducationType)
+        .FirstOrDefaultAsync();
     }
 
     public async Task<bool> EditAsync(DbUserEducation education, JsonPatchDocument<DbUserEducation> request)

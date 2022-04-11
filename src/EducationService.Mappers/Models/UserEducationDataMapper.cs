@@ -35,7 +35,7 @@ namespace LT.DigitalOffice.EducationService.Mappers.Models
         educationType: _educationTypeDataMapper.Map(dbUserEducation.EducationType),
         admissionAt: dbUserEducation.AdmissionAt,
         issueAt: dbUserEducation.IssueAt,
-        imagesIds : dbUserEducation.Images.Select(u => u.Id).ToList());
+        imagesIds : dbUserEducation.Images?.Select(u => u.Id).ToList());
     }
   }
 }

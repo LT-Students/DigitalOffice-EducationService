@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using LT.DigitalOffice.Kernel.BrokerSupport.Attributes.ParseEntity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,8 @@ namespace LT.DigitalOffice.EducationService.Models.Db
     public DateTime CreatedAtUtc { get; set; }
     public Guid? ModifiedBy { get; set; }
     public DateTime? ModifiedAtUtc { get; set; }
+
+    [IgnoreParse]
     public ICollection<DbUserEducation> UsersEducations { get; set; }
 
     public DbEducationType()
