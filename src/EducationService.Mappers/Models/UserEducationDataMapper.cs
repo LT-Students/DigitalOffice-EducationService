@@ -2,6 +2,7 @@
 using LT.DigitalOffice.EducationService.Models.Db;
 using LT.DigitalOffice.EducationService.Models.Dto.Enums;
 using LT.DigitalOffice.Models.Broker.Models.Education;
+using System.Linq;
 
 namespace LT.DigitalOffice.EducationService.Mappers.Models
 {
@@ -33,7 +34,8 @@ namespace LT.DigitalOffice.EducationService.Mappers.Models
         educationForm: _educationFormDataMapper.Map(dbUserEducation.EducationForm),
         educationType: _educationTypeDataMapper.Map(dbUserEducation.EducationType),
         admissionAt: dbUserEducation.AdmissionAt,
-        issueAt: dbUserEducation.IssueAt);
+        issueAt: dbUserEducation.IssueAt,
+        imagesIds : dbUserEducation.Images.Select(u => u.Id).ToList());
     }
   }
 }
