@@ -21,10 +21,14 @@ namespace LT.DigitalOffice.EducationService.Data
 
     public async Task<List<DbUserEducation>> GetAsync(Guid userId)
     {
-      return (
-        await _provider.UsersEducations
-          .Where(uc => uc.UserId == userId)
-          .ToListAsync());
+      IQueryable<DbUserEducation> dbEducation = _provider.UsersEducations.AsQueryable();
+
+      dbEducation = dbEducation.Include(dbEducation => dbEducation.EducationForm);
+      dbEducation = dbEducation.Include(dbEducation => dbEducation.EducationType);
+
+      return await dbEducation
+        .Where(uc => uc.UserId == userId)
+        .ToListAsync();
     }
 
     public async Task DisactivateEducationsAsync(Guid userId, Guid modifiedBy)

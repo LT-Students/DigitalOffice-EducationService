@@ -39,14 +39,7 @@ namespace LT.DigitalOffice.EducationService.Data
 
     public async Task<DbUserEducation> GetAsync(Guid educationId)
     {
-      IQueryable<DbUserEducation> dbEducation = _provider.UsersEducations.AsQueryable();
-
-      dbEducation = dbEducation.Where(dbEducation => dbEducation.Id == educationId);
-
-      return await dbEducation?
-        .Include(dbEducation => dbEducation.EducationForm)
-        .Include(dbEducation => dbEducation.EducationType)
-        .FirstOrDefaultAsync();
+      return await _provider.UsersEducations.FirstOrDefaultAsync(e => e.Id == educationId);
     }
 
     public async Task<bool> EditAsync(DbUserEducation education, JsonPatchDocument<DbUserEducation> request)
