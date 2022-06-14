@@ -12,7 +12,7 @@ using LT.DigitalOffice.Kernel.FluentValidationExtensions;
 using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Responses;
 using LT.DigitalOffice.Models.Broker.Enums;
-using LT.DigitalOffice.Models.Broker.Requests.Image;
+using LT.DigitalOffice.Models.Broker.Publishing.Subscriber.Image;
 using LT.DigitalOffice.Models.Broker.Responses.Image;
 using MassTransit;
 using Microsoft.AspNetCore.Http;
@@ -28,7 +28,7 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
   public class CreateImagesCommand : ICreateImagesCommand
   {
     private readonly IImageRepository _repository;
-    private readonly IRequestClient<ICreateImagesRequest> _rcImage;
+    private readonly IRequestClient<ICreateImagesPublish> _rcImage;
     private readonly ILogger<CreateImagesCommand> _logger;
     private readonly IAccessValidator _accessValidator;
     private readonly IHttpContextAccessor _httpContextAccessor;
@@ -45,9 +45,9 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
         return null;
       }
 
-      return (await RequestHandler.ProcessRequest<ICreateImagesRequest, ICreateImagesResponse>(
+      return (await RequestHandler.ProcessRequest<ICreateImagesPublish, ICreateImagesResponse>(
          _rcImage,
-         ICreateImagesRequest.CreateObj(_mapper.Map(images), ImageSource.User),
+         ICreateImagesPublish.CreateObj(_mapper.Map(images), ImageSource.User),
          errors,
          _logger))
        .ImagesIds;
@@ -55,7 +55,7 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
 
     public CreateImagesCommand(
       IImageRepository repository,
-      IRequestClient<ICreateImagesRequest> rcImage,
+      IRequestClient<ICreateImagesPublish> rcImage,
       ILogger<CreateImagesCommand> logger,
       IAccessValidator accessValidator,
       IHttpContextAccessor httpContextAccessor,

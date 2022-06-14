@@ -1,4 +1,5 @@
-﻿using LT.DigitalOffice.EducationService.Business.Commands.Education.Interfaces;
+﻿using FluentValidation.Results;
+using LT.DigitalOffice.EducationService.Business.Commands.Education.Interfaces;
 using LT.DigitalOffice.EducationService.Data.Interfaces;
 using LT.DigitalOffice.EducationService.Mappers.Db.Interfaces;
 using LT.DigitalOffice.EducationService.Mappers.Models.Interfaces;
@@ -12,7 +13,7 @@ using LT.DigitalOffice.Kernel.Extensions;
 using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Responses;
 using LT.DigitalOffice.Models.Broker.Enums;
-using LT.DigitalOffice.Models.Broker.Requests.Image;
+using LT.DigitalOffice.Models.Broker.Publishing.Subscriber.Image;
 using LT.DigitalOffice.Models.Broker.Responses.Image;
 using MassTransit;
 using Microsoft.AspNetCore.Http;
@@ -22,7 +23,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using FluentValidation.Results;
 
 namespace LT.DigitalOffice.EducationService.Business.Commands.Education
 {
@@ -34,7 +34,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
     private readonly ICreateEducationRequestValidator _validator;
     private readonly IResponseCreator _responseCreator;
     private readonly ICreateImageDataMapper _createImageDataMapper;
-    private readonly IRequestClient<ICreateImagesRequest> _rcImage;
+    private readonly IRequestClient<ICreateImagesPublish> _rcImage;
     private readonly ILogger<CreateEducationCommand> _logger;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -45,9 +45,9 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
         return null;
       }
 
-      return (await RequestHandler.ProcessRequest<ICreateImagesRequest, ICreateImagesResponse>(
+      return (await RequestHandler.ProcessRequest<ICreateImagesPublish, ICreateImagesResponse>(
           _rcImage,
-          ICreateImagesRequest.CreateObj(_createImageDataMapper.Map(images), ImageSource.User),
+          ICreateImagesPublish.CreateObj(_createImageDataMapper.Map(images), ImageSource.User),
           errors,
           _logger))?
         .ImagesIds;
@@ -60,7 +60,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
       ICreateEducationRequestValidator validator,
       IResponseCreator responseCreator,
       IHttpContextAccessor httpContextAccessor,
-      IRequestClient<ICreateImagesRequest> rcImage,
+      IRequestClient<ICreateImagesPublish> rcImage,
       ICreateImageDataMapper createImageDataMapper,
       ILogger<CreateEducationCommand> logger)
     {
