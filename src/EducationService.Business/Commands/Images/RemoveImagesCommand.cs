@@ -79,12 +79,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Image
         return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.BadRequest);
       }
 
-      await Task.WhenAll(
-        request.ImagesIds.Count > 0
-          ? _publish.RemoveImagesAsync(
-            imageIds: request.ImagesIds,
-            imageSource: ImageSource.User)
-          : Task.CompletedTask);
+      await _publish.RemoveImagesAsync(request.ImagesIds, ImageSource.User);
 
       response.Status = response.Errors.Any()
         ? OperationResultStatusType.PartialSuccess
