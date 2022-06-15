@@ -9,6 +9,6 @@ namespace LT.DigitalOffice.EducationService.Broker.Publishes.Interfaces
   [AutoInject]
   public interface IPublish
   {
-    Task RemoveImagesAsync(List<Guid> imageIds, ImageSource imageSource);
+    Task RemoveImagesAsync(List<Guid> imagesIds, ImageSource imageSource);
   }
 }
