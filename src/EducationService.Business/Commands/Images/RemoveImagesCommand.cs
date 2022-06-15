@@ -79,7 +79,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Image
         return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.BadRequest);
       }
 
-      await _publish.RemoveImagesAsync(request.ImagesIds, ImageSource.User);
+      await _publish.RemoveImagesAsync(request.ImagesIds, ImageSource.Education);
 
       response.Status = response.Errors.Any()
         ? OperationResultStatusType.PartialSuccess
