@@ -10,7 +10,6 @@ using LT.DigitalOffice.Kernel.Enums;
 using LT.DigitalOffice.Kernel.Extensions;
 using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Responses;
-using LT.DigitalOffice.Models.Broker.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
@@ -79,7 +78,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Image
         return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.BadRequest);
       }
 
-      await _publish.RemoveImagesAsync(request.ImagesIds, ImageSource.Education);
+      await _publish.RemoveImagesAsync(request.ImagesIds);
 
       response.Status = response.Errors.Any()
         ? OperationResultStatusType.PartialSuccess

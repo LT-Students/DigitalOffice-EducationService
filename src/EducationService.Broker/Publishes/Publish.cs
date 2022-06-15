@@ -18,11 +18,11 @@ namespace LT.DigitalOffice.EducationService.Broker.Publishes
       _bus = bus;
     }
 
-    public async Task RemoveImagesAsync(List<Guid> imagesIds, ImageSource imageSource)
+    public async Task RemoveImagesAsync(List<Guid> imagesIds)
     {
       await _bus.Publish<IRemoveImagesPublish>(IRemoveImagesPublish.CreateObj(
         imagesIds: imagesIds,
-        imageSource: imageSource));
+        imageSource: ImageSource.Education));
     }
   }
 }

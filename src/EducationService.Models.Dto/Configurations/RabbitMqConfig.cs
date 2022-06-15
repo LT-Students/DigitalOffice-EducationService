@@ -20,8 +20,5 @@ namespace LT.DigitalOffice.EducationService.Models.Dto.Configurations
 
     [AutoInjectRequest(typeof(IGetImagesRequest))]
     public string GetImagesEndpoint { get; set; }
-
-    [AutoInjectRequest(typeof(IRemoveImagesPublish))]
-    public string RemoveImagesEndpoint { get; set; }  
   }
 }
