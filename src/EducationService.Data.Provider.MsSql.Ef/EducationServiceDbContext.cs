@@ -1,5 +1,5 @@
 ﻿using LT.DigitalOffice.EducationService.Models.Db;
-using LT.DigitalOffice.Kernel.Database;
+using LT.DigitalOffice.Kernel.EFSupport.Provider;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using System.Threading.Tasks;
