@@ -1,22 +1,18 @@
 ﻿using FluentValidation.Results;
+using LT.DigitalOffice.EducationService.Broker.Publishes.Interfaces;
 using LT.DigitalOffice.EducationService.Business.Commands.Image.Interfaces;
 using LT.DigitalOffice.EducationService.Data.Interfaces;
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Images;
 using LT.DigitalOffice.EducationService.Validation.Image.Interfaces;
 using LT.DigitalOffice.Kernel.BrokerSupport.AccessValidatorEngine.Interfaces;
-using LT.DigitalOffice.Kernel.BrokerSupport.Broker;
 using LT.DigitalOffice.Kernel.Constants;
 using LT.DigitalOffice.Kernel.Enums;
 using LT.DigitalOffice.Kernel.Extensions;
 using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Responses;
-using LT.DigitalOffice.Models.Broker.Enums;
-using LT.DigitalOffice.Models.Broker.Requests.Image;
-using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -28,61 +24,30 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Image
     private readonly IImageRepository _imageRepository;
     private readonly IEducationRepository _educationRepository;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IRequestClient<IRemoveImagesRequest> _rcRemoveImages;
     private readonly IRemoveImagesRequestValidator _removeRequestValidator;
     private readonly IAccessValidator _accessValidator;
     private readonly ILogger<RemoveImagesCommand> _logger;
     private readonly IResponseCreator _responseCreator;
-
-    private async Task<bool> RemoveAsync(List<Guid> imagesIds, List<string> errors)
-    {
-      try
-      {
-        Response<IOperationResult<bool>> response =
-          await _rcRemoveImages.GetResponse<IOperationResult<bool>>(
-            IRemoveImagesRequest.CreateObj(imagesIds, ImageSource.User));
-
-        if (response.Message.IsSuccess)
-        {
-          return response.Message.Body;
-        }
-
-        _logger.LogWarning(
-          "Errors while removing images with ids: {ImagesIds}.\n Errors: {Errors}",
-          string.Join(", ", imagesIds),
-          string.Join('\n', response.Message.Errors));
-      }
-      catch (Exception ex)
-      {
-        _logger.LogError(
-          ex,
-          "Cannot remove images with ids: {ImagesIds}.",
-          string.Join(", ", imagesIds));
-      }
-
-      errors.Add("Cannot remove images. Please try again later.");
-
-      return false;
-    }
+    private readonly IPublish _publish;
 
     public RemoveImagesCommand(
       IImageRepository imageRepository,
       IEducationRepository educationRepository,
       IHttpContextAccessor httpContextAccessor,
-      IRequestClient<IRemoveImagesRequest> rcRemoveImages,
       IRemoveImagesRequestValidator removeRequestValidator,
       IAccessValidator accessValidator,
       ILogger<RemoveImagesCommand> logger,
-      IResponseCreator responseCreator)
+      IResponseCreator responseCreator,
+      IPublish publish)
     {
       _imageRepository = imageRepository;
       _educationRepository = educationRepository;
       _httpContextAccessor = httpContextAccessor;
-      _rcRemoveImages = rcRemoveImages;
       _removeRequestValidator = removeRequestValidator;
       _accessValidator = accessValidator;
       _logger = logger;
       _responseCreator = responseCreator;
+      _publish = publish;
     }
 
     public async Task<OperationResultResponse<bool>> ExecuteAsync(RemoveImagesRequest request)
@@ -110,8 +75,10 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Image
 
       if (!response.Body)
       {
-        await RemoveAsync(request.ImagesIds, response.Errors);
+        return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.BadRequest);
       }
+
+      await _publish.RemoveImagesAsync(request.ImagesIds);
 
       response.Status = response.Errors.Any()
         ? OperationResultStatusType.PartialSuccess
