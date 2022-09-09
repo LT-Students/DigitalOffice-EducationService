@@ -48,6 +48,6 @@ public class FindUsersCommand : IFindUsersCommand
     List<DbUserEducation> dbUserEducations = await _userEducationRepository.FindAsync(filter);
 
     return new FindResultResponse<EducationInfo>(
-      body: dbUserEducations.Select(ue => _educationInfoMapper.Map(ue)).ToList());
+      body: dbUserEducations.Select(_educationInfoMapper.Map).ToList());
   }
 }
