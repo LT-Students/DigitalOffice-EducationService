@@ -10,5 +10,5 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.User.Interfaces;
 [AutoInject]
 public interface IFindUsersCommand
 {
-  Task<FindResultResponse<EducationInfo>> ExecuteAsync(Guid userId, FindUsersFilter filter);
+  Task<FindResultResponse<EducationInfo>> ExecuteAsync(FindUsersFilter filter);
 }

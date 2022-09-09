@@ -15,9 +15,8 @@ public class UserController : ControllerBase
   [HttpGet("find")]
   public async Task<FindResultResponse<EducationInfo>> FindAsync(
     [FromServices] IFindUsersCommand command,
-    [FromQuery] Guid userId,
     [FromQuery] FindUsersFilter filter)
   {
-    return await command.ExecuteAsync(userId, filter);
+    return await command.ExecuteAsync(filter);
   }
 }

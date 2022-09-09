@@ -35,7 +35,7 @@ public class FindUsersCommand : IFindUsersCommand
     _educationInfoMapper = educationInfoMapper;
   }
 
-  public async Task<FindResultResponse<EducationInfo>> ExecuteAsync(Guid userId, FindUsersFilter filter)
+  public async Task<FindResultResponse<EducationInfo>> ExecuteAsync(FindUsersFilter filter)
   {
     ValidationResult validationResult = _baseFindFilterValidator.Validate(filter);
 
@@ -45,7 +45,7 @@ public class FindUsersCommand : IFindUsersCommand
         validationResult.Errors.Select(vf => vf.ErrorMessage).ToList());
     }
 
-    List<DbUserEducation> dbUserEducations = await _userEducationRepository.GetAsync(userId);
+    List<DbUserEducation> dbUserEducations = await _userEducationRepository.FindAsync(filter);
 
     return new FindResultResponse<EducationInfo>(
       body: dbUserEducations.Select(ue => _educationInfoMapper.Map(ue)).ToList());
