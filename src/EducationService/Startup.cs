@@ -1,4 +1,3 @@
-using EducationService.Broker.Consumers;
 using HealthChecks.UI.Client;
 using LT.DigitalOffice.EducationService.Broker.Consumers;
 using LT.DigitalOffice.EducationService.Data.Provider.MsSql.Ef;
@@ -70,7 +69,6 @@ namespace LT.DigitalOffice.EducationService
 
     private void ConfigureConsumers(IServiceCollectionBusConfigurator x)
     {
-      x.AddConsumer<GetUserEducationsConsumer>();
       x.AddConsumer<DisactivateUserEducationsConsumer>();
     }
 
@@ -79,11 +77,6 @@ namespace LT.DigitalOffice.EducationService
        IRabbitMqBusFactoryConfigurator cfg,
        RabbitMqConfig rabbitMqConfig)
     {
-      cfg.ReceiveEndpoint(rabbitMqConfig.GetUserEducationsEndpoint, ep =>
-      {
-        ep.ConfigureConsumer<GetUserEducationsConsumer>(context);
-      });
-
       cfg.ReceiveEndpoint(rabbitMqConfig.DisactivateUserEducationsEndpoint, ep =>
       {
         ep.ConfigureConsumer<DisactivateUserEducationsConsumer>(context);
