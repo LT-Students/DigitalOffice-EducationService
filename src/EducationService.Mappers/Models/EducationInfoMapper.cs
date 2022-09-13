@@ -1,5 +1,6 @@
 ﻿using LT.DigitalOffice.EducationService.Mappers.Models.Interfaces;
 using LT.DigitalOffice.EducationService.Models.Db;
+using LT.DigitalOffice.EducationService.Models.Dto.Enums;
 using LT.DigitalOffice.EducationService.Models.Dto.Models;
 
 namespace LT.DigitalOffice.EducationService.Mappers.Models;
@@ -29,7 +30,7 @@ public class EducationInfoMapper : IEducationInfoMapper
         QualificationName = dbUserEducation.QualificationName,
         EducationForm = _formInfoMapper.Map(dbUserEducation),
         EducationType = _typeInfoMapper.Map(dbUserEducation),
-        Completeness = dbUserEducation.Completeness,
+        Completeness = (EducationCompleteness)dbUserEducation.Completeness,
         AdmissionAt = dbUserEducation.AdmissionAt,
         IssueAt = dbUserEducation.IssueAt
       };
