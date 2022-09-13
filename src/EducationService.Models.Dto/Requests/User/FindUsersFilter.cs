@@ -1,4 +1,5 @@
-﻿using LT.DigitalOffice.Kernel.Requests;
+﻿using LT.DigitalOffice.EducationService.Models.Dto.Enums;
+using LT.DigitalOffice.Kernel.Requests;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
@@ -16,5 +17,5 @@ public record FindUsersFilter : BaseFindFilter
   public Guid? EducationTypeId { get; set; }
 
   [FromQuery(Name = "completeness")]
-  public int? Completeness { get; set; }
+  public EducationCompleteness? Completeness { get; set; }
 }

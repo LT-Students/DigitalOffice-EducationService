@@ -66,7 +66,7 @@ namespace LT.DigitalOffice.EducationService.Data
 
       if (filter.Completeness.HasValue)
       {
-        query = query.Where(e => e.Completeness == filter.Completeness.Value);
+        query = query.Where(e => e.Completeness == (int)filter.Completeness.Value);
       }
 
       return await query.Skip(filter.SkipCount).Take(filter.TakeCount).ToListAsync();
