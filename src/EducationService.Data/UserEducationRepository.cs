@@ -48,7 +48,7 @@ namespace LT.DigitalOffice.EducationService.Data
       await _provider.SaveAsync();
     }
 
-    public async Task<List<DbUserEducation>> FindAsync(FindUsersFilter filter)
+    public Task<List<DbUserEducation>> FindAsync(FindUsersFilter filter)
     {
       IQueryable<DbUserEducation> query = _provider.UsersEducations.AsQueryable();
 
@@ -69,7 +69,7 @@ namespace LT.DigitalOffice.EducationService.Data
         query = query.Where(e => e.Completeness == (int)filter.Completeness.Value);
       }
 
-      return await query.Skip(filter.SkipCount).Take(filter.TakeCount).ToListAsync();
+      return query.Skip(filter.SkipCount).Take(filter.TakeCount).ToListAsync();
     }
   }
 }
