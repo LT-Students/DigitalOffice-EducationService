@@ -24,7 +24,7 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
     private readonly IImageRepository _repository;
     private readonly IAccessValidator _accessValidator;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IEducationRepository _educationRepository;
+    private readonly IUserEducationRepository _educationRepository;
     private readonly IResponseCreator _responseCreator;
     private readonly IDbEducationImageMapper _imageMapper;
     private readonly ICreateImagesRequestValidator _validator;
@@ -34,7 +34,7 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
       IImageRepository repository,
       IAccessValidator accessValidator,
       IHttpContextAccessor httpContextAccessor,
-      IEducationRepository educationRepository,
+      IUserEducationRepository educationRepository,
       IResponseCreator responseCreator,
       IDbEducationImageMapper imageMapper,
       ICreateImagesRequestValidator validator,
