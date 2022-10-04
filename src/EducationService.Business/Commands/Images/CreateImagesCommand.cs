@@ -24,7 +24,7 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
     private readonly IImageRepository _repository;
     private readonly IAccessValidator _accessValidator;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IUserEducationRepository _educationRepository;
+    private readonly IUserEducationRepository _userEducationRepository;
     private readonly IResponseCreator _responseCreator;
     private readonly IDbEducationImageMapper _imageMapper;
     private readonly ICreateImagesRequestValidator _validator;
@@ -34,7 +34,7 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
       IImageRepository repository,
       IAccessValidator accessValidator,
       IHttpContextAccessor httpContextAccessor,
-      IUserEducationRepository educationRepository,
+      IUserEducationRepository userEducationRepository,
       IResponseCreator responseCreator,
       IDbEducationImageMapper imageMapper,
       ICreateImagesRequestValidator validator,
@@ -43,7 +43,7 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
       _repository = repository;
       _accessValidator = accessValidator;
       _httpContextAccessor = httpContextAccessor;
-      _educationRepository = educationRepository;
+      _userEducationRepository = userEducationRepository;
       _responseCreator = responseCreator;
       _imageMapper = imageMapper;
       _validator = validator;
@@ -54,7 +54,7 @@ namespace LT.DigitalOffice.UserService.Business.Commands.Image
     {
       Guid senderId = _httpContextAccessor.HttpContext.GetUserId();
 
-      if (senderId != (await _educationRepository.GetAsync(request.EducationId)).UserId
+      if (senderId != (await _userEducationRepository.GetAsync(request.EducationId)).UserId
         && !await _accessValidator.HasRightsAsync(Rights.AddEditRemoveUsers))
       {
         return _responseCreator.CreateFailureResponse<List<Guid>>(HttpStatusCode.Forbidden);
