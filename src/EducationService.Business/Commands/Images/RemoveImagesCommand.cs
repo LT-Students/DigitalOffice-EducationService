@@ -22,7 +22,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Image
   public class RemoveImagesCommand : IRemoveImagesCommand
   {
     private readonly IImageRepository _imageRepository;
-    private readonly IEducationRepository _educationRepository;
+    private readonly IUserEducationRepository _userEducationRepository;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IRemoveImagesRequestValidator _removeRequestValidator;
     private readonly IAccessValidator _accessValidator;
@@ -32,7 +32,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Image
 
     public RemoveImagesCommand(
       IImageRepository imageRepository,
-      IEducationRepository educationRepository,
+      IUserEducationRepository userEducationRepository,
       IHttpContextAccessor httpContextAccessor,
       IRemoveImagesRequestValidator removeRequestValidator,
       IAccessValidator accessValidator,
@@ -41,7 +41,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Image
       IPublish publish)
     {
       _imageRepository = imageRepository;
-      _educationRepository = educationRepository;
+      _userEducationRepository = userEducationRepository;
       _httpContextAccessor = httpContextAccessor;
       _removeRequestValidator = removeRequestValidator;
       _accessValidator = accessValidator;
@@ -56,7 +56,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Image
 
       Guid senderId = _httpContextAccessor.HttpContext.GetUserId();
 
-      if (senderId != (await _educationRepository.GetAsync(request.EducationId)).UserId
+      if (senderId != (await _userEducationRepository.GetAsync(request.EducationId)).UserId
         && !await _accessValidator.HasRightsAsync(Rights.AddEditRemoveUsers))
       {
         return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.Forbidden);

@@ -24,7 +24,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
   {
     private readonly IAccessValidator _accessValidator;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IEducationRepository _educationRepository;
+    private readonly IUserEducationRepository _userEducationRepository;
     private readonly IPatchDbUserEducationMapper _mapper;
     private readonly IEditEducationRequestValidator _validator;
     private readonly IResponseCreator _responseCreator;
@@ -32,14 +32,14 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
     public EditEducationCommand(
       IAccessValidator accessValidator,
       IHttpContextAccessor httpContextAccessor,
-      IEducationRepository educationRepository,
+      IUserEducationRepository userEducationRepository,
       IPatchDbUserEducationMapper mapper,
       IEditEducationRequestValidator validator,
       IResponseCreator responseCreator)
     {
       _accessValidator = accessValidator;
       _httpContextAccessor = httpContextAccessor;
-      _educationRepository = educationRepository;
+      _userEducationRepository = userEducationRepository;
       _mapper = mapper;
       _validator = validator;
       _responseCreator = responseCreator;
@@ -49,7 +49,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
       Guid educationId,
       JsonPatchDocument<EditEducationRequest> request)
     {
-      DbUserEducation userEducation = await _educationRepository.GetAsync(educationId);
+      DbUserEducation userEducation = await _userEducationRepository.GetAsync(educationId);
 
       if (userEducation is null)
       {
@@ -70,7 +70,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
       return new OperationResultResponse<bool>
       {
         Status = OperationResultStatusType.FullSuccess,
-        Body = await _educationRepository.EditAsync(userEducation, _mapper.Map(request))
+        Body = await _userEducationRepository.EditAsync(userEducation, _mapper.Map(request))
       };
     }
   }

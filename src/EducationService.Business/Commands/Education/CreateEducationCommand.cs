@@ -23,7 +23,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
   {
     private readonly IAccessValidator _accessValidator;
     private readonly IDbUserEducationMapper _mapper;
-    private readonly IEducationRepository _educationRepository;
+    private readonly IUserEducationRepository _userEducationRepository;
     private readonly ICreateEducationRequestValidator _validator;
     private readonly IResponseCreator _responseCreator;
     private readonly IImageService _imageService;
@@ -32,7 +32,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
     public CreateEducationCommand(
       IAccessValidator accessValidator,
       IDbUserEducationMapper mapper,
-      IEducationRepository educationRepository,
+      IUserEducationRepository userEducationRepository,
       ICreateEducationRequestValidator validator,
       IResponseCreator responseCreator,
       IHttpContextAccessor httpContextAccessor,
@@ -40,7 +40,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
     {
       _accessValidator = accessValidator;
       _mapper = mapper;
-      _educationRepository = educationRepository;
+      _userEducationRepository = userEducationRepository;
       _validator = validator;
       _responseCreator = responseCreator;
       _httpContextAccessor = httpContextAccessor;
@@ -73,7 +73,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
 
       OperationResultResponse<Guid?> response = new();
 
-      response.Body = await _educationRepository.CreateAsync(_mapper.Map(request, imagesIds));
+      response.Body = await _userEducationRepository.CreateAsync(_mapper.Map(request, imagesIds));
 
       _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Created;
 

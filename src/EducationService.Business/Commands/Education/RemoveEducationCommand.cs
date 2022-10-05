@@ -18,24 +18,24 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
   {
     private readonly IAccessValidator _accessValidator;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IEducationRepository _educationRepository;
+    private readonly IUserEducationRepository _userEducationRepository;
     private readonly IResponseCreator _responseCreator;
 
     public RemoveEducationCommand(
       IAccessValidator accessValidator,
       IHttpContextAccessor httpContextAccessor,
-      IEducationRepository educationRepository,
+      IUserEducationRepository userEducationRepository,
       IResponseCreator responseCreator)
     {
       _accessValidator = accessValidator;
       _httpContextAccessor = httpContextAccessor;
-      _educationRepository = educationRepository;
+      _userEducationRepository = userEducationRepository;
       _responseCreator = responseCreator;
     }
 
     public async Task<OperationResultResponse<bool>> ExecuteAsync(Guid educationId)
     {
-      DbUserEducation userEducation = await _educationRepository.GetAsync(educationId);
+      DbUserEducation userEducation = await _userEducationRepository.GetAsync(educationId);
 
       if (userEducation is null)
       {
@@ -50,7 +50,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
 
       return new()
       {
-        Body = await _educationRepository.RemoveAsync(userEducation),
+        Body = await _userEducationRepository.RemoveAsync(userEducation),
         Status = OperationResultStatusType.FullSuccess
       };
     }
