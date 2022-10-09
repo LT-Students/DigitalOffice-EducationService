@@ -4,6 +4,7 @@ using LT.DigitalOffice.EducationService.Models.Dto.Enums;
 using LT.DigitalOffice.EducationService.Models.Dto.Requests.Education;
 using LT.DigitalOffice.EducationService.Validation.Education.Interfaces;
 using LT.DigitalOffice.Kernel.Validators;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
 {
   public class EditEducationRequestValidator : BaseEditRequestValidator<EditEducationRequest>, IEditEducationRequestValidator
   {
-    private void HandleInternalPropertyValidation(Operation<EditEducationRequest> requestedOperation, CustomContext context)
+    private void HandleInternalPropertyValidation(Operation<EditEducationRequest> requestedOperation, ValidationContext<JsonPatchDocument<EditEducationRequest>> context)
     {
       Context = context;
       RequestedOperation = requestedOperation;
