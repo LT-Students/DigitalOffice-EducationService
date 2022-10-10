@@ -6,7 +6,6 @@ using LT.DigitalOffice.EducationService.Models.Dto.Requests.Images;
 using LT.DigitalOffice.EducationService.Validation.Image.Interfaces;
 using LT.DigitalOffice.Kernel.BrokerSupport.AccessValidatorEngine.Interfaces;
 using LT.DigitalOffice.Kernel.Constants;
-using LT.DigitalOffice.Kernel.Enums;
 using LT.DigitalOffice.Kernel.Extensions;
 using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Responses;
@@ -79,10 +78,6 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Image
       }
 
       await _publish.RemoveImagesAsync(request.ImagesIds);
-
-      response.Status = response.Errors.Any()
-        ? OperationResultStatusType.PartialSuccess
-        : OperationResultStatusType.FullSuccess;
 
       return response;
     }

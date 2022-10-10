@@ -3,7 +3,6 @@ using LT.DigitalOffice.EducationService.Data.Interfaces;
 using LT.DigitalOffice.EducationService.Models.Db;
 using LT.DigitalOffice.Kernel.BrokerSupport.AccessValidatorEngine.Interfaces;
 using LT.DigitalOffice.Kernel.Constants;
-using LT.DigitalOffice.Kernel.Enums;
 using LT.DigitalOffice.Kernel.Extensions;
 using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Responses;
@@ -48,11 +47,7 @@ namespace LT.DigitalOffice.EducationService.Business.Commands.Education
         return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.Forbidden);
       }
 
-      return new()
-      {
-        Body = await _userEducationRepository.RemoveAsync(userEducation),
-        Status = OperationResultStatusType.FullSuccess
-      };
+      return new OperationResultResponse<bool>(body: await _userEducationRepository.RemoveAsync(userEducation));
     }
   }
 }
