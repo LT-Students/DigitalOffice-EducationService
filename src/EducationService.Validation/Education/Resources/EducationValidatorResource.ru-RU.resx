@@ -99,10 +99,10 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="IsEmpty" xml:space="preserve">
-        <value>Не может быть пустым</value>
+        <value>не может быть пустым</value>
     </data>
     <data name="IsNotInEnum" xml:space="preserve">
-        <value>Значение отсутствует в enum</value>
+        <value>такое значение не предусмотрено</value>
     </data>
     <data name="UserDoesNotExist" xml:space="preserve">
         <value>Этот пользователь не существует</value>
