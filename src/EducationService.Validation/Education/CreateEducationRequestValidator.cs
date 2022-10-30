@@ -33,7 +33,7 @@ namespace LT.DigitalOffice.EducationService.Validation.Education
         .Cascade(CascadeMode.Stop)
         .NotEmpty().WithMessage($"{nameof(CreateEducationRequest.UserId)} {EducationValidatorResource.IsEmpty}")
         .MustAsync(async (pu, cancellation) => await CheckValidityUserId(pu, new List<string>()))
-        .WithMessage($"{EducationValidatorResource.UserDoesNotExist}");
+        .WithMessage(EducationValidatorResource.UserDoesNotExist);
 
       RuleFor(education => education.UniversityName)
         .NotEmpty().WithMessage($"{nameof(CreateEducationRequest.UniversityName)} {EducationValidatorResource.IsEmpty}");
